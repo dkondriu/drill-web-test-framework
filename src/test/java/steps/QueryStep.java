@@ -20,13 +20,17 @@ import initial.WebBrowser;
 import pages.*;
 
 public interface QueryStep {
-  public static String runSimpleQuery(String queryText) {
-    new NavigatePage().openQueryPage();
-    new QueryPage().submitQuery(queryText);
+  static String runSimpleQuery(String queryText) {
+    BasePage.getPage(NavigatePage.class)
+        .openQueryPage();
+    BasePage.getPage(QueryPage.class)
+        .submitQuery(queryText);
     return QueryResultsPage.queryResultsPage.getFirstResultCell();
   }
-  public static void runQuery(String queryText) {
-    new NavigatePage().openQueryPage();
-    new QueryPage().submitQuery(queryText);
+  static void runQuery(String queryText) {
+    BasePage.getPage(NavigatePage.class)
+        .openQueryPage();
+    BasePage.getPage(QueryPage.class)
+        .submitQuery(queryText);
   }
 }

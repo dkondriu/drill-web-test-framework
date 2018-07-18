@@ -19,8 +19,33 @@ package pages;
 import initial.WebBrowser;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class BasePage {
-  public BasePage() {
+
+  private static Map<Class<? extends BasePage>, BasePage> Pages;
+
+  BasePage() {
     PageFactory.initElements(WebBrowser.getDriver(), this);
   }
+
+  public static <T extends BasePage> T getPage(Class<T> pageClass) {
+
+    if (Pages == null) {
+      Pages = new HashMap<>();
+    }
+
+    if (!Pages.containsKey(pageClass)) {
+      try {
+        Pages.put(pageClass, pageClass.newInstance());
+      } catch (InstantiationException | IllegalAccessException e) {
+        e.printStackTrace();
+        throw new RuntimeException(e);
+      }
+    }
+
+    return pageClass.cast(Pages.get(pageClass));
+  }
+
 }

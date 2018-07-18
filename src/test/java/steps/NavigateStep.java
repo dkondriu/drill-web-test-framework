@@ -16,10 +16,11 @@
  */
 package steps;
 
+import pages.BasePage;
 import pages.NavigatePage;
 
 public interface NavigateStep {
-  public static void pagesDemo() {
-    new NavigatePage().pagesDemo();
+  static void pagesDemo() {
+    BasePage.getPage(NavigatePage.class).pagesDemo();
   }
 }

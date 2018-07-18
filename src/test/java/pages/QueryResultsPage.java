@@ -22,6 +22,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class QueryResultsPage extends BasePage {
   public static QueryResultsPage queryResultsPage = null;
@@ -32,7 +33,7 @@ public class QueryResultsPage extends BasePage {
   @FindBy(xpath = "//*[@id=\"result\"]/tbody")
   private WebElement queryResultTableBody;
 
-  public QueryResultsPage() {
+  QueryResultsPage() {
     queryResultsPage = this;
   }
 
@@ -48,25 +49,25 @@ public class QueryResultsPage extends BasePage {
     return queryResultLine.getText();
   }
 
-  public LinkedList<LinkedList<String>> getResultsTable() {
-    LinkedList<LinkedList<String>> rows = new LinkedList<>();
+  public List<List<String>> getResultsTable() {
+    List<List<String>> rows = new LinkedList<>();
     rows.add(getResultTableHead());
     rows.addAll(getResultTableBody());
     return rows;
   }
 
-  private LinkedList<String> getResultTableHead() {
-    LinkedList<String> columns = new LinkedList<>();
+  private List<String> getResultTableHead() {
+    List<String> columns = new LinkedList<>();
     for(WebElement el : queryResultTableHead.findElements(By.tagName("div"))) {
       columns.add(el.getText());
     }
     return columns;
   }
 
-  private LinkedList<LinkedList<String>> getResultTableBody() {
-    LinkedList<LinkedList<String>> rows = new LinkedList<>();
+  private List<List<String>> getResultTableBody() {
+    List<List<String>> rows = new LinkedList<>();
     for(WebElement tr : queryResultTableBody.findElements(By.tagName("tr"))) {
-      LinkedList<String> row = new LinkedList<>();
+      List<String> row = new LinkedList<>();
       for(WebElement td : tr.findElements(By.tagName("td"))) {
         row.add(td.getText());
       }

@@ -41,7 +41,7 @@ public class NavigatePage extends BasePage {
   @FindBy(partialLinkText = "Documentation")
   private WebElement documentation;
 
-  public NavigatePage() {
+  NavigatePage() {
     navigatePage = this;
   }
 
