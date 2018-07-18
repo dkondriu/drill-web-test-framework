@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pages;
+package steps;
 
-import driver.DriverWrapper;
-import org.openqa.selenium.support.PageFactory;
+import pages.NavigatePage;
 
-public abstract class PageBase {
-  public PageBase() {
-    PageFactory.initElements(DriverWrapper.getDriver(), this);
+public interface NavigateStep {
+  public static void pagesDemo() {
+    new NavigatePage().pagesDemo();
   }
 }

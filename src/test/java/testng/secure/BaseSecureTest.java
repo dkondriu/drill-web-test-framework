@@ -14,19 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package steps;
+package testng.secure;
 
-import driver.DriverWrapper;
-import pages.*;
-
-public interface StepQuery {
-  public static String runSimpleQuery(String queryText) {
-    new PageNavigate().openQueryPage();
-    new PageQuery().submitQuery(queryText);
-    return DriverWrapper.pageQueryResults.getFirstResultCell();
-  }
-  public static void runQuery(String queryText) {
-    new PageNavigate().openQueryPage();
-    new PageQuery().submitQuery(queryText);
-  }
+public class BaseSecureTest {
 }

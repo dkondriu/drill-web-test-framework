@@ -16,11 +16,12 @@
  */
 package pages;
 
-import driver.DriverWrapper;
+import initial.WebBrowser;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class PageNavigate extends PageBase {
+public class NavigatePage extends BasePage {
+  public static NavigatePage navigatePage = null;
   @FindBy(partialLinkText = "Apache Drill")
   private WebElement home;
   @FindBy(partialLinkText = "Query")
@@ -40,8 +41,8 @@ public class PageNavigate extends PageBase {
   @FindBy(partialLinkText = "Documentation")
   private WebElement documentation;
 
-  public PageNavigate() {
-    DriverWrapper.pageNavigate = this;
+  public NavigatePage() {
+    navigatePage = this;
   }
 
   public void openQueryPage() {
@@ -50,20 +51,20 @@ public class PageNavigate extends PageBase {
 
   public void pagesDemo() {
     home.click();
-    DriverWrapper.waitSeconds(2);
+    WebBrowser.waitSeconds(2);
     query.click();
-    DriverWrapper.waitSeconds(2);
+    WebBrowser.waitSeconds(2);
     profiles.click();
-    DriverWrapper.waitSeconds(2);
+    WebBrowser.waitSeconds(2);
     storage.click();
-    DriverWrapper.waitSeconds(2);
+    WebBrowser.waitSeconds(2);
     metrics.click();
-    DriverWrapper.waitSeconds(2);
+    WebBrowser.waitSeconds(2);
     threads.click();
-    DriverWrapper.waitSeconds(2);
+    WebBrowser.waitSeconds(2);
     logs.click();
-    DriverWrapper.waitSeconds(2);
+    WebBrowser.waitSeconds(2);
     options.click();
-    DriverWrapper.waitSeconds(2);
+    WebBrowser.waitSeconds(2);
   }
 }

@@ -14,19 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package step;
+package testng.unsecure;
 
-import driver.DriverWrapper;
-import pages.*;
+import initial.WebBrowser;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 
-public interface StepQuery {
-  public static String runSimpleQuery(String queryText) {
-    new PageNavigate().openQueryPage();
-    new PageQuery().submitQuery(queryText);
-    return DriverWrapper.pageQueryResults.getFirstResultCell();
+public class BaseUnsecureTest {
+  @BeforeSuite
+  public void beforeSuite() {
+
   }
-  public static void runQuery(String queryText) {
-    new PageNavigate().openQueryPage();
-    new PageQuery().submitQuery(queryText);
+  @AfterSuite
+  public void afterSuite() {
+    WebBrowser.closeBrowser();
   }
 }

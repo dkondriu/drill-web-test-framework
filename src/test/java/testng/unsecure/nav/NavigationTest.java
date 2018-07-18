@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testng.nav;
+package testng.unsecure.nav;
 
-import driver.DriverWrapper;
+import initial.WebBrowser;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Test;
-import steps.StepNavigate;
+import steps.NavigateStep;
 
-public class TestNavigation {
+public class NavigationTest {
   /*@BeforeSuite
   public void beforeSuite() {
 
@@ -34,12 +34,12 @@ public class TestNavigation {
 
   @Test(groups = { "functional" })
   public void testNav() throws Exception {
-    StepNavigate.pagesDemo();
+    NavigateStep.pagesDemo();
   }
 
   @AfterSuite
   public void afterSuite() {
-    DriverWrapper.closeBrowser();
+    WebBrowser.closeBrowser();
   }
 
 }
