@@ -14,33 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testng.nav;
+package steps;
 
-import driver.DriverWrapper;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.Test;
-import step.StepNavigate;
-import step.StepQuery;
+import initial.WebBrowser;
+import pages.QueryResultsPage;
 
-public class Navigation {
-  /*@BeforeSuite
-  public void beforeSuite() {
+import java.util.LinkedList;
 
-  }*/
-
-  /*@BeforeMethod
-  public void beforeMethod() {
-
-  }*/
-
-  @Test(groups = { "functional" })
-  public void testNav() throws Exception {
-    StepNavigate.pagesDemo();
+public interface QueryResultsStep {
+  public static int getResultsTableColumnsCount(int rowNumber) {
+    return QueryResultsPage.queryResultsPage.getResultsTable().get(rowNumber).size();
   }
-
-  @AfterSuite
-  public void afterSuite() {
-    DriverWrapper.closeBrowser();
+  public static int getResultsTableRowsCount() {
+    return QueryResultsPage.queryResultsPage.getResultsTable().size();
   }
-
+  public static LinkedList<String> getResultsTableRow(int rowNumber) {
+    return QueryResultsPage.queryResultsPage.getResultsTable().get(rowNumber);
+  }
 }

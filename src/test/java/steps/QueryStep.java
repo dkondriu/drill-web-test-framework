@@ -16,10 +16,17 @@
  */
 package steps;
 
-import pages.PageNavigate;
+import initial.WebBrowser;
+import pages.*;
 
-public interface StepNavigate {
-  public static void pagesDemo() {
-    new PageNavigate().pagesDemo();
+public interface QueryStep {
+  public static String runSimpleQuery(String queryText) {
+    new NavigatePage().openQueryPage();
+    new QueryPage().submitQuery(queryText);
+    return QueryResultsPage.queryResultsPage.getFirstResultCell();
+  }
+  public static void runQuery(String queryText) {
+    new NavigatePage().openQueryPage();
+    new QueryPage().submitQuery(queryText);
   }
 }

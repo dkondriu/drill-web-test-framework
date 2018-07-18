@@ -14,20 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package step;
+package pages;
 
-import driver.DriverWrapper;
+import initial.WebBrowser;
+import org.openqa.selenium.support.PageFactory;
 
-import java.util.LinkedList;
-
-public interface StepQueryResults {
-  public static int getResultsTableColumnsCount(int rowNumber) {
-    return DriverWrapper.pageQueryResults.getResultsTable().get(rowNumber).size();
-  }
-  public static int getResultsTableRowsCount() {
-    return DriverWrapper.pageQueryResults.getResultsTable().size();
-  }
-  public static LinkedList<String> getResultsTableRow(int rowNumber) {
-    return DriverWrapper.pageQueryResults.getResultsTable().get(rowNumber);
+public abstract class BasePage {
+  public BasePage() {
+    PageFactory.initElements(WebBrowser.getDriver(), this);
   }
 }

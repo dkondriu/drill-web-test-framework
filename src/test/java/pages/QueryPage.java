@@ -16,12 +16,12 @@
  */
 package pages;
 
-import driver.DriverWrapper;
+import initial.WebBrowser;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class PageQuery extends PageBase {
-
+public class QueryPage extends BasePage {
+  public static QueryPage queryPage = null;
   @FindBy(xpath = "//*[@id=\"message\"]")
   private WebElement sampleQueryElement;
   @FindBy(xpath = "//*[@id=\"message\"]/button")
@@ -41,8 +41,8 @@ public class PageQuery extends PageBase {
   @FindBy(xpath = "//*[@id=\"queryForm\"]/button")
   private WebElement submitButton;
 
-  public PageQuery() {
-    DriverWrapper.pageQuery = this;
+  public QueryPage() {
+    queryPage = this;
   }
 
   public WebElement getSampleQueryElement() {
@@ -120,7 +120,7 @@ public class PageQuery extends PageBase {
   public void submitQuery(String queryText) {
     getQueryInputField().sendKeys(queryText);
     getSubmitButton().click();
-    new PageQueryResults();
+    new QueryResultsPage();
   }
 
 }

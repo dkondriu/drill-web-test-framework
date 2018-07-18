@@ -14,20 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package steps;
+package testng.secure.login;
 
-import driver.DriverWrapper;
-
-import java.util.LinkedList;
-
-public interface StepQueryResults {
-  public static int getResultsTableColumnsCount(int rowNumber) {
-    return DriverWrapper.pageQueryResults.getResultsTable().get(rowNumber).size();
-  }
-  public static int getResultsTableRowsCount() {
-    return DriverWrapper.pageQueryResults.getResultsTable().size();
-  }
-  public static LinkedList<String> getResultsTableRow(int rowNumber) {
-    return DriverWrapper.pageQueryResults.getResultsTable().get(rowNumber);
-  }
+public class LoginTest {
 }

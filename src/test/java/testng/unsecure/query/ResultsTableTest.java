@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testng.query;
+package testng.unsecure.query;
 
 import org.testng.annotations.Test;
-import steps.StepQuery;
-import steps.StepQueryResults;
+import steps.QueryStep;
+import steps.QueryResultsStep;
 
 import java.util.Arrays;
 
 import static org.testng.Assert.assertTrue;
 
-public class TestResultsTable {
+public class ResultsTableTest {
   /*@BeforeSuite
   public void beforeSuite() {
 
@@ -37,13 +37,13 @@ public class TestResultsTable {
 
   @Test(groups = { "functional" })
   public void debugTest() {
-    StepQuery.runQuery("SELECT * FROM cp.`employee.json` LIMIT 20");
+    QueryStep.runQuery("SELECT * FROM cp.`employee.json` LIMIT 20");
     int rowsSize = 11;
     int columnsSize = 16;
 
-    assertTrue(rowsSize == StepQueryResults.getResultsTableRowsCount(), "Rows count - " + StepQueryResults.getResultsTableRowsCount() + ", but should be - " + rowsSize);
-    assertTrue(columnsSize == StepQueryResults.getResultsTableColumnsCount(0), "Columns count - " + StepQueryResults.getResultsTableColumnsCount(0) + ", but should be - " + columnsSize);
-    assertTrue(StepQueryResults.getResultsTableRow(0).equals(Arrays.asList("employee_id", "full_name", "first_name",
+    assertTrue(rowsSize == QueryResultsStep.getResultsTableRowsCount(), "Rows count - " + QueryResultsStep.getResultsTableRowsCount() + ", but should be - " + rowsSize);
+    assertTrue(columnsSize == QueryResultsStep.getResultsTableColumnsCount(0), "Columns count - " + QueryResultsStep.getResultsTableColumnsCount(0) + ", but should be - " + columnsSize);
+    assertTrue(QueryResultsStep.getResultsTableRow(0).equals(Arrays.asList("employee_id", "full_name", "first_name",
         "last_name", "position_id", "position_title", "store_id", "department_id",
         "birth_date", "hire_date", "salary", "supervisor_id", "education_level",
         "marital_status", "gender", "management_role")), "Columns names on query results page are different then expected!");
