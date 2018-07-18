@@ -16,19 +16,27 @@
  */
 package steps;
 
-import initial.WebBrowser;
+import pages.BasePage;
 import pages.QueryResultsPage;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public interface QueryResultsStep {
-  public static int getResultsTableColumnsCount(int rowNumber) {
-    return QueryResultsPage.queryResultsPage.getResultsTable().get(rowNumber).size();
+  static int getResultsTableColumnsCount(int rowNumber) {
+    return BasePage.getPage(QueryResultsPage.class)
+        .queryResultsPage
+        .getResultsTable()
+        .get(rowNumber)
+        .size();
   }
-  public static int getResultsTableRowsCount() {
-    return QueryResultsPage.queryResultsPage.getResultsTable().size();
+  static int getResultsTableRowsCount() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getResultsTable()
+        .size();
   }
-  public static LinkedList<String> getResultsTableRow(int rowNumber) {
-    return QueryResultsPage.queryResultsPage.getResultsTable().get(rowNumber);
+  static List<String> getResultsTableRow(int rowNumber) {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getResultsTable()
+        .get(rowNumber);
   }
 }

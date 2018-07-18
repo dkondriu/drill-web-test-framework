@@ -41,7 +41,7 @@ public class QueryPage extends BasePage {
   @FindBy(xpath = "//*[@id=\"queryForm\"]/button")
   private WebElement submitButton;
 
-  public QueryPage() {
+  QueryPage() {
     queryPage = this;
   }
 
