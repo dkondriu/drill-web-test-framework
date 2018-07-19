@@ -20,12 +20,12 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 public abstract class TestProperties {
-  public static String drillHost = null;
-  public static WebBrowser.DRIVER driverType = null;
-  public static String webdriversPath = null;
-  public static boolean secureDrill = false;
-  public static String drillUserName = null;
-  public static String drillUserPassword = null;
+  public static String drillHost;
+  public static WebBrowser.DRIVER driverType;
+  public static String webdriversPath;
+  public static boolean secureDrill;
+  public static String drillUserName;
+  public static String drillUserPassword;
 
   static {
     try (FileInputStream in = new FileInputStream("init.properties")) {

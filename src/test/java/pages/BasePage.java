@@ -17,6 +17,7 @@
 package pages;
 
 import initial.WebBrowser;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public abstract class BasePage {
   private static Map<Class<? extends BasePage>, BasePage> Pages;
 
   BasePage() {
-    PageFactory.initElements(WebBrowser.getDriver(), this);
+    PageFactory.initElements(getDriver(), this);
   }
 
   public static <T extends BasePage> T getPage(Class<T> pageClass) {
@@ -40,12 +41,17 @@ public abstract class BasePage {
       try {
         Pages.put(pageClass, pageClass.newInstance());
       } catch (InstantiationException | IllegalAccessException e) {
+        WebBrowser.closeBrowser();
         e.printStackTrace();
         throw new RuntimeException(e);
       }
     }
 
     return pageClass.cast(Pages.get(pageClass));
+  }
+
+  protected static WebDriver getDriver() {
+    return WebBrowser.getDriver();
   }
 
 }

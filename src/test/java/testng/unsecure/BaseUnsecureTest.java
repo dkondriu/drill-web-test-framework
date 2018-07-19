@@ -19,14 +19,15 @@ package testng.unsecure;
 import initial.WebBrowser;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import testng.BaseTest;
 
-public class BaseUnsecureTest {
+public class BaseUnsecureTest extends BaseTest {
   @BeforeSuite
   public void beforeSuite() {
 
   }
+
   @AfterSuite
   public void afterSuite() {
-    WebBrowser.closeBrowser();
   }
 }

@@ -16,20 +16,20 @@
  */
 package initial;
 
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public abstract class WebBrowser {
   public enum DRIVER {
-    CHROME_WINDOWS,
-    CHROME_LINUX,
-    FIREFOX_WINDOWS,
-    FIREFOX_LINUX
+    CHROME_WINDOWS, CHROME_LINUX, FIREFOX_WINDOWS, FIREFOX_LINUX
   }
-  private static org.openqa.selenium.WebDriver driver;
+
+  private static WebDriver driver;
 
   public static void init() {
     System.setProperty("webdriver.chrome.driver", TestProperties.webdriversPath);
     //todo: download other webdrivers
+    //todo: add windows support
     switch (TestProperties.driverType) {
       case CHROME_LINUX:
         driver = new ChromeDriver();
@@ -41,8 +41,11 @@ public abstract class WebBrowser {
     maximizeWindow();
   }
 
-  public static org.openqa.selenium.WebDriver getDriver() {
-    try{driver.getCurrentUrl();} catch (Exception e) {init();}
+  public static WebDriver getDriver() {
+    if (driver == null) {
+      init();
+    }
+
     return driver;
   }
 
@@ -55,11 +58,15 @@ public abstract class WebBrowser {
   }
 
   public static void closeBrowser() {
-    driver.close();
+    driver.quit();
+    driver = null;
   }
 
   public static void waitSeconds(int seconds) {
-    try{Thread.sleep(seconds*1000);}catch (Exception ignore){}
+    try {
+      Thread.sleep(seconds * 1000);
+    } catch (Exception ignore) {
+    }
     //driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
   }
 }

@@ -16,7 +16,6 @@
  */
 package pages;
 
-import initial.WebBrowser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -25,25 +24,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class QueryResultsPage extends BasePage {
-  public static QueryResultsPage queryResultsPage = null;
   @FindBy(xpath = "//*[@id=\"result\"]/tbody/tr/td")
   private WebElement queryResultLine;
   @FindBy(xpath = "//*[@id=\"result_wrapper\"]/div[2]/div[1]/div/table/thead")
   private WebElement queryResultTableHead;
   @FindBy(xpath = "//*[@id=\"result\"]/tbody")
   private WebElement queryResultTableBody;
-
-  QueryResultsPage() {
-    queryResultsPage = this;
-  }
-
-  public void setQueryResultLine(WebElement queryResultLine) {
-    this.queryResultLine = queryResultLine;
-  }
-
-  public WebElement getQueryResultLine() {
-    return queryResultLine;
-  }
 
   public String getFirstResultCell() {
     return queryResultLine.getText();

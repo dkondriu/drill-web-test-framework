@@ -16,21 +16,19 @@
  */
 package steps;
 
-import initial.WebBrowser;
 import pages.*;
 
-public interface QueryStep {
+public interface QuerySteps {
   static String runSimpleQuery(String queryText) {
-    BasePage.getPage(NavigatePage.class)
-        .openQueryPage();
-    BasePage.getPage(QueryPage.class)
-        .submitQuery(queryText);
-    return QueryResultsPage.queryResultsPage.getFirstResultCell();
+    return BasePage.getPage(NavigatePage.class)
+        .navigateQuery()
+        .submitQuery(queryText)
+        .getFirstResultCell();
   }
+
   static void runQuery(String queryText) {
     BasePage.getPage(NavigatePage.class)
-        .openQueryPage();
-    BasePage.getPage(QueryPage.class)
+        .navigateQuery()
         .submitQuery(queryText);
   }
 }

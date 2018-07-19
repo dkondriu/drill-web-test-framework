@@ -21,7 +21,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class NavigatePage extends BasePage {
-  public static NavigatePage navigatePage = null;
   @FindBy(partialLinkText = "Apache Drill")
   private WebElement home;
   @FindBy(partialLinkText = "Query")
@@ -41,30 +40,41 @@ public class NavigatePage extends BasePage {
   @FindBy(partialLinkText = "Documentation")
   private WebElement documentation;
 
-  NavigatePage() {
-    navigatePage = this;
-  }
-
-  public void openQueryPage() {
-    query.click();
-  }
-
-  public void pagesDemo() {
+  public void navigateHome() {
     home.click();
-    WebBrowser.waitSeconds(2);
-    query.click();
-    WebBrowser.waitSeconds(2);
-    profiles.click();
-    WebBrowser.waitSeconds(2);
-    storage.click();
-    WebBrowser.waitSeconds(2);
-    metrics.click();
-    WebBrowser.waitSeconds(2);
-    threads.click();
-    WebBrowser.waitSeconds(2);
-    logs.click();
-    WebBrowser.waitSeconds(2);
-    options.click();
-    WebBrowser.waitSeconds(2);
   }
+
+  public QueryPage navigateQuery() {
+    query.click();
+    return getPage(QueryPage.class);
+  }
+
+  public void navigateProfiles() {
+    profiles.click();
+  }
+
+  public void navigateStorage() {
+    storage.click();
+  }
+
+  public void navigateMetrics() {
+    metrics.click();
+  }
+
+  public void navigateThreads() {
+    threads.click();
+  }
+
+  public void navigateLogs() {
+    logs.click();
+  }
+
+  public void navigateOptions() {
+    options.click();
+  }
+
+  public void navigateDocumentation() {
+    documentation.click();
+  }
+
 }

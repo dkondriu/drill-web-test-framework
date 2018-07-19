@@ -17,26 +17,8 @@
 package steps;
 
 import pages.BasePage;
-import pages.QueryResultsPage;
+import pages.NavigatePage;
 
-import java.util.List;
+public interface NavigateSteps {
 
-public interface QueryResultsStep {
-  static int getResultsTableColumnsCount(int rowNumber) {
-    return BasePage.getPage(QueryResultsPage.class)
-        .queryResultsPage
-        .getResultsTable()
-        .get(rowNumber)
-        .size();
-  }
-  static int getResultsTableRowsCount() {
-    return BasePage.getPage(QueryResultsPage.class)
-        .getResultsTable()
-        .size();
-  }
-  static List<String> getResultsTableRow(int rowNumber) {
-    return BasePage.getPage(QueryResultsPage.class)
-        .getResultsTable()
-        .get(rowNumber);
-  }
 }

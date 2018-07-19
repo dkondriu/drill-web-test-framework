@@ -21,7 +21,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class QueryPage extends BasePage {
-  public static QueryPage queryPage = null;
   @FindBy(xpath = "//*[@id=\"message\"]")
   private WebElement sampleQueryElement;
   @FindBy(xpath = "//*[@id=\"message\"]/button")
@@ -41,86 +40,14 @@ public class QueryPage extends BasePage {
   @FindBy(xpath = "//*[@id=\"queryForm\"]/button")
   private WebElement submitButton;
 
-  QueryPage() {
-    queryPage = this;
-  }
-
-  public WebElement getSampleQueryElement() {
-    return sampleQueryElement;
-  }
-
-  public void setSampleQueryElement(WebElement sampleQueryElement) {
-    this.sampleQueryElement = sampleQueryElement;
-  }
-
-  public WebElement getSampleQueryCloseButton() {
-    return sampleQueryCloseButton;
-  }
-
-  public void setSampleQueryCloseButton(WebElement sampleQueryCloseButton) {
-    this.sampleQueryCloseButton = sampleQueryCloseButton;
-  }
-
   public WebElement getQueryTypeLabel() {
     return queryTypeLabel;
   }
 
-  public void setQueryTypeLabel(WebElement queryTypeLabel) {
-    this.queryTypeLabel = queryTypeLabel;
-  }
-
-  public WebElement getQueryTypeSQLRButton() {
-    return queryTypeSQLRButton;
-  }
-
-  public void setQueryTypeSQLRButton(WebElement queryTypeSQLRButton) {
-    this.queryTypeSQLRButton = queryTypeSQLRButton;
-  }
-
-  public WebElement getQueryTypePHYSICALRButton() {
-    return queryTypePHYSICALRButton;
-  }
-
-  public void setQueryTypePHYSICALRButton(WebElement queryTypePHYSICALRButton) {
-    this.queryTypePHYSICALRButton = queryTypePHYSICALRButton;
-  }
-
-  public WebElement getQueryTypeLOGICALRButton() {
-    return queryTypeLOGICALRButton;
-  }
-
-  public void setQueryTypeLOGICALRButton(WebElement queryTypeLOGICALRButton) {
-    this.queryTypeLOGICALRButton = queryTypeLOGICALRButton;
-  }
-
-  public WebElement getQueryInputLabel() {
-    return queryInputLabel;
-  }
-
-  public void setQueryInputLabel(WebElement queryInputLabel) {
-    this.queryInputLabel = queryInputLabel;
-  }
-
-  public WebElement getQueryInputField() {
-    return queryInputField;
-  }
-
-  public void setQueryInputField(WebElement queryInputField) {
-    this.queryInputField = queryInputField;
-  }
-
-  public WebElement getSubmitButton() {
-    return submitButton;
-  }
-
-  public void setSubmitButton(WebElement submitButton) {
-    this.submitButton = submitButton;
-  }
-
-  public void submitQuery(String queryText) {
-    getQueryInputField().sendKeys(queryText);
-    getSubmitButton().click();
-    new QueryResultsPage();
+  public QueryResultsPage submitQuery(String queryText) {
+    queryInputField.sendKeys(queryText);
+    submitButton.click();
+    return getPage(QueryResultsPage.class);
   }
 
 }

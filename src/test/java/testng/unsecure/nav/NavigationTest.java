@@ -19,7 +19,6 @@ package testng.unsecure.nav;
 import initial.WebBrowser;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Test;
-import steps.NavigateStep;
 
 public class NavigationTest {
   /*@BeforeSuite
@@ -34,7 +33,6 @@ public class NavigationTest {
 
   @Test(groups = { "functional" })
   public void testNav() throws Exception {
-    NavigateStep.pagesDemo();
   }
 
   @AfterSuite

@@ -17,10 +17,25 @@
 package steps;
 
 import pages.BasePage;
-import pages.NavigatePage;
+import pages.QueryResultsPage;
 
-public interface NavigateStep {
-  static void pagesDemo() {
-    BasePage.getPage(NavigatePage.class).pagesDemo();
+import java.util.List;
+
+public interface QueryResultsSteps {
+  static int getResultsTableColumnsCount(int rowNumber) {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getResultsTable()
+        .get(rowNumber)
+        .size();
+  }
+  static int getResultsTableRowsCount() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getResultsTable()
+        .size();
+  }
+  static List<String> getResultsTableRow(int rowNumber) {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getResultsTable()
+        .get(rowNumber);
   }
 }
