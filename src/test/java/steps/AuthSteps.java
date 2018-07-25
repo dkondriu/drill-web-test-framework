@@ -14,22 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testng.unsecure.nav;
+package steps;
 
-import initial.WebBrowser;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.Test;
-import testng.unsecure.BaseUnsecureTest;
+import pages.BasePage;
+import pages.LoginNavigatePage;
+import pages.LoginPage;
+import pages.LogoutNavigatePage;
+import pages.MainLoginPage;
 
-public class NavigationTest extends BaseUnsecureTest {
-
-  @Test(groups = { "functional" })
-  public void testNav() {
+public interface AuthSteps {
+  static void login() {
+    BasePage.getPage(LoginNavigatePage.class).openMainLoginPage();
+    BasePage.getPage(MainLoginPage.class).openLoginPage();
+    BasePage.getPage(LoginPage.class).authenticate();
   }
-
-  @AfterSuite
-  public void afterSuite() {
-    WebBrowser.closeBrowser();
+  static void logOut() {
+    BasePage.getPage(LogoutNavigatePage.class).logout();
   }
-
 }

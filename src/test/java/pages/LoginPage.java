@@ -14,22 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testng.unsecure.nav;
+package pages;
 
-import initial.WebBrowser;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.Test;
-import testng.unsecure.BaseUnsecureTest;
+import initial.TestProperties;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
-public class NavigationTest extends BaseUnsecureTest {
+public class LoginPage extends BasePage {
+  @FindBy(xpath = "/html/body/div[2]/div[2]/form/fieldset/div/h4")
+  private WebElement loginTitle;
+  @FindBy(xpath = "//*[@name=\"j_username\"]")
+  private WebElement userName;
+  @FindBy(xpath = "//*[@name=\"j_password\"]")
+  private WebElement userPassword;
+  @FindBy(xpath = "/html/body/div[2]/div[2]/form/fieldset/div/p[3]/button")
+  private WebElement submitLogin;
 
-  @Test(groups = { "functional" })
-  public void testNav() {
+  public NavigatePage authenticate() {
+    userName.sendKeys(TestProperties.drillUserName);
+    userPassword.sendKeys(TestProperties.drillUserPassword);
+    submitLogin.click();
+    return getPage(NavigatePage.class);
   }
-
-  @AfterSuite
-  public void afterSuite() {
-    WebBrowser.closeBrowser();
-  }
-
 }

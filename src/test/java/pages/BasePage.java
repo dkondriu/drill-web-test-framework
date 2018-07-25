@@ -50,6 +50,10 @@ public abstract class BasePage {
     return pageClass.cast(Pages.get(pageClass));
   }
 
+  public static void clearPages() {
+    Pages.clear();
+  }
+
   protected static WebDriver getDriver() {
     return WebBrowser.getDriver();
   }

@@ -58,8 +58,10 @@ public abstract class WebBrowser {
   }
 
   public static void closeBrowser() {
-    driver.quit();
-    driver = null;
+    if(driver != null) {
+      driver.quit();
+      driver = null;
+    }
   }
 
   public static void waitSeconds(int seconds) {

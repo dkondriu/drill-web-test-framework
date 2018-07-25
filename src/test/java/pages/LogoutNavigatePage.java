@@ -14,22 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testng.unsecure.nav;
+package pages;
 
-import initial.WebBrowser;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.Test;
-import testng.unsecure.BaseUnsecureTest;
+import initial.TestProperties;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
-public class NavigationTest extends BaseUnsecureTest {
-
-  @Test(groups = { "functional" })
-  public void testNav() {
+public class LogoutNavigatePage extends BasePage {
+  @FindBy(partialLinkText = "Log Out (")
+  private WebElement logoutButton;
+  
+  public void logout() {
+    logoutButton.click();
   }
-
-  @AfterSuite
-  public void afterSuite() {
-    WebBrowser.closeBrowser();
+  public boolean isAuthorized(){
+    return logoutButton.getText().trim().contains("Log Out (" + TestProperties.drillUserName + ")");
   }
 
 }
