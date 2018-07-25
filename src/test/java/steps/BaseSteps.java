@@ -14,22 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testng.unsecure.nav;
+package steps;
 
 import initial.WebBrowser;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.Test;
-import testng.unsecure.BaseUnsecureTest;
+import pages.BasePage;
 
-public class NavigationTest extends BaseUnsecureTest {
-
-  @Test(groups = { "functional" })
-  public void testNav() {
-  }
-
-  @AfterSuite
-  public void afterSuite() {
+public interface BaseSteps {
+  static void tearDown() {
+    BasePage.clearPages();
     WebBrowser.closeBrowser();
   }
-
 }

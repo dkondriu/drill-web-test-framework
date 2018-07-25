@@ -16,5 +16,19 @@
  */
 package testng.secure;
 
-public class BaseSecureTest {
+import initial.WebBrowser;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
+import testng.BaseTest;
+
+public class BaseSecureTest extends BaseTest {
+  @BeforeSuite
+  public void beforeSuite() {
+
+  }
+
+  @AfterSuite
+  public void afterSuite() {
+
+  }
 }

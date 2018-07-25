@@ -28,7 +28,7 @@ public abstract class TestProperties {
   public static String drillUserPassword;
 
   static {
-    try (FileInputStream in = new FileInputStream("init.properties")) {
+    try (FileInputStream in = new FileInputStream("conf/init.properties")) {
       Properties p = new Properties();
       p.load(in);
       drillHost = p.getProperty("DRILL_HOST");

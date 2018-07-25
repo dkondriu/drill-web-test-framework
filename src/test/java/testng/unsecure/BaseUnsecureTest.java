@@ -19,15 +19,17 @@ package testng.unsecure;
 import initial.WebBrowser;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import steps.AuthSteps;
 import testng.BaseTest;
 
 public class BaseUnsecureTest extends BaseTest {
   @BeforeSuite
   public void beforeSuite() {
-
+    AuthSteps.login();
   }
 
   @AfterSuite
   public void afterSuite() {
+    AuthSteps.logOut();
   }
 }

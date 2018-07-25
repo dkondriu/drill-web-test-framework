@@ -16,5 +16,20 @@
  */
 package testng.secure.login;
 
-public class LoginTest {
+import initial.WebBrowser;
+import org.testng.annotations.Test;
+import pages.BasePage;
+import pages.LoginNavigatePage;
+import pages.LogoutNavigatePage;
+import steps.AuthSteps;
+import testng.secure.BaseSecureTest;
+
+public class LoginTest extends BaseSecureTest {
+  @Test(groups = {"functional"})
+  public void testLogin() {
+    AuthSteps.login();
+    assert BasePage.getPage(LogoutNavigatePage.class).isAuthorized() : "Login failed";
+    AuthSteps.logOut();
+    assert BasePage.getPage(LoginNavigatePage.class).readyToLogin() : "Logout failed";
+  }
 }

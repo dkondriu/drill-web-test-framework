@@ -14,22 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package testng.unsecure.nav;
+package pages;
 
-import initial.WebBrowser;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.Test;
-import testng.unsecure.BaseUnsecureTest;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
-public class NavigationTest extends BaseUnsecureTest {
+public class MainLoginPage extends BasePage {
+  @FindBy(partialLinkText = "Login using FORM AUTHENTICATION")
+  private WebElement loginUsingAuthentication;
 
-  @Test(groups = { "functional" })
-  public void testNav() {
+  public LoginPage openLoginPage() {
+    loginUsingAuthentication.click();
+    return getPage(LoginPage.class);
   }
-
-  @AfterSuite
-  public void afterSuite() {
-    WebBrowser.closeBrowser();
-  }
-
 }
