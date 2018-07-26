@@ -16,7 +16,6 @@
  */
 package pages;
 
-import initial.TestProperties;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -30,10 +29,28 @@ public class LoginPage extends BasePage {
   @FindBy(xpath = "/html/body/div[2]/div[2]/form/fieldset/div/p[3]/button")
   private WebElement submitLogin;
 
-  public NavigatePage authenticate() {
-    userName.sendKeys(TestProperties.drillUserName);
-    userPassword.sendKeys(TestProperties.drillUserPassword);
+  public String getLoginTitle() {
+    return loginTitle.getText();
+  }
+
+  public String getUserName() {
+    return userName.getAttribute("value");
+  }
+
+  public void setUserName(String userName) {
+    this.userName.sendKeys(userName);
+  }
+
+  public String getUserPassword() {
+    return userPassword.getAttribute("value");
+  }
+
+  public void setUserPassword(String userPassword) {
+    this.userPassword.sendKeys(userPassword);
+  }
+
+  public NavigationPage submit() {
     submitLogin.click();
-    return getPage(NavigatePage.class);
+    return getPage(NavigationPage.class);
   }
 }

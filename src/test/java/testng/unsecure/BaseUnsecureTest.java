@@ -16,7 +16,7 @@
  */
 package testng.unsecure;
 
-import initial.WebBrowser;
+import initial.TestProperties;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import steps.AuthSteps;
@@ -25,7 +25,7 @@ import testng.BaseTest;
 public class BaseUnsecureTest extends BaseTest {
   @BeforeSuite
   public void beforeSuite() {
-    AuthSteps.login();
+    AuthSteps.login(TestProperties.drillUserName, TestProperties.drillUserPassword);
   }
 
   @AfterSuite

@@ -17,18 +17,21 @@
 package steps;
 
 import pages.BasePage;
-import pages.LoginNavigatePage;
 import pages.LoginPage;
-import pages.LogoutNavigatePage;
-import pages.MainLoginPage;
+import pages.NavigationPage;
 
 public interface AuthSteps {
-  static void login() {
-    BasePage.getPage(LoginNavigatePage.class).openMainLoginPage();
-    BasePage.getPage(MainLoginPage.class).openLoginPage();
-    BasePage.getPage(LoginPage.class).authenticate();
+  static NavigationPage login(String login, String password) {
+    LoginPage lp = BasePage.getPage(NavigationPage.class)
+        .navigateLogin()
+        .openLoginPage();
+    lp.setUserName(login);
+    lp.setUserPassword(password);
+    return lp.submit();
   }
-  static void logOut() {
-    BasePage.getPage(LogoutNavigatePage.class).logout();
+
+  static NavigationPage logOut() {
+    return BasePage.getPage(NavigationPage.class)
+        .navigateLogout();
   }
 }

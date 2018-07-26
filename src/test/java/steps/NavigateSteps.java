@@ -16,9 +16,6 @@
  */
 package steps;
 
-import pages.BasePage;
-import pages.NavigatePage;
-
 public interface NavigateSteps {
 
 }

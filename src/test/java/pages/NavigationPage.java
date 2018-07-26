@@ -16,11 +16,10 @@
  */
 package pages;
 
-import initial.WebBrowser;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class NavigatePage extends BasePage {
+public class NavigationPage extends BasePage {
   @FindBy(partialLinkText = "Apache Drill")
   private WebElement home;
   @FindBy(partialLinkText = "Query")
@@ -39,6 +38,10 @@ public class NavigatePage extends BasePage {
   private WebElement options;
   @FindBy(partialLinkText = "Documentation")
   private WebElement documentation;
+  @FindBy(partialLinkText = "Log In")
+  private WebElement login;
+  @FindBy(partialLinkText = "Log Out (")
+  private WebElement logout;
 
   public void navigateHome() {
     home.click();
@@ -75,6 +78,24 @@ public class NavigatePage extends BasePage {
 
   public void navigateDocumentation() {
     documentation.click();
+  }
+
+  public ChooseAuthMethodPage navigateLogin() {
+    login.click();
+    return getPage(ChooseAuthMethodPage.class);
+  }
+
+  public NavigationPage navigateLogout() {
+    logout.click();
+    return getPage(NavigationPage.class);
+  }
+
+  public String getLoginText() {
+    return login.getText();
+  }
+
+  public String getLogoutText() {
+    return logout.getText();
   }
 
 }

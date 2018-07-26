@@ -20,14 +20,14 @@ import pages.*;
 
 public interface QuerySteps {
   static String runSimpleQuery(String queryText) {
-    return BasePage.getPage(NavigatePage.class)
+    return BasePage.getPage(NavigationPage.class)
         .navigateQuery()
         .submitQuery(queryText)
         .getFirstResultCell();
   }
 
   static void runQuery(String queryText) {
-    BasePage.getPage(NavigatePage.class)
+    BasePage.getPage(NavigationPage.class)
         .navigateQuery()
         .submitQuery(queryText);
   }
