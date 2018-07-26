@@ -25,11 +25,15 @@ import testng.BaseTest;
 public class BaseUnsecureTest extends BaseTest {
   @BeforeSuite
   public void beforeSuite() {
-    AuthSteps.login(TestProperties.drillUserName, TestProperties.drillUserPassword);
+    if(TestProperties.secureDrill) {
+      AuthSteps.login(TestProperties.drillUserName, TestProperties.drillUserPassword);
+    }
   }
 
   @AfterSuite
   public void afterSuite() {
-    AuthSteps.logOut();
+    if(TestProperties.secureDrill) {
+      AuthSteps.logOut();
+    }
   }
 }
