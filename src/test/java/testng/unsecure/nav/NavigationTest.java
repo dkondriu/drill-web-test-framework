@@ -16,20 +16,15 @@
  */
 package testng.unsecure.nav;
 
-import initial.WebBrowser;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Test;
 import testng.unsecure.BaseUnsecureTest;
 
+import static org.testng.Assert.*;
+
 public class NavigationTest extends BaseUnsecureTest {
 
-  @Test(groups = { "functional" })
+  @Test(groups = {"functional"})
   public void testNav() {
-  }
-
-  @AfterSuite
-  public void afterSuite() {
-    WebBrowser.closeBrowser();
   }
 
 }

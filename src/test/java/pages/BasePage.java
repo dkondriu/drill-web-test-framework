@@ -25,7 +25,7 @@ import java.util.Map;
 
 public abstract class BasePage {
 
-  private static Map<Class<? extends BasePage>, BasePage> Pages;
+  private static Map<Class<? extends BasePage>, BasePage> pages;
 
   BasePage() {
     PageFactory.initElements(getDriver(), this);
@@ -33,13 +33,13 @@ public abstract class BasePage {
 
   public static <T extends BasePage> T getPage(Class<T> pageClass) {
 
-    if (Pages == null) {
-      Pages = new HashMap<>();
+    if (pages == null) {
+      pages = new HashMap<>();
     }
 
-    if (!Pages.containsKey(pageClass)) {
+    if (!pages.containsKey(pageClass)) {
       try {
-        Pages.put(pageClass, pageClass.newInstance());
+        pages.put(pageClass, pageClass.newInstance());
       } catch (InstantiationException | IllegalAccessException e) {
         WebBrowser.closeBrowser();
         e.printStackTrace();
@@ -47,11 +47,11 @@ public abstract class BasePage {
       }
     }
 
-    return pageClass.cast(Pages.get(pageClass));
+    return pageClass.cast(pages.get(pageClass));
   }
 
   public static void clearPages() {
-    Pages.clear();
+    pages.clear();
   }
 
   protected static WebDriver getDriver() {

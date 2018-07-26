@@ -6,7 +6,7 @@
 
   <groupId>com.cybervisiontech</groupId>
   <artifactId>drill-webui-test-framework</artifactId>
-  <version>1.1</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <dependencies>
@@ -24,19 +24,6 @@
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <version>6.14.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.cucumber</groupId>
-      <artifactId>cucumber-java</artifactId>
-      <version>3.0.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.cucumber</groupId>
-      <artifactId>cucumber-junit</artifactId>
-      <version>3.0.1</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 

@@ -16,7 +16,9 @@
  */
 package steps;
 
-import pages.*;
+import pages.BasePage;
+import pages.NavigationPage;
+import pages.QueryResultsPage;
 
 public interface QuerySteps {
   static String runSimpleQuery(String queryText) {
@@ -26,8 +28,8 @@ public interface QuerySteps {
         .getFirstResultCell();
   }
 
-  static void runQuery(String queryText) {
-    BasePage.getPage(NavigationPage.class)
+  static QueryResultsPage runQuery(String queryText) {
+    return BasePage.getPage(NavigationPage.class)
         .navigateQuery()
         .submitQuery(queryText);
   }

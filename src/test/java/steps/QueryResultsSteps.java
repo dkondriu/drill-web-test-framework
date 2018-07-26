@@ -19,7 +19,6 @@ package steps;
 import pages.BasePage;
 import pages.QueryResultsPage;
 
-import java.util.Arrays;
 import java.util.List;
 
 public interface QueryResultsSteps {
@@ -28,15 +27,16 @@ public interface QueryResultsSteps {
         .getResultsTableBody()
         .size();
   }
+
   static int columnsCount() {
     return BasePage.getPage(QueryResultsPage.class)
         .getResultsTableHeader()
         .size();
   }
-  static boolean rowEqualTo(int rowId, List<String> rowToCompare) {
+
+  static List getRow(int rowId) {
     return BasePage.getPage(QueryResultsPage.class)
         .getResultsTableBody()
-        .get(rowId)
-        .equals(rowToCompare);
+        .get(rowId);
   }
 }

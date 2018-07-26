@@ -22,10 +22,13 @@ import org.openqa.selenium.support.FindBy;
 public class LoginPage extends BasePage {
   @FindBy(xpath = "/html/body/div[2]/div[2]/form/fieldset/div/h4")
   private WebElement loginTitle;
+
   @FindBy(xpath = "//*[@name=\"j_username\"]")
   private WebElement userName;
+
   @FindBy(xpath = "//*[@name=\"j_password\"]")
   private WebElement userPassword;
+
   @FindBy(xpath = "/html/body/div[2]/div[2]/form/fieldset/div/p[3]/button")
   private WebElement submitLogin;
 
@@ -37,16 +40,18 @@ public class LoginPage extends BasePage {
     return userName.getAttribute("value");
   }
 
-  public void setUserName(String userName) {
+  public LoginPage setUserName(String userName) {
     this.userName.sendKeys(userName);
+    return this;
   }
 
   public String getUserPassword() {
     return userPassword.getAttribute("value");
   }
 
-  public void setUserPassword(String userPassword) {
+  public LoginPage setUserPassword(String userPassword) {
     this.userPassword.sendKeys(userPassword);
+    return this;
   }
 
   public NavigationPage submit() {
