@@ -16,7 +16,6 @@
  */
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -27,39 +26,41 @@ public class QueryResultsPage extends BasePage {
   @FindBy(xpath = "//*[@id=\"result\"]/tbody/tr/td")
   private WebElement queryResultLine;
   @FindBy(xpath = "//*[@id=\"result_wrapper\"]/div[2]/div[1]/div/table/thead")
-  private WebElement queryResultTableHead;
+  private WebElement queryResultTableHeader;
   @FindBy(xpath = "//*[@id=\"result\"]/tbody")
   private WebElement queryResultTableBody;
+  public static List<List<String>> resultsTable = new LinkedList<>();
+
+  public List<String> getResultsTableHeader() {
+    List<String> resultsTableHead = new LinkedList<>();
+    for(String column : queryResultTableHeader.getAttribute("outerHTML").split("<th")){
+      if(!column.contains("</th>")) {
+        continue;
+      }
+      resultsTableHead.add(column.
+          replaceAll("<span .*", "").
+          replaceAll(".*class=\"DataTables_sort_wrapper\">", "").
+          replaceAll("</thead>", "").trim());
+    }
+    return resultsTableHead;
+  }
+
+  public List<List<String>> getResultsTableBody() {
+    List<List<String>> resultsTable = new LinkedList<>();
+    for(String row : queryResultTableBody.getAttribute("outerHTML").split("<tr")){
+      if(!row.contains("</tr>")) {
+        continue;
+      }
+      List<String> columns = new LinkedList<>();
+      for(String column : row.replaceAll("</tr>.*", "").trim().split("</td>")) {
+        columns.add(column.replaceAll(".*>", "").trim());
+      }
+      resultsTable.add(columns);
+    }
+    return resultsTable;
+  }
 
   public String getFirstResultCell() {
     return queryResultLine.getText();
   }
-
-  public List<List<String>> getResultsTable() {
-    List<List<String>> rows = new LinkedList<>();
-    rows.add(getResultTableHead());
-    rows.addAll(getResultTableBody());
-    return rows;
-  }
-
-  private List<String> getResultTableHead() {
-    List<String> columns = new LinkedList<>();
-    for(WebElement el : queryResultTableHead.findElements(By.tagName("div"))) {
-      columns.add(el.getText());
-    }
-    return columns;
-  }
-
-  private List<List<String>> getResultTableBody() {
-    List<List<String>> rows = new LinkedList<>();
-    for(WebElement tr : queryResultTableBody.findElements(By.tagName("tr"))) {
-      List<String> row = new LinkedList<>();
-      for(WebElement td : tr.findElements(By.tagName("td"))) {
-        row.add(td.getText());
-      }
-      rows.add(row);
-    }
-    return rows;
-  }
-
 }

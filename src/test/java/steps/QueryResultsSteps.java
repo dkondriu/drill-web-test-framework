@@ -19,23 +19,24 @@ package steps;
 import pages.BasePage;
 import pages.QueryResultsPage;
 
+import java.util.Arrays;
 import java.util.List;
 
 public interface QueryResultsSteps {
-  static int getResultsTableColumnsCount(int rowNumber) {
+  static int rowsCount() {
     return BasePage.getPage(QueryResultsPage.class)
-        .getResultsTable()
-        .get(rowNumber)
+        .getResultsTableBody()
         .size();
   }
-  static int getResultsTableRowsCount() {
+  static int columnsCount() {
     return BasePage.getPage(QueryResultsPage.class)
-        .getResultsTable()
+        .getResultsTableHeader()
         .size();
   }
-  static List<String> getResultsTableRow(int rowNumber) {
+  static boolean rowEqualTo(int rowId, List<String> rowToCompare) {
     return BasePage.getPage(QueryResultsPage.class)
-        .getResultsTable()
-        .get(rowNumber);
+        .getResultsTableBody()
+        .get(rowId)
+        .equals(rowToCompare);
   }
 }

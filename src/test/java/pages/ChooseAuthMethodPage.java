@@ -16,19 +16,15 @@
  */
 package pages;
 
-import initial.TestProperties;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class LogoutNavigatePage extends BasePage {
-  @FindBy(partialLinkText = "Log Out (")
-  private WebElement logoutButton;
-  
-  public void logout() {
-    logoutButton.click();
-  }
-  public boolean isAuthorized(){
-    return logoutButton.getText().trim().contains("Log Out (" + TestProperties.drillUserName + ")");
-  }
+public class ChooseAuthMethodPage extends BasePage {
+  @FindBy(partialLinkText = "Login using FORM AUTHENTICATION")
+  private WebElement loginUsingAuthentication;
 
+  public LoginPage openLoginPage() {
+    loginUsingAuthentication.click();
+    return getPage(LoginPage.class);
+  }
 }

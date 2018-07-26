@@ -16,20 +16,23 @@
  */
 package testng.secure.login;
 
-import initial.WebBrowser;
+import initial.TestProperties;
 import org.testng.annotations.Test;
-import pages.BasePage;
-import pages.LoginNavigatePage;
-import pages.LogoutNavigatePage;
 import steps.AuthSteps;
 import testng.secure.BaseSecureTest;
 
 public class LoginTest extends BaseSecureTest {
   @Test(groups = {"functional"})
   public void testLogin() {
-    AuthSteps.login();
-    assert BasePage.getPage(LogoutNavigatePage.class).isAuthorized() : "Login failed";
-    AuthSteps.logOut();
-    assert BasePage.getPage(LoginNavigatePage.class).readyToLogin() : "Logout failed";
+    assert AuthSteps.login(
+        TestProperties.drillUserName,
+        TestProperties.drillUserPassword)
+        .getLogoutText().equals("Log Out (" + TestProperties.drillUserName + ")") : "Login failed";
+  }
+  @Test(groups = {"functional"})
+  public void testLogout() {
+    assert AuthSteps
+        .logOut()
+        .getLoginText().equals("Log In") : "Logout failed";
   }
 }
