@@ -16,7 +16,6 @@
  */
 package testng.secure;
 
-import initial.WebBrowser;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import testng.BaseTest;

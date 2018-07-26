@@ -22,24 +22,34 @@ import org.openqa.selenium.support.FindBy;
 public class NavigationPage extends BasePage {
   @FindBy(partialLinkText = "Apache Drill")
   private WebElement home;
+
   @FindBy(partialLinkText = "Query")
   private WebElement query;
+
   @FindBy(partialLinkText = "Profiles")
   private WebElement profiles;
+
   @FindBy(partialLinkText = "Storage")
   private WebElement storage;
+
   @FindBy(partialLinkText = "Metrics")
   private WebElement metrics;
+
   @FindBy(partialLinkText = "Threads")
   private WebElement threads;
+
   @FindBy(partialLinkText = "Logs")
   private WebElement logs;
+
   @FindBy(partialLinkText = "Options")
   private WebElement options;
+
   @FindBy(partialLinkText = "Documentation")
   private WebElement documentation;
+
   @FindBy(partialLinkText = "Log In")
   private WebElement login;
+
   @FindBy(partialLinkText = "Log Out (")
   private WebElement logout;
 

@@ -21,18 +21,18 @@ import org.testng.annotations.Test;
 import steps.AuthSteps;
 import testng.secure.BaseSecureTest;
 
+import static org.testng.Assert.*;
+
 public class LoginTest extends BaseSecureTest {
   @Test(groups = {"functional"})
   public void testLogin() {
-    assert AuthSteps.login(
-        TestProperties.drillUserName,
-        TestProperties.drillUserPassword)
-        .getLogoutText().equals("Log Out (" + TestProperties.drillUserName + ")") : "Login failed";
+    assertEquals(
+        AuthSteps.login(TestProperties.drillUserName, TestProperties.drillUserPassword).getLogoutText(),
+        "Log Out (" + TestProperties.drillUserName + ")", "Login failed");
   }
+
   @Test(groups = {"functional"})
   public void testLogout() {
-    assert AuthSteps
-        .logOut()
-        .getLoginText().equals("Log In") : "Logout failed";
+    assertEquals(AuthSteps.logOut().getLoginText(), "Log In", "Logout failed");
   }
 }

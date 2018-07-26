@@ -22,16 +22,15 @@ import pages.NavigationPage;
 
 public interface AuthSteps {
   static NavigationPage login(String login, String password) {
-    LoginPage lp = BasePage.getPage(NavigationPage.class)
+    return BasePage.getPage(NavigationPage.class)
         .navigateLogin()
-        .openLoginPage();
-    lp.setUserName(login);
-    lp.setUserPassword(password);
-    return lp.submit();
+        .openLoginPage()
+        .setUserName(login)
+        .setUserPassword(password)
+        .submit();
   }
 
   static NavigationPage logOut() {
-    return BasePage.getPage(NavigationPage.class)
-        .navigateLogout();
+    return BasePage.getPage(NavigationPage.class).navigateLogout();
   }
 }

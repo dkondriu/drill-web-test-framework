@@ -58,7 +58,7 @@ public abstract class WebBrowser {
   }
 
   public static void closeBrowser() {
-    if(driver != null) {
+    if (driver != null) {
       driver.quit();
       driver = null;
     }
@@ -69,6 +69,5 @@ public abstract class WebBrowser {
       Thread.sleep(seconds * 1000);
     } catch (Exception ignore) {
     }
-    //driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
   }
 }

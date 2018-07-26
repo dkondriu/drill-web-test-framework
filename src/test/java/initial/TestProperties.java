@@ -21,10 +21,15 @@ import java.util.Properties;
 
 public abstract class TestProperties {
   public static String drillHost;
+
   public static WebBrowser.DRIVER driverType;
+
   public static String webdriversPath;
+
   public static boolean secureDrill;
+
   public static String drillUserName;
+
   public static String drillUserPassword;
 
   static {
@@ -38,7 +43,7 @@ public abstract class TestProperties {
       drillUserName = p.getProperty("DRILL_USER_NAME");
       drillUserPassword = p.getProperty("DRILL_USER_PASSWORD");
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
   }
 }
