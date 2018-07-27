@@ -17,11 +17,14 @@
 package steps;
 
 import pages.BasePage;
-import pages.LoginPage;
 import pages.NavigationPage;
 
-public interface AuthSteps {
-  static NavigationPage login(String login, String password) {
+public final class AuthSteps {
+
+  private AuthSteps() {
+  }
+
+  public static NavigationPage login(String login, String password) {
     return BasePage.getPage(NavigationPage.class)
         .navigateLogin()
         .openLoginPage()
@@ -30,7 +33,8 @@ public interface AuthSteps {
         .submit();
   }
 
-  static NavigationPage logOut() {
-    return BasePage.getPage(NavigationPage.class).navigateLogout();
+  public static NavigationPage logOut() {
+    return BasePage.getPage(NavigationPage.class)
+        .navigateLogout();
   }
 }

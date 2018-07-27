@@ -19,8 +19,12 @@ package steps;
 import initial.WebBrowser;
 import pages.BasePage;
 
-public interface BaseSteps {
-  static void tearDown() {
+public final class BaseSteps {
+
+  private BaseSteps(){
+  }
+
+  public static void tearDown() {
     BasePage.clearPages();
     WebBrowser.closeBrowser();
   }

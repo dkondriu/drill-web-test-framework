@@ -16,6 +16,9 @@
  */
 package steps;
 
-public interface NavigateSteps {
+public final class NavigateSteps {
+
+  private NavigateSteps() {
+  }
 
 }

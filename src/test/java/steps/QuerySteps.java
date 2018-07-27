@@ -20,15 +20,19 @@ import pages.BasePage;
 import pages.NavigationPage;
 import pages.QueryResultsPage;
 
-public interface QuerySteps {
-  static String runSimpleQuery(String queryText) {
+public final class QuerySteps {
+
+  private QuerySteps() {
+  }
+
+  public static String runSimpleQuery(String queryText) {
     return BasePage.getPage(NavigationPage.class)
         .navigateQuery()
         .submitQuery(queryText)
         .getFirstResultCell();
   }
 
-  static QueryResultsPage runQuery(String queryText) {
+  public static QueryResultsPage runQuery(String queryText) {
     return BasePage.getPage(NavigationPage.class)
         .navigateQuery()
         .submitQuery(queryText);

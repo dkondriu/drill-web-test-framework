@@ -21,20 +21,24 @@ import pages.QueryResultsPage;
 
 import java.util.List;
 
-public interface QueryResultsSteps {
-  static int rowsCount() {
+public final class QueryResultsSteps {
+
+  private QueryResultsSteps() {
+  }
+
+  public static int rowsCount() {
     return BasePage.getPage(QueryResultsPage.class)
         .getResultsTableBody()
         .size();
   }
 
-  static int columnsCount() {
+  public static int columnsCount() {
     return BasePage.getPage(QueryResultsPage.class)
         .getResultsTableHeader()
         .size();
   }
 
-  static List getRow(int rowId) {
+  public static List getRow(int rowId) {
     return BasePage.getPage(QueryResultsPage.class)
         .getResultsTableBody()
         .get(rowId);
