@@ -16,6 +16,7 @@
  */
 package pages;
 
+import initial.WebBrowser;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -25,6 +26,7 @@ public class ChooseAuthMethodPage extends BasePage {
 
   public LoginPage openLoginPage() {
     loginUsingAuthentication.click();
+    WebBrowser.waitSeconds(1);
     return getPage(LoginPage.class);
   }
 }

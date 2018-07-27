@@ -16,6 +16,7 @@
  */
 package pages;
 
+import initial.WebBrowser;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -41,6 +42,7 @@ public class LoginPage extends BasePage {
   }
 
   public LoginPage setUserName(String userName) {
+    this.userName.clear();
     this.userName.sendKeys(userName);
     return this;
   }
@@ -50,12 +52,14 @@ public class LoginPage extends BasePage {
   }
 
   public LoginPage setUserPassword(String userPassword) {
+    this.userPassword.clear();
     this.userPassword.sendKeys(userPassword);
     return this;
   }
 
   public NavigationPage submit() {
     submitLogin.click();
+    WebBrowser.waitSeconds(1);
     return getPage(NavigationPage.class);
   }
 }

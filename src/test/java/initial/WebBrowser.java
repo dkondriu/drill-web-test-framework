@@ -18,23 +18,37 @@ package initial;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 
 public abstract class WebBrowser {
   public enum DRIVER {
-    CHROME_WINDOWS, CHROME_LINUX, FIREFOX_WINDOWS, FIREFOX_LINUX
+    CHROME, FIREFOX, IE, EDGE
   }
 
   private static WebDriver driver;
 
   public static void init() {
-    System.setProperty("webdriver.chrome.driver", TestProperties.webdriversPath);
-    //todo: download other webdrivers
-    //todo: add windows support
     switch (TestProperties.driverType) {
-      case CHROME_LINUX:
+      case CHROME:
+        System.setProperty("webdriver.chrome.driver", TestProperties.webdriversPath);
         driver = new ChromeDriver();
         break;
+      case FIREFOX:
+        System.setProperty("webdriver.gecko.driver", TestProperties.webdriversPath);
+        driver = new FirefoxDriver();
+        break;
+      case IE:
+        System.setProperty("webdriver.ie.driver", TestProperties.webdriversPath);
+        driver = new InternetExplorerDriver();
+        break;
+      case EDGE:
+        System.setProperty("webdriver.edge.driver", TestProperties.webdriversPath);
+        driver = new EdgeDriver();
+        break;
       default:
+        System.setProperty("webdriver.chrome.driver", TestProperties.webdriversPath);
         driver = new ChromeDriver();
     }
     driver.get(TestProperties.drillHost);

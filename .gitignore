@@ -2,3 +2,4 @@
 drill-webui-test-framework.iml
 target
 conf/init.properties
+conf\init.properties

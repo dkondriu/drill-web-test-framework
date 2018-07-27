@@ -16,6 +16,7 @@
  */
 package pages;
 
+import initial.WebBrowser;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -54,6 +55,7 @@ public class QueryPage extends BasePage {
   public QueryResultsPage submitQuery(String queryText) {
     queryInputField.sendKeys(queryText);
     submitButton.click();
+    WebBrowser.waitSeconds(2);
     return getPage(QueryResultsPage.class);
   }
 

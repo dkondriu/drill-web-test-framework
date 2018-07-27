@@ -16,6 +16,7 @@
  */
 package pages;
 
+import initial.WebBrowser;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -55,48 +56,59 @@ public class NavigationPage extends BasePage {
 
   public void navigateHome() {
     home.click();
+    WebBrowser.waitSeconds(1);
   }
 
   public QueryPage navigateQuery() {
     query.click();
+    WebBrowser.waitSeconds(1);
     return getPage(QueryPage.class);
   }
 
   public void navigateProfiles() {
     profiles.click();
+    WebBrowser.waitSeconds(1);
   }
 
   public void navigateStorage() {
     storage.click();
+    WebBrowser.waitSeconds(1);
   }
 
   public void navigateMetrics() {
     metrics.click();
+    WebBrowser.waitSeconds(1);
   }
 
   public void navigateThreads() {
     threads.click();
+    WebBrowser.waitSeconds(1);
   }
 
   public void navigateLogs() {
     logs.click();
+    WebBrowser.waitSeconds(1);
   }
 
   public void navigateOptions() {
     options.click();
+    WebBrowser.waitSeconds(1);
   }
 
   public void navigateDocumentation() {
     documentation.click();
+    WebBrowser.waitSeconds(1);
   }
 
   public ChooseAuthMethodPage navigateLogin() {
     login.click();
+    WebBrowser.waitSeconds(1);
     return getPage(ChooseAuthMethodPage.class);
   }
 
   public NavigationPage navigateLogout() {
     logout.click();
+    WebBrowser.waitSeconds(1);
     return getPage(NavigationPage.class);
   }
 
