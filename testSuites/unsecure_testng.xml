@@ -1,12 +1,17 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <!-- mvn clean test -Dsurefire.suiteXmlFiles=testSuites/unsecure_testng.xml -->
 <suite name="Unsecure tests" verbose="2" annotations="JDK">
+  <listeners>
+    <listener class-name="org.apache.drillui.test.framework.testng.TestEventsListener" />
+  </listeners>
   <test name="a-t1" preserve-order="true" >
     <classes>
-      <class name="testng.unsecure.BaseUnsecureTest" />
-      <class name="testng.unsecure.nav.NavigationTest" />
-      <class name="testng.unsecure.query.DateOutputTest" />
-      <class name="testng.unsecure.query.ResultsTableTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.nav.NavigationTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.query.DateOutputTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.query.ResultsTableTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.query.ErrorTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.query.ResultsExceptionsTest" />
     </classes>
   </test>
 </suite>
