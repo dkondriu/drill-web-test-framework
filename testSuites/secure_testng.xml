@@ -1,10 +1,13 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <!-- mvn clean test -Dsurefire.suiteXmlFiles=testSuites/secure_testng.xml -->
 <suite name="Secure tests" verbose="2" annotations="JDK">
+  <listeners>
+    <listener class-name="org.apache.drillui.test.framework.testng.TestEventsListener" />
+  </listeners>
   <test name="a-t1" preserve-order="true" >
     <classes>
-      <class name="testng.secure.BaseSecureTest" />
-      <class name="testng.secure.login.LoginTest" />
+      <class name="org.apache.drillui.test.framework.testng.secure.BaseSecureTest" />
+      <class name="org.apache.drillui.test.framework.testng.secure.login.LoginTest" />
     </classes>
   </test>
 </suite>
