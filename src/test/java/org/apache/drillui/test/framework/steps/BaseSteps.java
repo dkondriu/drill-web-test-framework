@@ -21,7 +21,15 @@ import org.apache.drillui.test.framework.pages.BasePage;
 
 public final class BaseSteps {
 
-  private BaseSteps(){
+  private BaseSteps() {
+  }
+
+  public static void setImplicitWait(int seconds) {
+    WebBrowser.setImplicitWait(seconds);
+  }
+
+  public static void resetImplicitWait() {
+    WebBrowser.resetImplicitWait();
   }
 
   public static void tearDown() {

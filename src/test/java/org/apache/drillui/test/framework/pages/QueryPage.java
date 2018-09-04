@@ -56,7 +56,6 @@ public class QueryPage extends BasePage {
   public QueryResultsPage submitQuery(String queryText) {
     queryInputField.sendKeys(queryText);
     submitButton.click();
-    WebBrowser.waitSeconds(TestProperties.defaultTimeout);
     return getPage(QueryResultsPage.class);
   }
 

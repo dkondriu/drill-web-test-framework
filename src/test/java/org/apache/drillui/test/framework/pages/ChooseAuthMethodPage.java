@@ -27,7 +27,6 @@ public class ChooseAuthMethodPage extends BasePage {
 
   public LoginPage openLoginPage() {
     loginUsingAuthentication.click();
-    WebBrowser.waitSeconds(TestProperties.defaultTimeout);
     return getPage(LoginPage.class);
   }
 }

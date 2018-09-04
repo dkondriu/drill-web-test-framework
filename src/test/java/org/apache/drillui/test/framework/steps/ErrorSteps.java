@@ -31,7 +31,6 @@ public final class ErrorSteps {
    * @return JSON text with Drill WebUI error message
    */
   public static String getFullStackTrace() {
-    WebBrowser.waitSeconds(TestProperties.defaultTimeout);
     return BasePage.getPage(ErrorPage.class).getFullStackTrace();
   }
 }

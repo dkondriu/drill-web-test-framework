@@ -27,13 +27,11 @@ public final class QueryExceptionsSteps {
   }
 
   public static boolean hasException() {
-    WebBrowser.waitSeconds(TestProperties.defaultTimeout);
     String exception = BasePage.getPage(QueryExceptionPage.class).getFullStackTrace();
     return !exception.isEmpty();
   }
 
   public static String getFullStackTrace() {
-    WebBrowser.waitSeconds(TestProperties.defaultTimeout);
     return BasePage.getPage(QueryExceptionPage.class).getFullStackTrace();
   }
 }

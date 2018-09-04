@@ -60,7 +60,6 @@ public class LoginPage extends BasePage {
 
   public NavigationPage submit() {
     submitLogin.click();
-    WebBrowser.waitSeconds(TestProperties.defaultTimeout);
     return getPage(NavigationPage.class);
   }
 }

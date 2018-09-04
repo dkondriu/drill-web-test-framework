@@ -22,6 +22,8 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
+import java.util.concurrent.TimeUnit;
+
 public abstract class WebBrowser {
   public enum DRIVER {
     CHROME, FIREFOX, IE, EDGE
@@ -51,8 +53,17 @@ public abstract class WebBrowser {
         System.setProperty("webdriver.chrome.driver", TestProperties.webdriversPath);
         driver = new ChromeDriver();
     }
+    resetImplicitWait();
     driver.get(TestProperties.drillHost);
     maximizeWindow();
+  }
+
+  public static void setImplicitWait (int seconds) {
+    getDriver().manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
+  }
+
+  public static void resetImplicitWait () {
+    setImplicitWait(TestProperties.defaultTimeout);
   }
 
   public static WebDriver getDriver() {
@@ -78,10 +89,4 @@ public abstract class WebBrowser {
     }
   }
 
-  public static void waitSeconds(int seconds) {
-    try {
-      Thread.sleep(seconds * 1000);
-    } catch (Exception ignore) {
-    }
-  }
 }
