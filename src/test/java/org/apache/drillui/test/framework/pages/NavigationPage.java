@@ -68,8 +68,9 @@ public class NavigationPage extends BasePage {
     profiles.click();
   }
 
-  public void navigateStorage() {
+  public StoragePage navigateStorage() {
     storage.click();
+    return BasePage.getPage(StoragePage.class);
   }
 
   public void navigateMetrics() {

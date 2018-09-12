@@ -16,9 +16,18 @@
  */
 package org.apache.drillui.test.framework.steps;
 
+import org.apache.drillui.test.framework.pages.BasePage;
+import org.apache.drillui.test.framework.pages.NavigationPage;
+import org.apache.drillui.test.framework.pages.StoragePage;
+
 public final class NavigateSteps {
 
   private NavigateSteps() {
   }
+
+  public static StoragePage navigateStorage() {
+    return BasePage.getPage(NavigationPage.class).navigateStorage();
+  }
+
 
 }
