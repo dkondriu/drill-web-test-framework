@@ -21,32 +21,55 @@ import java.util.Properties;
 
 public abstract class TestProperties {
   public static String drillHost;
-
+  public static String OS = getOSType();
   public static WebBrowser.DRIVER driverType;
-
   public static String webdriversPath;
-
   public static boolean secureDrill;
-
   public static int defaultTimeout;
-
   public static String drillUserName;
-
   public static String drillUserPassword;
 
   static {
     try (FileInputStream in = new FileInputStream("conf/init.properties")) {
       Properties p = new Properties();
       p.load(in);
-      drillHost = p.getProperty("DRILL_HOST");
-      driverType = WebBrowser.DRIVER.valueOf(p.getProperty("DRIVER_TYPE"));
-      webdriversPath = p.getProperty("WEBDRIVERS_PATH");
-      secureDrill = Boolean.parseBoolean(p.getProperty("SECURE_DRILL"));
-      defaultTimeout = Integer.parseInt(p.getProperty("DEFAULT_TIMEOUT"));
-      drillUserName = p.getProperty("DRILL_USER_NAME");
-      drillUserPassword = p.getProperty("DRILL_USER_PASSWORD");
+      drillHost = loadParameter(p, "DRILL_HOST");
+      driverType = WebBrowser.DRIVER.valueOf(loadParameter(p, "DRIVER_TYPE"));
+      webdriversPath = getWebdriversPath();
+      secureDrill = Boolean.parseBoolean(loadParameter(p, "SECURE_DRILL"));
+      defaultTimeout = Integer.parseInt(loadParameter(p, "DEFAULT_TIMEOUT"));
+      drillUserName = loadParameter(p, "DRILL_USER_NAME");
+      drillUserPassword = loadParameter(p, "DRILL_USER_PASSWORD");
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private static String getOSType() {
+    String os = System.getProperty("os.name").toLowerCase();
+    if(os.contains("win")) {
+      return "WINDOWS";
+    } else if(os.contains("mac")) {
+      return "MACOS";
+    } else if(os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+      return "LINUX";
+    }
+    return null;
+  }
+
+  private static String loadParameter(Properties initFile, String parameterName) {
+    String property = System.getProperty(parameterName);
+    if(property == null) {
+      property = initFile.getProperty(parameterName);
+    }
+    return property;
+  }
+
+  private static String getWebdriversPath() {
+    String path = "webdrivers/" + OS + "_" + driverType;
+    if(OS.equals("WINDOWS")) {
+      path += ".exe";
+    }
+    return path;
   }
 }
