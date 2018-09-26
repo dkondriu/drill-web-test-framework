@@ -20,26 +20,13 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 public abstract class TestProperties {
-  public static String drillHost;
+  public static Properties p;
   public static String OS = getOSType();
-  public static WebBrowser.DRIVER driverType;
-  public static String webdriversPath;
-  public static boolean secureDrill;
-  public static int defaultTimeout;
-  public static String drillUserName;
-  public static String drillUserPassword;
 
   static {
     try (FileInputStream in = new FileInputStream("conf/init.properties")) {
-      Properties p = new Properties();
+      p = new Properties();
       p.load(in);
-      drillHost = loadParameter(p, "DRILL_HOST");
-      driverType = WebBrowser.DRIVER.valueOf(loadParameter(p, "DRIVER_TYPE"));
-      webdriversPath = getWebdriversPath();
-      secureDrill = Boolean.parseBoolean(loadParameter(p, "SECURE_DRILL"));
-      defaultTimeout = Integer.parseInt(loadParameter(p, "DEFAULT_TIMEOUT"));
-      drillUserName = loadParameter(p, "DRILL_USER_NAME");
-      drillUserPassword = loadParameter(p, "DRILL_USER_PASSWORD");
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -57,19 +44,19 @@ public abstract class TestProperties {
     return null;
   }
 
-  private static String loadParameter(Properties initFile, String parameterName) {
+  public static String get(String parameterName) {
     String property = System.getProperty(parameterName);
     if(property == null) {
-      property = initFile.getProperty(parameterName);
+      property = p.getProperty(parameterName);
     }
     return property;
   }
 
-  private static String getWebdriversPath() {
-    String path = "webdrivers/" + OS + "_" + driverType;
-    if(OS.equals("WINDOWS")) {
-      path += ".exe";
-    }
-    return path;
+  public static int getInt(String parameterName) {
+    return Integer.parseInt(get(parameterName));
+  }
+
+  public static boolean getBool(String parameterName) {
+    return Boolean.parseBoolean(get(parameterName));
   }
 }

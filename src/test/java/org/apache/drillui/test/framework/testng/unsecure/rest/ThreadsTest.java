@@ -14,25 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.drillui.test.framework.testng.secure.login;
+package org.apache.drillui.test.framework.testng.unsecure.rest;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
-import org.apache.drillui.test.framework.testng.secure.BaseSecureTest;
 import org.testng.annotations.Test;
-import org.apache.drillui.test.framework.steps.AuthSteps;
 
-import static org.testng.Assert.*;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 
-public class LoginTest extends BaseSecureTest {
-  @Test(groups = {"functional"})
-  public void testLogin() {
-    assertEquals(
-        AuthSteps.login(TestProperties.get("DRILL_USER_NAME"), TestProperties.get("DRILL_USER_PASSWORD")).getLogoutText(),
-        "Log Out (" + TestProperties.get("DRILL_USER_NAME") + ")", "Login failed");
-  }
-
-  @Test(groups = {"functional"})
-  public void testLogout() {
-    assertEquals(AuthSteps.logOut().getLoginText(), "Log In", "Logout failed");
+public class ThreadsTest extends BaseRestTest {
+  @Test
+  public void checkThreadsPage() {
+    given()
+        .when()
+        .get("/status/threads")
+        .then()
+        .statusCode(200)
+        .body(allOf(containsString("Reference Handler")) ,containsString("Signal Dispatcher"));
   }
 }

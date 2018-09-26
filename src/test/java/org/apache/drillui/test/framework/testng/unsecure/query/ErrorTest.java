@@ -33,7 +33,7 @@ public class ErrorTest extends BaseUnsecureTest {
     BaseSteps.openUrl("/djmfhhgkdjs");
     String error = ErrorSteps.getFullStackTrace();
     assertFalse(error.isEmpty());
-    switch (TestProperties.driverType.name()) {
+    switch (TestProperties.get("DRIVER_TYPE")) {
       case "FIREFOX":
         assertEquals(error, "errorMessage \"HTTP 404 Not Found\"");
         break;

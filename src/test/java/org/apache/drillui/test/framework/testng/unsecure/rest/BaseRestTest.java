@@ -14,25 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.drillui.test.framework.testng.secure.login;
+package org.apache.drillui.test.framework.testng.unsecure.rest;
 
+import io.restassured.RestAssured;
 import org.apache.drillui.test.framework.initial.TestProperties;
-import org.apache.drillui.test.framework.testng.secure.BaseSecureTest;
-import org.testng.annotations.Test;
-import org.apache.drillui.test.framework.steps.AuthSteps;
+import org.testng.annotations.BeforeSuite;
 
-import static org.testng.Assert.*;
-
-public class LoginTest extends BaseSecureTest {
-  @Test(groups = {"functional"})
-  public void testLogin() {
-    assertEquals(
-        AuthSteps.login(TestProperties.get("DRILL_USER_NAME"), TestProperties.get("DRILL_USER_PASSWORD")).getLogoutText(),
-        "Log Out (" + TestProperties.get("DRILL_USER_NAME") + ")", "Login failed");
-  }
-
-  @Test(groups = {"functional"})
-  public void testLogout() {
-    assertEquals(AuthSteps.logOut().getLoginText(), "Log In", "Logout failed");
+public class BaseRestTest {
+  @BeforeSuite
+  public void setupRestAssured() {
+    RestAssured.port = Integer.parseInt(TestProperties.get("DRILL_PORT"));
+    RestAssured.baseURI = TestProperties.get("DRILL_HOST");
   }
 }

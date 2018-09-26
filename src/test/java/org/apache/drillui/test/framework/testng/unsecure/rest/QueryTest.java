@@ -14,26 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.drillui.test.framework.testng.unsecure;
+package org.apache.drillui.test.framework.testng.unsecure.rest;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
-import org.apache.drillui.test.framework.testng.BaseTest;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
-import org.apache.drillui.test.framework.steps.AuthSteps;
+public class QueryTest extends BaseRestTest {
 
-public class BaseUnsecureTest extends BaseTest {
-  @BeforeSuite
-  public void beforeSuite() {
-    if (TestProperties.getBool("SECURE_DRILL")) {
-      AuthSteps.login(TestProperties.get("DRILL_USER_NAME"), TestProperties.get("DRILL_USER_PASSWORD"));
-    }
-  }
-
-  @AfterSuite
-  public void afterSuite() {
-    if (TestProperties.getBool("SECURE_DRILL")) {
-      AuthSteps.logOut();
-    }
-  }
 }
