@@ -14,25 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.drillui.test.framework.testng.secure.login;
+package org.apache.drillui.test.framework.testng.unsecure.rest;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
-import org.apache.drillui.test.framework.testng.secure.BaseSecureTest;
 import org.testng.annotations.Test;
-import org.apache.drillui.test.framework.steps.AuthSteps;
 
-import static org.testng.Assert.*;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasItems;
 
-public class LoginTest extends BaseSecureTest {
-  @Test(groups = {"functional"})
-  public void testLogin() {
-    assertEquals(
-        AuthSteps.login(TestProperties.get("DRILL_USER_NAME"), TestProperties.get("DRILL_USER_PASSWORD")).getLogoutText(),
-        "Log Out (" + TestProperties.get("DRILL_USER_NAME") + ")", "Login failed");
-  }
-
-  @Test(groups = {"functional"})
-  public void testLogout() {
-    assertEquals(AuthSteps.logOut().getLoginText(), "Log In", "Logout failed");
+public class OptionsTest extends BaseRestTest {
+  @Test
+  public void getOptions() {
+    given()
+        .when()
+        .get("/options.json")
+        .then()
+        .statusCode(200)
+        .body("name", hasItems("planner.width.max_per_query", "drill.exec.storage.implicit.filename.column.label"))
+        .body("value", hasItems(true, false, 64, "filename", "DEFAULT"))
+        .body("accessibleScopes", hasItems("SYSTEM", "ALL"))
+        .body("kind", hasItems("BOOLEAN", "LONG", "STRING", "DOUBLE"));
   }
 }

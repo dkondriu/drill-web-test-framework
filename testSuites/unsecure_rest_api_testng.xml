@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<!-- mvn clean test -Dsurefire.suiteXmlFiles=testSuites/unsecure_rest_api_testng.xml -->
+<suite name="Secure tests" verbose="2" annotations="JDK">
+  <test name="a-t1" preserve-order="true" >
+    <classes>
+      <class name="org.apache.drillui.test.framework.testng.unsecure.rest.ClusterTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.rest.QueryTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.rest.StatusTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.rest.ProfilesTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.rest.StorageTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.rest.ThreadsTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.rest.OptionsTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.rest.MetricsTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.rest.LogsTest" />
+    </classes>
+  </test>
+</suite>

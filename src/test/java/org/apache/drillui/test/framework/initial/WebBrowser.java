@@ -25,37 +25,42 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import java.util.concurrent.TimeUnit;
 
 public abstract class WebBrowser {
-  public enum DRIVER {
-    CHROME, FIREFOX, IE, EDGE
-  }
 
   private static WebDriver driver;
 
   public static void init() {
-    switch (TestProperties.driverType) {
-      case CHROME:
-        System.setProperty("webdriver.chrome.driver", TestProperties.webdriversPath);
+    switch (TestProperties.get("DRIVER_TYPE")) {
+      case "CHROME":
+        System.setProperty("webdriver.chrome.driver", getWebdriversPath());
         driver = new ChromeDriver();
         break;
-      case FIREFOX:
-        System.setProperty("webdriver.gecko.driver", TestProperties.webdriversPath);
+      case "FIREFOX":
+        System.setProperty("webdriver.gecko.driver", getWebdriversPath());
         driver = new FirefoxDriver();
         break;
-      case IE:
-        System.setProperty("webdriver.ie.driver", TestProperties.webdriversPath);
+      case "IE":
+        System.setProperty("webdriver.ie.driver", getWebdriversPath());
         driver = new InternetExplorerDriver();
         break;
-      case EDGE:
-        System.setProperty("webdriver.edge.driver", TestProperties.webdriversPath);
+      case "EDGE":
+        System.setProperty("webdriver.edge.driver", getWebdriversPath());
         driver = new EdgeDriver();
         break;
       default:
-        System.setProperty("webdriver.chrome.driver", TestProperties.webdriversPath);
+        System.setProperty("webdriver.chrome.driver", getWebdriversPath());
         driver = new ChromeDriver();
     }
     resetImplicitWait();
-    driver.get(TestProperties.drillHost);
+    openURL("/");
     maximizeWindow();
+  }
+
+  private static String getWebdriversPath() {
+    String path = "webdrivers/" + TestProperties.OS + "_" + TestProperties.get("DRIVER_TYPE");
+    if(TestProperties.OS.equals("WINDOWS")) {
+      path += ".exe";
+    }
+    return path;
   }
 
   public static void setImplicitWait (int seconds) {
@@ -63,7 +68,7 @@ public abstract class WebBrowser {
   }
 
   public static void resetImplicitWait () {
-    setImplicitWait(TestProperties.defaultTimeout);
+    setImplicitWait(TestProperties.getInt("DEFAULT_TIMEOUT"));
   }
 
   public static WebDriver getDriver() {
@@ -75,7 +80,7 @@ public abstract class WebBrowser {
   }
 
   public static void openURL(String url) {
-    driver.get(TestProperties.drillHost + url);
+    driver.get(TestProperties.get("DRILL_HOST") + ":" + TestProperties.get("DRILL_PORT") + url);
   }
 
   public static void maximizeWindow() {
