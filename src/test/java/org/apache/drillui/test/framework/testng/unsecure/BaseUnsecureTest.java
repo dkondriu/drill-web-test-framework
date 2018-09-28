@@ -20,7 +20,7 @@ import org.apache.drillui.test.framework.initial.TestProperties;
 import org.apache.drillui.test.framework.testng.BaseTest;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
-import org.apache.drillui.test.framework.steps.AuthSteps;
+import org.apache.drillui.test.framework.steps.webui.AuthSteps;
 
 public class BaseUnsecureTest extends BaseTest {
   @BeforeSuite

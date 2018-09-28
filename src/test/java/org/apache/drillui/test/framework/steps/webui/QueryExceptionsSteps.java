@@ -14,29 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.drillui.test.framework.steps;
+package org.apache.drillui.test.framework.steps.webui;
 
 import org.apache.drillui.test.framework.initial.TestProperties;
 import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
-import org.apache.drillui.test.framework.pages.NavigationPage;
+import org.apache.drillui.test.framework.pages.QueryExceptionPage;
 
-public final class AuthSteps {
+public final class QueryExceptionsSteps {
 
-  private AuthSteps() {
+  private QueryExceptionsSteps() {
   }
 
-  public static NavigationPage login(String login, String password) {
-    return BasePage.getPage(NavigationPage.class)
-        .navigateLogin()
-        .openLoginPage()
-        .setUserName(login)
-        .setUserPassword(password)
-        .submit();
+  public static boolean hasException() {
+    String exception = BasePage.getPage(QueryExceptionPage.class).getFullStackTrace();
+    return !exception.isEmpty();
   }
 
-  public static NavigationPage logOut() {
-    return BasePage.getPage(NavigationPage.class)
-        .navigateLogout();
+  public static String getFullStackTrace() {
+    return BasePage.getPage(QueryExceptionPage.class).getFullStackTrace();
   }
 }

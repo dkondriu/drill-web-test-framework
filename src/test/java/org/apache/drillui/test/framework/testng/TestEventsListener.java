@@ -18,10 +18,9 @@ package org.apache.drillui.test.framework.testng;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.drillui.test.framework.pages.BasePage;
-import org.apache.drillui.test.framework.pages.ErrorPage;
 import org.apache.drillui.test.framework.pages.QueryExceptionPage;
-import org.apache.drillui.test.framework.steps.BaseSteps;
-import org.apache.drillui.test.framework.steps.ErrorSteps;
+import org.apache.drillui.test.framework.steps.webui.BaseSteps;
+import org.apache.drillui.test.framework.steps.webui.ErrorSteps;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;

@@ -14,23 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.drillui.test.framework.steps;
+package org.apache.drillui.test.framework.steps.webui;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
-import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
 import org.apache.drillui.test.framework.pages.ErrorPage;
+import org.apache.drillui.test.framework.pages.QueryExceptionPage;
+import org.apache.drillui.test.framework.pages.QueryResultsPage;
 
-public final class ErrorSteps {
+import java.util.LinkedList;
+import java.util.List;
 
-  private ErrorSteps() {
+public final class QueryResultsSteps {
+
+  private QueryResultsSteps() {
   }
 
-  /**
-   * If this method returns not an empty string, WebDriver opens Drill main page by calling WebBrowser.openURL("/");
-   * @return JSON text with Drill WebUI error message
-   */
-  public static String getFullStackTrace() {
-    return BasePage.getPage(ErrorPage.class).getFullStackTrace();
+  public static int rowsCount() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getResultsTableBody()
+        .size();
+  }
+
+  public static int columnsCount() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getResultsTableHeader()
+        .size();
+  }
+
+  public static List getRow(int rowId) {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getResultsTableBody()
+        .get(rowId);
   }
 }

@@ -17,8 +17,8 @@
 package org.apache.drillui.test.framework.testng.unsecure.query;
 
 import org.testng.annotations.Test;
-import org.apache.drillui.test.framework.steps.QueryResultsSteps;
-import org.apache.drillui.test.framework.steps.QuerySteps;
+import org.apache.drillui.test.framework.steps.webui.QueryResultsSteps;
+import org.apache.drillui.test.framework.steps.webui.QuerySteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
 
 import static org.testng.Assert.assertEquals;

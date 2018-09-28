@@ -1,0 +1,8 @@
+{
+  "name": "opentsdb",
+  "config": {
+    "type": "openTSDB",
+    "connection": "http://localhost:10000",
+    "enabled": false
+  }
+}

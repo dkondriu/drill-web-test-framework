@@ -14,20 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.drillui.test.framework.steps;
+package org.apache.drillui.test.framework.steps.webui;
 
+import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
-import org.apache.drillui.test.framework.pages.NavigationPage;
-import org.apache.drillui.test.framework.pages.StoragePage;
 
-public final class NavigateSteps {
+public final class BaseSteps {
 
-  private NavigateSteps() {
+  private BaseSteps() {
   }
 
-  public static StoragePage navigateStorage() {
-    return BasePage.getPage(NavigationPage.class).navigateStorage();
+  public static void setImplicitWait(int seconds) {
+    WebBrowser.setImplicitWait(seconds);
   }
 
+  public static void resetImplicitWait() {
+    WebBrowser.resetImplicitWait();
+  }
 
+  public static void tearDown() {
+    BasePage.clearPages();
+    WebBrowser.closeBrowser();
+  }
+
+  public static void openUrl(String url) {
+    WebBrowser.openURL(url);
+  }
 }

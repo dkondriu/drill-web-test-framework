@@ -17,9 +17,11 @@
  */
 package org.apache.drillui.test.framework.testng.unsecure.storage;
 
-import org.apache.drillui.test.framework.steps.NavigateSteps;
-import org.apache.drillui.test.framework.steps.StorageSteps;
+import org.apache.drillui.test.framework.steps.restapi.BaseSteps;
+import org.apache.drillui.test.framework.steps.webui.NavigateSteps;
+import org.apache.drillui.test.framework.steps.webui.StorageSteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -27,6 +29,11 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class StoragePageTest extends BaseUnsecureTest {
+
+  @BeforeClass
+  public void setupStoragePlugins() {
+    BaseSteps.setupStoragePlugins();
+  }
 
   @BeforeMethod
   public void navigateStorage() {

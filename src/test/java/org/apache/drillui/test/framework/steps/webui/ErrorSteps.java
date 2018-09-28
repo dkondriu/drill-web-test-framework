@@ -14,30 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.drillui.test.framework.steps;
+package org.apache.drillui.test.framework.steps.webui;
 
+import org.apache.drillui.test.framework.initial.TestProperties;
 import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
+import org.apache.drillui.test.framework.pages.ErrorPage;
 
-public final class BaseSteps {
+public final class ErrorSteps {
 
-  private BaseSteps() {
+  private ErrorSteps() {
   }
 
-  public static void setImplicitWait(int seconds) {
-    WebBrowser.setImplicitWait(seconds);
-  }
-
-  public static void resetImplicitWait() {
-    WebBrowser.resetImplicitWait();
-  }
-
-  public static void tearDown() {
-    BasePage.clearPages();
-    WebBrowser.closeBrowser();
-  }
-
-  public static void openUrl(String url) {
-    WebBrowser.openURL(url);
+  /**
+   * If this method returns not an empty string, WebDriver opens Drill main page by calling WebBrowser.openURL("/");
+   * @return JSON text with Drill WebUI error message
+   */
+  public static String getFullStackTrace() {
+    return BasePage.getPage(ErrorPage.class).getFullStackTrace();
   }
 }

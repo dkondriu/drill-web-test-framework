@@ -19,7 +19,7 @@ package org.apache.drillui.test.framework.testng.secure.login;
 import org.apache.drillui.test.framework.initial.TestProperties;
 import org.apache.drillui.test.framework.testng.secure.BaseSecureTest;
 import org.testng.annotations.Test;
-import org.apache.drillui.test.framework.steps.AuthSteps;
+import org.apache.drillui.test.framework.steps.webui.AuthSteps;
 
 import static org.testng.Assert.*;
 

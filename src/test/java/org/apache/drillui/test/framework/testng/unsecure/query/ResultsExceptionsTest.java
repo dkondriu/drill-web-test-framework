@@ -16,9 +16,9 @@
  */
 package org.apache.drillui.test.framework.testng.unsecure.query;
 
-import org.apache.drillui.test.framework.steps.QueryExceptionsSteps;
+import org.apache.drillui.test.framework.steps.webui.QueryExceptionsSteps;
 import org.testng.annotations.Test;
-import org.apache.drillui.test.framework.steps.QuerySteps;
+import org.apache.drillui.test.framework.steps.webui.QuerySteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
 
 import static org.testng.Assert.assertTrue;
