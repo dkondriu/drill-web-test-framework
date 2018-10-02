@@ -25,19 +25,36 @@ public final class StorageSteps {
   private StorageSteps() {
   }
 
-  public static boolean storagePluginExists(String name) {
+  public static boolean exists(String name) {
     return BasePage.getPage(StoragePage.class).storagePluginExists(name);
   }
 
-  public static boolean storagePluginEnabled(String name) {
+  public static boolean enabled(String name) {
     return BasePage.getPage(StoragePage.class).storagePluginEnabled(name);
   }
 
-  public static void enableStoragePlugin(String name) {
+  public static void enable(String name) {
     BasePage.getPage(StoragePage.class).enableStoragePlugin(name);
   }
 
-  public static void disableStoragePlugin(String name) {
+  public static void disable(String name) {
     BasePage.getPage(StoragePage.class).disableStoragePlugin(name);
+  }
+
+  public static void create(String name) {
+    BasePage.getPage(StoragePage.class)
+        .setNewStoragePluginName(name)
+        .submitNewStoragePlugin();
+  }
+
+  public static void update(String name) {
+    BasePage.getPage(StoragePage.class).updateStoragePlugin(name);
+  }
+
+  public static void create(String name, String pluginConfig) {
+    create(name);
+    EditStoragePluginSteps.setPluginConfig(pluginConfig);
+    EditStoragePluginSteps.create();
+    EditStoragePluginSteps.back();
   }
 }

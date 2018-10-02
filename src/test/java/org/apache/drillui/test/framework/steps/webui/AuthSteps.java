@@ -16,8 +16,6 @@
  */
 package org.apache.drillui.test.framework.steps.webui;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
-import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
 import org.apache.drillui.test.framework.pages.NavigationPage;
 

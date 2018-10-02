@@ -22,13 +22,15 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 public abstract class WebBrowser {
 
   private static WebDriver driver;
 
-  public static void init() {
+  private static void init() {
     switch (TestProperties.get("DRIVER_TYPE")) {
       case "CHROME":
         System.setProperty("webdriver.chrome.driver", getWebdriversPath());
@@ -83,7 +85,17 @@ public abstract class WebBrowser {
     driver.get(TestProperties.get("DRILL_HOST") + ":" + TestProperties.get("DRILL_PORT") + url);
   }
 
-  public static void maximizeWindow() {
+  public static String getURL() {
+    URL url;
+    try {
+      url = new URL(driver.getCurrentUrl());
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
+    }
+    return url.getPath();
+  }
+
+  private static void maximizeWindow() {
     driver.manage().window().maximize();
   }
 
@@ -93,5 +105,4 @@ public abstract class WebBrowser {
       driver = null;
     }
   }
-
 }

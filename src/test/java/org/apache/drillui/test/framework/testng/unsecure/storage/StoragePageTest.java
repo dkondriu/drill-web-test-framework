@@ -46,7 +46,7 @@ public class StoragePageTest extends BaseUnsecureTest {
         "cp", "dfs", "hbase", "hive", "kafka", "kudu", "mongo", "opentsdb", "s3"
     };
     for (String plugin : plugins) {
-      assertTrue(StorageSteps.storagePluginExists(plugin),
+      assertTrue(StorageSteps.exists(plugin),
           String.format("The plugin \"%s\" is not present!", plugin));
     }
   }
@@ -57,7 +57,7 @@ public class StoragePageTest extends BaseUnsecureTest {
         "cp", "dfs"
     };
     for (String plugin : plugins) {
-      assertTrue(StorageSteps.storagePluginEnabled(plugin),
+      assertTrue(StorageSteps.enabled(plugin),
           String.format("The plugin \"%s\" is not enabled!", plugin));
     }
   }
@@ -65,12 +65,12 @@ public class StoragePageTest extends BaseUnsecureTest {
   @Test(groups = {"functional"})
   public void enableDisablePlugin() {
     String pluginTested = "dfs";
-    if (!StorageSteps.storagePluginEnabled(pluginTested)) {
-      StorageSteps.enableStoragePlugin(pluginTested);
+    if (!StorageSteps.enabled(pluginTested)) {
+      StorageSteps.enable(pluginTested);
     }
-    StorageSteps.disableStoragePlugin(pluginTested);
-    assertFalse(StorageSteps.storagePluginEnabled(pluginTested));
-    StorageSteps.enableStoragePlugin(pluginTested);
-    assertTrue(StorageSteps.storagePluginEnabled(pluginTested));
+    StorageSteps.disable(pluginTested);
+    assertFalse(StorageSteps.enabled(pluginTested));
+    StorageSteps.enable(pluginTested);
+    assertTrue(StorageSteps.enabled(pluginTested));
   }
 }

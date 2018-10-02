@@ -13,6 +13,7 @@
       <class name="org.apache.drillui.test.framework.testng.unsecure.query.ErrorTest" />
       <class name="org.apache.drillui.test.framework.testng.unsecure.query.ResultsExceptionsTest" />
       <class name="org.apache.drillui.test.framework.testng.unsecure.storage.StoragePageTest" />
+      <class name="org.apache.drillui.test.framework.testng.unsecure.storage.StoragePluginsCRUDTest" />
     </classes>
   </test>
 </suite>
