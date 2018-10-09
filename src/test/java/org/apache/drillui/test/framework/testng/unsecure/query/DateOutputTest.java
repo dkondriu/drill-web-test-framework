@@ -44,7 +44,7 @@ public class DateOutputTest extends BaseUnsecureTest {
   public void selectTimestampZeroQuery() {
     QuerySteps.runQuery("select timestamp '2017-04-06 11:22:33';");
     String result = (String) QueryResultsSteps.getRow(0).get(0);
-    String expected = "2017-04-06 11:22:33.0";
+    String expected = "2017-04-06T11:22:33";
     assertEquals(result, expected);
   }
 
@@ -52,7 +52,7 @@ public class DateOutputTest extends BaseUnsecureTest {
   public void selectTimestampOneQuery() {
     QuerySteps.runQuery("select timestamp '2017-04-06 11:22:33.1';");
     String result = (String) QueryResultsSteps.getRow(0).get(0);
-    String expected = "2017-04-06 11:22:33.1";
+    String expected = "2017-04-06T11:22:33.100";
     assertEquals(result, expected);
   }
 
@@ -60,7 +60,7 @@ public class DateOutputTest extends BaseUnsecureTest {
   public void selectTimestampTwoQuery() {
     QuerySteps.runQuery("select timestamp '2017-04-06 11:22:33.12';");
     String result = (String) QueryResultsSteps.getRow(0).get(0);
-    String expected = "2017-04-06 11:22:33.12";
+    String expected = "2017-04-06T11:22:33.120";
     assertEquals(result, expected);
   }
 
@@ -68,7 +68,7 @@ public class DateOutputTest extends BaseUnsecureTest {
   public void selectTimestampThreeQuery() {
     QuerySteps.runQuery("select timestamp '2017-04-06 11:22:33.123';");
     String result = (String) QueryResultsSteps.getRow(0).get(0);
-    String expected = "2017-04-06 11:22:33.123";
+    String expected = "2017-04-06T11:22:33.123";
     assertEquals(result, expected);
   }
 
