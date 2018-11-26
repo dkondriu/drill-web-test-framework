@@ -7,7 +7,7 @@ Also the test framework covers Drill REST API testing using [REST Assured](http:
 ## Requirements
 1. OS with GUI (Windows, Linux, Mac OS).
 2. JDK v8.0 or higher.
-3. [Apache Maven](https://maven.apache.org/).
+3. [Apache Maven](https://maven.apache.org/) v3.3.9 or higher.
 4. Web browser to test with.
       Supported Web browsers: Windows (Chrome, Firefox, Edge), Linux (Chrome, Firefox), Mac OS (Chrome, Firefox)
 5. Apache Drill instance is running (either in distributed or in embedded mode). It is not required to be run at the same system, all is needed is an access to the Web UI.
