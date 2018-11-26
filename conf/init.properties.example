@@ -1,9 +1,18 @@
-DRILL_HOST=http://localhost
+# Apache Drill cluster information
+DRILL_HOST=localhost
 DRILL_PORT=8047
 DRILL_VERSION=1.15.0-SNAPSHOT
+
+# Can be distributed (true) or embedded (false)
+DISTRIBUTED_MODE=false
+
+# Plain security with user/password authentication
+SECURE_DRILL=false
+DRILL_USER_NAME=
+DRILL_USER_PASSWORD=
+
+# Browser to use. Supported types: CHROME (default), FIREFOX, IE, EDGE
 DRIVER_TYPE=CHROME
-DISTRIBUTED_MODE=true
-SECURE_DRILL=true
-DEFAULT_TIMEOUT=1
-DRILL_USER_NAME=mapr
-DRILL_USER_PASSWORD=mapr
+
+# Timeout to load pages (in seconds)
+DEFAULT_TIMEOUT=5
