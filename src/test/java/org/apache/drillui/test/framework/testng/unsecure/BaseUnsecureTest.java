@@ -24,14 +24,14 @@ import org.apache.drillui.test.framework.steps.webui.AuthSteps;
 
 public class BaseUnsecureTest extends BaseTest {
   @BeforeSuite
-  public void beforeSuite() {
+  public final void beforeSuite() {
     if (TestProperties.getBool("SECURE_DRILL")) {
       AuthSteps.login(TestProperties.get("DRILL_USER_NAME"), TestProperties.get("DRILL_USER_PASSWORD"));
     }
   }
 
   @AfterSuite
-  public void afterSuite() {
+  public final void afterSuite() {
     if (TestProperties.getBool("SECURE_DRILL")) {
       AuthSteps.logOut();
     }

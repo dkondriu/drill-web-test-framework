@@ -22,12 +22,12 @@ import org.apache.drillui.test.framework.testng.BaseTest;
 
 public class BaseSecureTest extends BaseTest {
   @BeforeSuite
-  public void beforeSuite() {
+  public final void beforeSuite() {
 
   }
 
   @AfterSuite
-  public void afterSuite() {
+  public final void afterSuite() {
 
   }
 }

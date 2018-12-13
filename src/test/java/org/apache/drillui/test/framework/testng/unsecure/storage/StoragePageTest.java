@@ -17,8 +17,8 @@
  */
 package org.apache.drillui.test.framework.testng.unsecure.storage;
 
-import org.apache.drillui.test.framework.steps.restapi.BaseSteps;
-import org.apache.drillui.test.framework.steps.webui.NavigateSteps;
+import org.apache.drillui.test.framework.steps.restapi.RestBaseSteps;
+import org.apache.drillui.test.framework.steps.webui.NavigationSteps;
 import org.apache.drillui.test.framework.steps.webui.StorageSteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
 import org.testng.annotations.BeforeClass;
@@ -32,12 +32,12 @@ public class StoragePageTest extends BaseUnsecureTest {
 
   @BeforeClass
   public void setupStoragePlugins() {
-    BaseSteps.setupStoragePlugins();
+    RestBaseSteps.setupStoragePlugins();
   }
 
   @BeforeMethod
   public void navigateStorage() {
-    NavigateSteps.navigateStorage();
+    NavigationSteps.navigateStorage();
   }
 
   @Test(groups = {"functional"})

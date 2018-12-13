@@ -30,8 +30,8 @@ public class EditStoragePluginPage extends BasePage {
   @FindBy(className = "ace_text-input")
   private WebElement textArea;
 
-  @FindBy(css = ".ace_layer.ace_text-layer")
-  private WebElement textLayer;
+  @FindBy(className = "ace_content")
+  private WebElement textAreaContent;
 
   @FindBy(linkText = "Back")
   private List<WebElement> backButton;
@@ -58,13 +58,15 @@ public class EditStoragePluginPage extends BasePage {
   private WebElement message;
 
   public EditStoragePluginPage setPluginConfig(String pluginConfig) {
+    waitForTextAreaLoaded();
     textArea.clear();
     textArea.sendKeys(pluginConfig);
     return this;
   }
 
   public String getPluginConfig() {
-    return textLayer.getText();
+    waitForTextAreaLoaded();
+    return getTextAreaContent();
   }
 
   public void back() {
@@ -137,5 +139,16 @@ public class EditStoragePluginPage extends BasePage {
   public void waitForDisabled() {
     new WebDriverWait(getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT"))
         .until(ExpectedConditions.stalenessOf(disableButton.get(0)));
+  }
+
+  private void waitForTextAreaLoaded() {
+    if (getTextAreaContent().equals("")) {
+      new WebDriverWait(getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT"))
+          .until(driver -> !getTextAreaContent().equals(""));
+    }
+  }
+
+  private String getTextAreaContent() {
+    return textAreaContent.getText();
   }
 }

@@ -24,24 +24,30 @@ import org.apache.drillui.test.framework.initial.TestProperties;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-public final class BaseSteps {
+public final class RestBaseSteps {
 
-  private BaseSteps() {
+  private static boolean storagePluginsSetupComplete = false;
+
+  private RestBaseSteps() {
   }
 
   public static void setupStoragePlugins() {
+    if (storagePluginsSetupComplete) {
+      return;
+    }
     boolean status;
     setupREST();
-    status = StorageSteps.updateStoragePlugin(
+    status = RestStorageSteps.updateStoragePlugin(
         getDefaultDfsPlugin(),
-        SecuritySteps.getDefaultSession());
-    status = status && StorageSteps.updateStoragePlugin(
+        RestSecuritySteps.getDefaultSession());
+    status = status && RestStorageSteps.updateStoragePlugin(
         getOpenTSDBPlugin(),
-        SecuritySteps.getDefaultSession()
+        RestSecuritySteps.getDefaultSession()
     );
     if (!status) {
       throw new RuntimeException("Some of the plugins did not updated!");
     }
+    storagePluginsSetupComplete = true;
   }
 
   public static void setupREST() {
@@ -50,7 +56,7 @@ public final class BaseSteps {
   }
 
   private static String getPluginFromResource(String resource) {
-    try (InputStream file = BaseSteps.class.getClassLoader()
+    try (InputStream file = RestBaseSteps.class.getClassLoader()
         .getResourceAsStream(resource)) {
       return IOUtils.toString(file, Charset.defaultCharset());
     } catch (Exception e) {

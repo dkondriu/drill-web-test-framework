@@ -17,27 +17,39 @@
  */
 package org.apache.drillui.test.framework.steps.restapi;
 
+import io.restassured.RestAssured;
+import io.restassured.authentication.FormAuthConfig;
 import io.restassured.filter.session.SessionFilter;
-import io.restassured.response.Response;
+import org.apache.drillui.test.framework.initial.TestProperties;
 
-import static io.restassured.RestAssured.given;
+public final class RestSecuritySteps {
 
-public final class StorageSteps {
-
-  private StorageSteps() {
+  private RestSecuritySteps() {
   }
 
-  public static boolean updateStoragePlugin(String body, SessionFilter session) {
-    Response r = given()
+  public static SessionFilter getDefaultSession() {
+    return TestProperties.getBool("SECURE_DRILL") ?
+        login(
+            TestProperties.get("DRILL_USER_NAME"),
+            TestProperties.get("DRILL_USER_PASSWORD")) :
+        new SessionFilter();
+  }
+
+  public static SessionFilter login(String userName, String userPassword) {
+    SessionFilter session = new SessionFilter();
+    RestAssured.given()
+        .auth()
+        .form(
+            userName,
+            userPassword,
+            new FormAuthConfig(
+                "/j_security_check",
+                "j_username",
+                "j_password")
+        )
         .filter(session)
-        .body(body)
-        .with()
-        .contentType("application/json")
         .when()
-        .post("/storage/plugin.json")
-        .then()
-        .extract()
-        .response();
-    return r.statusCode() == 200;
+        .get("/login");
+    return session;
   }
 }

@@ -20,14 +20,13 @@ import org.apache.drillui.test.framework.pages.BasePage;
 import org.apache.drillui.test.framework.pages.NavigationPage;
 import org.apache.drillui.test.framework.pages.StoragePage;
 
-public final class NavigateSteps {
+public final class NavigationSteps {
 
-  private NavigateSteps() {
+  private NavigationSteps() {
   }
 
   public static StoragePage navigateStorage() {
     return BasePage.getPage(NavigationPage.class).navigateStorage();
   }
-
 
 }

@@ -17,33 +17,38 @@
 package org.apache.drillui.test.framework.steps.webui;
 
 import org.apache.drillui.test.framework.pages.BasePage;
-import org.apache.drillui.test.framework.pages.ErrorPage;
-import org.apache.drillui.test.framework.pages.QueryExceptionPage;
 import org.apache.drillui.test.framework.pages.QueryResultsPage;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public final class QueryResultsSteps {
+
+  private static QueryResultsPage getPage() {
+    return BasePage.getPage(QueryResultsPage.class);
+  }
 
   private QueryResultsSteps() {
   }
 
   public static int rowsCount() {
-    return BasePage.getPage(QueryResultsPage.class)
+    return getPage()
         .getResultsTableBody()
         .size();
   }
 
   public static int columnsCount() {
-    return BasePage.getPage(QueryResultsPage.class)
+    return getPage()
         .getResultsTableHeader()
         .size();
   }
 
   public static List getRow(int rowId) {
-    return BasePage.getPage(QueryResultsPage.class)
+    return getPage()
         .getResultsTableBody()
         .get(rowId);
+  }
+
+  public static String getQueryProfile() {
+    return getPage().getQueryProfile();
   }
 }

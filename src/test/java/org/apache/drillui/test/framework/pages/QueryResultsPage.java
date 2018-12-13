@@ -32,6 +32,9 @@ public class QueryResultsPage extends BasePage {
   @FindBy(xpath = "//*[@id=\"result\"]/tbody")
   private WebElement queryResultTableBody;
 
+  @FindBy(xpath = "//*[@title=\"Open in new window\"]")
+  private WebElement profileButton;
+
   public List<String> getResultsTableHeader() {
     List<String> resultsTableHead = new LinkedList<>();
     for (String column : queryResultTableHeader.getAttribute("outerHTML").split("<th")) {
@@ -59,6 +62,10 @@ public class QueryResultsPage extends BasePage {
       resultsTable.add(columns);
     }
     return resultsTable;
+  }
+
+  public String getQueryProfile() {
+    return profileButton.getText().split(": ")[1];
   }
 
   public String getFirstResultCell() {

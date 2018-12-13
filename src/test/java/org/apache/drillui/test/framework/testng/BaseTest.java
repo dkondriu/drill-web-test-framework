@@ -6,7 +6,7 @@ import org.apache.drillui.test.framework.steps.webui.BaseSteps;
 public class BaseTest {
 
   @AfterSuite
-  public void tearDown() {
+  public final void tearDown() {
     BaseSteps.tearDown();
   }
 }

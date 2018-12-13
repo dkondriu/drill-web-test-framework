@@ -17,10 +17,11 @@
  */
 package org.apache.drillui.test.framework.testng.unsecure.storage;
 
+import org.apache.drillui.test.framework.steps.restapi.RestBaseSteps;
 import org.apache.drillui.test.framework.steps.webui.AlertSteps;
 import org.apache.drillui.test.framework.steps.webui.BaseSteps;
 import org.apache.drillui.test.framework.steps.webui.EditStoragePluginSteps;
-import org.apache.drillui.test.framework.steps.webui.NavigateSteps;
+import org.apache.drillui.test.framework.steps.webui.NavigationSteps;
 import org.apache.drillui.test.framework.steps.webui.StorageSteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
 import org.testng.annotations.BeforeClass;
@@ -48,12 +49,12 @@ public class StoragePluginsCRUDTest extends BaseUnsecureTest {
 
   @BeforeClass
   public void setupStoragePlugins() {
-    org.apache.drillui.test.framework.steps.restapi.BaseSteps.setupStoragePlugins();
+    RestBaseSteps.setupStoragePlugins();
   }
 
   @BeforeMethod
   public void beforeMethod() {
-    NavigateSteps.navigateStorage();
+    NavigationSteps.navigateStorage();
     if (StorageSteps.exists(testPluginName)) {
       StorageSteps.update(testPluginName);
       EditStoragePluginSteps.delete();
