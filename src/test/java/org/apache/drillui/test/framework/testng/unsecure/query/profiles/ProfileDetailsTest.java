@@ -35,7 +35,7 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
   @BeforeClass
   public void setupProfileDetailsTest() {
     RestBaseSteps.setupStoragePlugins();
-    QuerySteps.runQuery(testQuery);
+    QuerySteps.submitQuery(testQuery);
     QueryProfileDetailsSteps.openProfile(QueryResultsSteps.getQueryProfile());
   }
 

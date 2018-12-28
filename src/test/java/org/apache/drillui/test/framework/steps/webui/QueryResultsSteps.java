@@ -48,6 +48,11 @@ public final class QueryResultsSteps {
         .get(rowId);
   }
 
+  public static List<List<String>> getResultsTableBody() {
+    return BasePage.getPage(QueryResultsPage.class)
+            .getResultsTableBody();
+  }
+
   public static String getQueryProfile() {
     return getPage().getQueryProfile();
   }

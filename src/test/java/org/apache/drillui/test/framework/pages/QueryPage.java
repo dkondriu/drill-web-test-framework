@@ -16,10 +16,14 @@
  */
 package org.apache.drillui.test.framework.pages;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
 import org.apache.drillui.test.framework.initial.WebBrowser;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class QueryPage extends BasePage {
   @FindBy(xpath = "//*[@id=\"message\"]")
@@ -54,9 +58,90 @@ public class QueryPage extends BasePage {
   }
 
   public QueryResultsPage submitQuery(String queryText) {
-    queryInputField.sendKeys(queryText);
+    String[] query = queryText.replaceAll("\r", " ").split("\n");
+    for(String line: query) {
+      queryInputField.sendKeys(line.trim());
+      queryInputField.sendKeys(Keys.END);
+      queryInputField.sendKeys(Keys.ENTER);
+      queryInputField.sendKeys(Keys.SHIFT, Keys.PAGE_DOWN);
+      queryInputField.sendKeys(Keys.DELETE);
+    }
+    //queryInputField.sendKeys(queryText.replaceAll("\r", " ").replaceAll("\n", " "));
     submitButton.click();
     return getPage(QueryResultsPage.class);
+  }
+
+  public QueryPage sendQueryLine(String queryLine) {
+    queryInputField.sendKeys(queryLine);
+    return this;
+  }
+
+  public QueryPage sendKeyToQuery(Keys key) {
+    queryInputField.sendKeys(key);
+    return this;
+  }
+
+  public QueryPage selectSQLQueryType() {
+    queryTypeSQLRButton.click();
+    return this;
+  }
+
+  public QueryPage selectPhysicalQueryType() {
+    queryTypePHYSICALRButton.click();
+    return this;
+  }
+
+  public QueryPage selectLogicalQueryType() {
+    queryTypeLOGICALRButton.click();
+    return this;
+  }
+
+  public void validateQueryPage() {
+    Map<String, String> attributes = new HashMap<>();
+    String text = "×\nSample SQL query: SELECT * FROM cp.`employee.json` LIMIT 20";
+
+    attributes.put("class", "alert alert-info alert-dismissable");
+    attributes.put("style", "font-family: Courier;");
+    validateWebElement(sampleQueryElement, attributes, null, text);
+
+    validateWebElement(sampleQueryCloseButton, null, null, null);
+    validateWebElement(queryTypeLabel, null, null, null);
+    validateWebElement(queryTypeSQLRButton, null, null, null);
+    validateWebElement(queryTypePHYSICALRButton, null, null, null);
+    validateWebElement(queryTypeLOGICALRButton, null, null, null);
+    validateWebElement(queryInputLabel, null, null, null);
+    //validateWebElement(queryInputField, null, null, null);
+    validateWebElement(submitButton, null, null, null);
+  }
+
+  private void validateWebElement(WebElement element, Map<String, String> attributes, Map<String, String> cssValues, String text) {
+    if (!element.isDisplayed()) {
+      throw new RuntimeException("Element is not displayed!");
+    }
+    if (!element.isEnabled()) {
+      throw new RuntimeException("Element is not enabled!");
+    }
+    if (attributes == null || attributes.isEmpty()) {
+      return;
+    }
+    for (String attribute : attributes.keySet()) {
+      if (!element.getAttribute(attribute).equals(attributes.get(attribute))) {
+        throw new RuntimeException("Wrong value of the attribute \"" + attribute + "\"!" + " \nActual \"" + element.getAttribute(attribute) + "\", \nexpected \"" + attributes.get(attribute) + "\"!");
+      }
+    }
+    if (cssValues == null || cssValues.isEmpty()) {
+      return;
+    }
+    for (String cssProperty : cssValues.keySet()) {
+      if (!element.getCssValue(cssProperty).equals(cssValues.get(cssProperty))) {
+        throw new RuntimeException("Wrong value of the css property \"" + cssProperty + "\"! \nActual \"" + element.getCssValue(cssProperty) + "\", \nexpected \"" + cssValues.get(cssProperty) + "\"!");
+      }
+    }
+    if (text == null) {
+      return;
+    } else if(!element.getText().equals(text)) {
+      throw new RuntimeException("Wrong text of the Web element! \nActual \"" + element.getText() + "\", \nexpected \"" + text + "\"!");
+    }
   }
 
 }

@@ -18,6 +18,7 @@ package org.apache.drillui.test.framework.steps.webui;
 
 import org.apache.drillui.test.framework.pages.BasePage;
 import org.apache.drillui.test.framework.pages.NavigationPage;
+import org.apache.drillui.test.framework.pages.QueryPage;
 import org.apache.drillui.test.framework.pages.StoragePage;
 
 public final class NavigationSteps {
@@ -27,6 +28,10 @@ public final class NavigationSteps {
 
   public static StoragePage navigateStorage() {
     return BasePage.getPage(NavigationPage.class).navigateStorage();
+  }
+
+  public static QueryPage navigateQuery() {
+    return BasePage.getPage(NavigationPage.class).navigateQuery();
   }
 
 }

@@ -27,14 +27,14 @@ import static org.testng.Assert.assertFalse;
 public class ResultsExceptionsTest extends BaseUnsecureTest {
   @Test(groups = {"functional"})
   public void queryWithException() {
-    QuerySteps.runQuery("ELECT * FROM cp.`employee.json` LIMIT 9");
+    QuerySteps.submitQuery("ELECT * FROM cp.`employee.json` LIMIT 9");
     assertTrue(QueryExceptionsSteps.hasException());
     assertTrue(QueryExceptionsSteps.getFullStackTrace().startsWith("Query Failed: An Error Occurred"));
   }
 
   @Test(groups = {"functional"})
   public void queryWithoutException() {
-    QuerySteps.runQuery("SELECT * FROM cp.`employee.json` LIMIT 9");
+    QuerySteps.submitQuery("SELECT * FROM cp.`employee.json` LIMIT 9");
     assertFalse(QueryExceptionsSteps.hasException());
   }
 
