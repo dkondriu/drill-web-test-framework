@@ -49,7 +49,7 @@ public class ErrorTest extends BaseUnsecureTest {
 
   @Test(groups = {"functional"})
   public void queryWithoutError() {
-    QuerySteps.runQuery("SELECT * FROM cp.`employee.json` LIMIT 9");
+    QuerySteps.submitQuery("SELECT * FROM cp.`employee.json` LIMIT 9");
     assertTrue(ErrorSteps.getFullStackTrace().isEmpty());
   }
 

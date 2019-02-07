@@ -16,6 +16,7 @@
  */
 package org.apache.drillui.test.framework.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -23,6 +24,42 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class QueryResultsPage extends BasePage {
+  @FindBy(xpath = "/html/body/div[2]/div[2]/table/tbody/tr/td[1]/button")
+  private WebElement profileButton;
+
+  @FindBy(xpath = "/html/body/div[2]/div[2]/table/tbody/tr/td[1]/button/span[1]")
+  private WebElement queryResultStatus;
+
+  @FindBy(id = "delimitBy")
+  private WebElement exportCSVDelimiter;
+
+  @FindBy(xpath = "/html/body/div[2]/div[2]/table/tbody/tr/td[3]/button")
+  private WebElement exportButton;
+
+  @FindBy(xpath = "//*[@id=\"result_filter\"]/label/input")
+  private WebElement rowsFilter;
+
+  @FindBy(xpath = "//*[@id=\"result_wrapper\"]/div[1]/div[2]/button")
+  private WebElement showHideColumns;
+
+  @FindBy(xpath = "/html/body/ul")
+  private WebElement rowsListFilter;
+
+  @FindBy(xpath = "//*[@id=\"result_length\"]/label/select")
+  private WebElement rowsPerPage;
+
+  @FindBy(id = "result_info")
+  private WebElement pageRowsInfo;
+
+  @FindBy(id = "result_previous")
+  private WebElement previousPage;
+
+  @FindBy(xpath = "//*[@id=\"result_paginate\"]/span")
+  private WebElement pagesList;
+
+  @FindBy(id = "result_next")
+  private WebElement nextPage;
+
   @FindBy(xpath = "//*[@id=\"result\"]/tbody/tr/td")
   private WebElement queryResultLine;
 
@@ -31,6 +68,34 @@ public class QueryResultsPage extends BasePage {
 
   @FindBy(xpath = "//*[@id=\"result\"]/tbody")
   private WebElement queryResultTableBody;
+
+  public boolean hasPrevPage() {
+    return !previousPage.getAttribute("class").endsWith("ui-state-disabled");
+  }
+
+  public boolean hasPaginationPages() {
+    return pagesList.findElements(By.tagName("a")).size() > 1;
+  }
+
+  public int getPaginationPagesCount() {
+    return pagesList.findElements(By.tagName("a")).size();
+  }
+
+  public void openPage(int pageNumber) {
+    pagesList.findElements(By.tagName("a")).get(pageNumber - 1).click();
+  }
+
+  public boolean hasNextPage() {
+    return !nextPage.getAttribute("class").endsWith("ui-state-disabled");
+  }
+
+  public String getQueryStatus() {
+    return queryResultStatus.getText();
+  }
+
+  public String getPageRowsInfo() {
+    return pageRowsInfo.getText();
+  }
 
   public List<String> getResultsTableHeader() {
     List<String> resultsTableHead = new LinkedList<>();

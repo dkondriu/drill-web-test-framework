@@ -17,11 +17,8 @@
 package org.apache.drillui.test.framework.steps.webui;
 
 import org.apache.drillui.test.framework.pages.BasePage;
-import org.apache.drillui.test.framework.pages.ErrorPage;
-import org.apache.drillui.test.framework.pages.QueryExceptionPage;
 import org.apache.drillui.test.framework.pages.QueryResultsPage;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public final class QueryResultsSteps {
@@ -45,5 +42,45 @@ public final class QueryResultsSteps {
     return BasePage.getPage(QueryResultsPage.class)
         .getResultsTableBody()
         .get(rowId);
+  }
+
+  public static List<List<String>> getResultsTableBody() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getResultsTableBody();
+  }
+
+  public static boolean isPaginationEnabled() {
+    return BasePage.getPage(QueryResultsPage.class).hasPrevPage() ||
+        BasePage.getPage(QueryResultsPage.class).hasPaginationPages() ||
+        BasePage.getPage(QueryResultsPage.class).hasNextPage();
+  }
+
+  public static int getPaginationPagesCount() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getPaginationPagesCount();
+  }
+
+  public static void openPage(int pageNumber) {
+    BasePage.getPage(QueryResultsPage.class).openPage(pageNumber);
+  }
+
+  public static boolean hasPrevPage() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .hasPrevPage();
+  }
+
+  public static boolean hasNextPage() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .hasNextPage();
+  }
+
+  public static String getPageRowsInfo() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getPageRowsInfo();
+  }
+
+  public static String getQueryStatus() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getQueryStatus();
   }
 }

@@ -59,7 +59,7 @@ public class EditStoragePluginPage extends BasePage {
 
   public EditStoragePluginPage setPluginConfig(String pluginConfig) {
     textArea.clear();
-    textArea.sendKeys(pluginConfig);
+    textArea.sendKeys(pluginConfig.replaceAll("\r", "").replaceAll("\n", ""));
     return this;
   }
 

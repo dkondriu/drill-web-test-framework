@@ -19,7 +19,6 @@ package org.apache.drillui.test.framework.steps.webui;
 import org.apache.drillui.test.framework.initial.TestProperties;
 import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public final class BaseSteps {

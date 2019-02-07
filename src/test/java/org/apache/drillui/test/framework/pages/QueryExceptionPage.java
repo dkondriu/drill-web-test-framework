@@ -24,13 +24,17 @@ public class QueryExceptionPage extends BasePage {
   @FindBy(xpath = "/html/body/div[2]")
   private WebElement exceptionElement;
 
+  @FindBy(xpath = "/html/body/div[2]/h2")
+  private WebElement exceptionHeaderElement;
+
   public String getFullStackTrace() {
     try {
+      exceptionHeaderElement.getText();
       exceptionElement.getText();
     } catch (NoSuchElementException e) {
       return "";
     }
-    String exception = exceptionElement.getText().replace("back", "").trim();
+    String exception = exceptionElement.getText().trim();
     return exception.startsWith("Query Failed: ") ? exception : "";
   }
 }
