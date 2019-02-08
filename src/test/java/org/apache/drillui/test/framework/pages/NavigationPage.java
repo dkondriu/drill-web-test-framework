@@ -16,8 +16,6 @@
  */
 package org.apache.drillui.test.framework.pages;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
-import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 

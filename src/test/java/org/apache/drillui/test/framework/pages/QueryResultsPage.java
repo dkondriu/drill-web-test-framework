@@ -43,7 +43,10 @@ public class QueryResultsPage extends BasePage {
   private WebElement showHideColumns;
 
   @FindBy(xpath = "/html/body/ul")
-  private WebElement rowsListFilter;
+  private WebElement columnsListFilter;
+
+  @FindBy(className = "ColVis_collectionBackground")
+  private WebElement outsideColumnsFilter;
 
   @FindBy(xpath = "//*[@id=\"result_length\"]/label/select")
   private WebElement rowsPerPage;
@@ -128,5 +131,62 @@ public class QueryResultsPage extends BasePage {
 
   public String getFirstResultCell() {
     return queryResultLine.getText();
+  }
+
+  public void findInRows(String text) {
+    rowsFilter.clear();
+    rowsFilter.sendKeys(text);
+  }
+
+  public void filterColumns(List<String> columns) {
+    showHideColumns.click();
+    List<WebElement> columnsElements = new LinkedList<>();
+    columnsElements.addAll(columnsListFilter.findElements(By.tagName("label")));
+    for(WebElement col: columnsElements) {
+      if(columns.contains(col.findElement(By.tagName("span")).getText())) {
+        showColumn(col.findElement(By.tagName("input")));
+      } else {
+        hideColumn(col.findElement(By.tagName("input")));
+      }
+    }
+    outsideColumnsFilter.click();
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    /*try {
+      WebDriverWait wait = new WebDriverWait(WebBrowser.getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT"));
+      wait.until(ExpectedConditions.stalenessOf(outsideColumnsFilter));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }*/
+  }
+
+  public String getQueryProfileId() {
+    return profileButton.getText().replace("Query Profile: ", "").replaceAll(" .+", "");
+  }
+
+  public void exportCSV(String delimiter) {
+    exportCSVDelimiter.clear();
+    exportCSVDelimiter.sendKeys(delimiter);
+    exportButton.click();
+  }
+
+  public void exportCSV() {
+    exportButton.click();
+  }
+
+  private void showColumn(WebElement column) {
+    if(!column.isSelected()) {
+      column.click();
+    }
+  }
+
+  private void hideColumn(WebElement column) {
+    if(column.isSelected()) {
+      column.click();
+    }
   }
 }

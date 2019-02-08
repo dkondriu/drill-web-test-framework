@@ -49,6 +49,31 @@ public final class QueryResultsSteps {
         .getResultsTableBody();
   }
 
+  public static List<String> getResultsTableHeader() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getResultsTableHeader();
+  }
+
+  public static void findInRows(String text) {
+    BasePage.getPage(QueryResultsPage.class)
+        .findInRows(text);
+  }
+
+  public static void exportCSV(String delimiter) {
+    BasePage.getPage(QueryResultsPage.class)
+        .exportCSV(delimiter);
+  }
+
+  public static void exportCSV() {
+    BasePage.getPage(QueryResultsPage.class)
+        .exportCSV();
+  }
+
+  public static String getQueryProfileId() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getQueryProfileId();
+  }
+
   public static boolean isPaginationEnabled() {
     return BasePage.getPage(QueryResultsPage.class).hasPrevPage() ||
         BasePage.getPage(QueryResultsPage.class).hasPaginationPages() ||
@@ -82,5 +107,10 @@ public final class QueryResultsSteps {
   public static String getQueryStatus() {
     return BasePage.getPage(QueryResultsPage.class)
         .getQueryStatus();
+  }
+
+  public static void filterColumns(List<String> columns) {
+    BasePage.getPage(QueryResultsPage.class)
+        .filterColumns(columns);
   }
 }

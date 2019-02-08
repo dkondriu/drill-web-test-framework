@@ -17,12 +17,17 @@
 package org.apache.drillui.test.framework.testng.unsecure.query;
 
 import org.apache.drillui.test.framework.steps.webui.NavigateSteps;
-import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
-import org.testng.annotations.Test;
 import org.apache.drillui.test.framework.steps.webui.QueryResultsSteps;
 import org.apache.drillui.test.framework.steps.webui.QuerySteps;
-import org.apache.drillui.test.framework.steps.webui.QuerySteps.*;
+import org.apache.drillui.test.framework.steps.webui.QuerySteps.QUERY_TYPE;
+import org.apache.drillui.test.framework.steps.webui.QuerySteps.RESULT_MODE;
+import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
+import org.testng.annotations.Test;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,12 +50,11 @@ public class ResultsTableTest extends BaseUnsecureTest {
   public void testSubmitPhysicalPlan() {
     QuerySteps.submitQuery("select * from cp.`employee.json` LIMIT 5");
     List<List<String>> sqlResult = QueryResultsSteps.getResultsTableBody();
-    String physicalPlan = QuerySteps.submitQuery("explain plan for select * from cp.`employee.json` LIMIT 5")
-        .getResultsTableBody().get(0).get(1);
+    String physicalPlan = QuerySteps.submitQuery("explain plan for select * from cp.`employee.json` LIMIT 5").getResultsTableBody().get(0).get(1);
     QuerySteps.submitQuery(physicalPlan, QUERY_TYPE.PHYSICAL, null);
     List<List<String>> physicalResult = QueryResultsSteps.getResultsTableBody();
     assertEquals(sqlResult.size(), physicalResult.size());
-    for(int i = 0; i < sqlResult.size(); i++) {
+    for (int i = 0; i < sqlResult.size(); i++) {
       assertEquals(sqlResult.get(i), physicalResult.get(i));
     }
   }
@@ -59,12 +63,11 @@ public class ResultsTableTest extends BaseUnsecureTest {
   public void testSubmitLogicalPlan() {
     QuerySteps.submitQuery("select * from cp.`employee.json` LIMIT 5");
     List<List<String>> sqlResult = QueryResultsSteps.getResultsTableBody();
-    String logicalPlan = QuerySteps.submitQuery("explain plan without implementation for select * from cp.`employee.json` LIMIT 5")
-        .getResultsTableBody().get(0).get(1);
+    String logicalPlan = QuerySteps.submitQuery("explain plan without implementation for select * from cp.`employee.json` LIMIT 5").getResultsTableBody().get(0).get(1);
     QuerySteps.submitQuery(logicalPlan, QUERY_TYPE.LOGICAL, RESULT_MODE.EXEC);
     List<List<String>> logicalResult = QueryResultsSteps.getResultsTableBody();
     assertEquals(sqlResult.size(), logicalResult.size());
-    for(int i = 0; i < sqlResult.size(); i++) {
+    for (int i = 0; i < sqlResult.size(); i++) {
       assertEquals(sqlResult.get(i), logicalResult.get(i));
     }
   }
@@ -96,5 +99,41 @@ public class ResultsTableTest extends BaseUnsecureTest {
     QuerySteps.submitQueryOnQueryPage("select * from cp.`employee.json` LIMIT 33", "13");
     assertEquals(QueryResultsSteps.getPaginationPagesCount(), 2);
     assertEquals(QueryResultsSteps.getPageRowsInfo(), "Showing 1 to 10 of 13 entries");
+  }
+
+  @Test(groups = {"functional"})
+  public void testColumnsFilter() {
+    QuerySteps.submitQuery("select * from cp.`employee.json` LIMIT 3");
+    QueryResultsSteps.filterColumns(Arrays.asList("employee_id", "full_name"));
+    assertEquals(QueryResultsSteps.getResultsTableBody().get(0).size(), 2);
+    assertEquals(QueryResultsSteps.getResultsTableHeader().get(0), "employee_id");
+    assertEquals(QueryResultsSteps.getResultsTableHeader().get(1), "full_name");
+  }
+
+  @Test(groups = {"functional"})
+  public void testRowsFilter() {
+    QuerySteps.submitQuery("select * from cp.`employee.json` LIMIT 3");
+    QueryResultsSteps.findInRows("Nowmer");
+    assertEquals(QueryResultsSteps.getResultsTableBody().size(), 1);
+    assertEquals(QueryResultsSteps.getResultsTableBody().get(0).get(3), "Nowmer");
+    assertEquals(QueryResultsSteps.getPageRowsInfo(), "Showing 1 to 1 of 1 entries (filtered from 3 total entries)");
+  }
+
+  @Test(groups = {"functional"})
+  public void testExport() {
+    QuerySteps.submitQuery("select employee_id, full_name, first_name from cp.`employee.json` LIMIT 3");
+    String profile_id = QueryResultsSteps.getQueryProfileId();
+    QueryResultsSteps.exportCSV();
+    File file = new File("downloads/" + profile_id + ".csv");
+    BufferedReader br = null;
+    try {
+      br = new BufferedReader(new FileReader(file));
+      assertEquals(br.readLine(), "employee_id,full_name,first_name");
+      assertEquals(br.readLine(), "1,Sheri Nowmer,Sheri");
+      assertEquals(br.readLine(), "2,Derrick Whelply,Derrick");
+      assertEquals(br.readLine(), "4,Michael Spence,Michael");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

@@ -20,10 +20,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.FileSystems;
 import java.util.concurrent.TimeUnit;
 
 public abstract class WebBrowser {
@@ -34,11 +37,25 @@ public abstract class WebBrowser {
     switch (TestProperties.get("DRIVER_TYPE")) {
       case "CHROME":
         System.setProperty("webdriver.chrome.driver", getWebdriversPath());
-        driver = new ChromeDriver();
+        /*ChromeOptions options = new ChromeOptions();
+        options.addArguments("--test-type");
+        options.addArguments("--headless");
+        options.addArguments("--disable-extensions");
+
+        ChromeDriverService driverService = ChromeDriverService.createDefaultService();
+        driver = new ChromeDriver(driverService, options);
+
+        Map<String, Object> commandParams = new HashMap<>();
+        commandParams.put("cmd", "Page.setDownloadBehavior");
+        Map<String, String> params = new HashMap<>();
+        params.put("behavior", "allow");
+        params.put("downloadPath", new File("").getAbsolutePath() + FileSystems.getDefault().getSeparator() + "downloads");
+        commandParams.put("params", params);*/
+
         break;
       case "FIREFOX":
         System.setProperty("webdriver.gecko.driver", getWebdriversPath());
-        driver = new FirefoxDriver();
+        driver = new FirefoxDriver(getFirefoxProfile());
         break;
       case "IE":
         System.setProperty("webdriver.ie.driver", getWebdriversPath());
@@ -55,6 +72,15 @@ public abstract class WebBrowser {
     resetImplicitWait();
     openURL("/");
     maximizeWindow();
+  }
+
+  private static FirefoxProfile getFirefoxProfile() {
+    FirefoxProfile firefoxProfile = new FirefoxProfile();
+    firefoxProfile.setPreference("browser.download.folderList", 2);
+    firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
+    firefoxProfile.setPreference("browser.download.dir", new File("").getAbsolutePath() + FileSystems.getDefault().getSeparator() + "downloads");
+    firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv");
+    return firefoxProfile;
   }
 
   private static String getWebdriversPath() {

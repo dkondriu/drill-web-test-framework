@@ -21,6 +21,10 @@ import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.Objects;
+
 public final class BaseSteps {
 
   private BaseSteps() {
@@ -37,6 +41,7 @@ public final class BaseSteps {
   public static void tearDown() {
     BasePage.clearPages();
     WebBrowser.closeBrowser();
+    Arrays.stream(Objects.requireNonNull(new File("downloads").listFiles((f, p) -> p.endsWith(".csv")))).forEach(File::delete);
   }
 
   public static void openUrl(String url) {
