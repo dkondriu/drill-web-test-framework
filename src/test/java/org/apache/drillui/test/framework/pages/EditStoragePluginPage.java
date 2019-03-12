@@ -59,8 +59,7 @@ public class EditStoragePluginPage extends BasePage {
 
   public EditStoragePluginPage setPluginConfig(String pluginConfig) {
     waitForTextAreaLoaded();
-    textArea.clear();
-    textArea.sendKeys(pluginConfig);
+    sendText(textArea, pluginConfig);
     return this;
   }
 

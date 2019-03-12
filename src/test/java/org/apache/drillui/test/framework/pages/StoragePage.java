@@ -99,7 +99,7 @@ public class StoragePage extends BasePage {
   }
 
   public StoragePage setNewStoragePluginName(String name) {
-    newStoragePluginInput.sendKeys(name);
+    sendText(newStoragePluginInput, name);
     return this;
   }
 

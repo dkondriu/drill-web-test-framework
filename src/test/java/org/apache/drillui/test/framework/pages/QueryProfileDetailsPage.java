@@ -109,7 +109,7 @@ public class QueryProfileDetailsPage extends BasePage{
   }
 
   public void rerunQuery() {
-    rerunButton.click();
+    rerunButton.submit();
   }
 
   public enum QueryType {
