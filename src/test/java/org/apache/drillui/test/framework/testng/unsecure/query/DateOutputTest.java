@@ -17,6 +17,8 @@
 package org.apache.drillui.test.framework.testng.unsecure.query;
 
 import org.apache.drillui.test.framework.steps.webui.BaseSteps;
+import org.apache.drillui.test.framework.steps.webui.NavigationSteps;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.apache.drillui.test.framework.steps.webui.QuerySteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
@@ -26,6 +28,11 @@ import static org.testng.Assert.assertEquals;
 public class DateOutputTest extends BaseUnsecureTest {
 
   private final QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
+
+  @BeforeMethod
+  public void navigateQuery() {
+    NavigationSteps.navigateQuery();
+  }
 
   @Test(groups = {"functional"})
   public void selectDateQuery() {

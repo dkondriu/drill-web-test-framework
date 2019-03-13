@@ -16,8 +16,6 @@
  */
 package org.apache.drillui.test.framework.pages;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
-import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -40,17 +38,26 @@ public class QueryPage extends BasePage {
   @FindBy(xpath = "//*[@id=\"logical\"]")
   private WebElement queryTypeLOGICALRButton;
 
-  @FindBy(xpath = "//*[@id=\"queryForm\"]/div[2]/label")
-  private WebElement queryInputLabel;
-
   @FindBy(xpath = "//*[@id=\"query-editor-format\"]/textarea")
   private WebElement queryInputField;
 
   @FindBy(xpath = "//*[@id=\"queryForm\"]/button")
   private WebElement submitButton;
 
+  @FindBy(xpath = "//*[@id=\"queryForm\"]/input[1]")
+  private WebElement limitResultsCheckbox;
+
+  @FindBy(id = "queryLimit")
+  private WebElement limitResultsInput;
+
   public WebElement getQueryTypeLabel() {
     return queryTypeLabel;
+  }
+
+  public QueryPage limitQueryResults(String rowsInResult) {
+    limitResultsCheckbox.click();
+    sendText(limitResultsInput, rowsInResult);
+    return this;
   }
 
   public QueryResultsPage submitQuery(String queryText) {

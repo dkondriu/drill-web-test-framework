@@ -16,8 +16,6 @@
  */
 package org.apache.drillui.test.framework.steps.webui;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
-import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
 import org.apache.drillui.test.framework.pages.QueryExceptionPage;
 
@@ -29,6 +27,10 @@ public final class QueryExceptionsSteps {
   public static boolean hasException() {
     String exception = BasePage.getPage(QueryExceptionPage.class).getFullStackTrace();
     return !exception.isEmpty();
+  }
+
+  public static void goBack() {
+    BasePage.getPage(QueryExceptionPage.class).goBack();
   }
 
   public static String getFullStackTrace() {

@@ -20,6 +20,7 @@ package org.apache.drillui.test.framework.testng.unsecure.query.profiles;
 
 import org.apache.drillui.test.framework.steps.restapi.RestBaseSteps;
 import org.apache.drillui.test.framework.steps.webui.BaseSteps;
+import org.apache.drillui.test.framework.steps.webui.NavigationSteps;
 import org.apache.drillui.test.framework.steps.webui.QueryProfileDetailsSteps;
 import org.apache.drillui.test.framework.steps.webui.QuerySteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
@@ -114,7 +115,8 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
     String queryPlan = querySteps.explainPlanForQuery(testQuery)
         .getRow(0).get(1);
     // Preparation: submitting the physical plan and getting the profile
-    String newQueryProfile = querySteps.runPhysical(queryPlan)
+    String newQueryProfile = NavigationSteps.navigateQuery()
+        .runPhysical(queryPlan)
         .getQueryProfile();
     // The test itself
     newQueryProfile = queryProfileDetailsSteps.openProfile(newQueryProfile)
@@ -133,7 +135,8 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
         .getRow(0).get(1)
         .replace("\"LOGICAL\"", "\"EXEC\"");
     // Preparation: submitting the physical plan and opening the profile
-    String newQueryProfile = querySteps.runLogical(queryPlan)
+    String newQueryProfile = NavigationSteps.navigateQuery()
+        .runLogical(queryPlan)
         .getQueryProfile();
     // The test itself
     newQueryProfile = queryProfileDetailsSteps.openProfile(newQueryProfile)
