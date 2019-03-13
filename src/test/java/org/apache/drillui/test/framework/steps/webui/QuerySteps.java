@@ -22,29 +22,42 @@ import org.apache.drillui.test.framework.pages.QueryPage;
 import org.apache.drillui.test.framework.pages.QueryPage.QueryType;
 
 public final class QuerySteps extends BaseSteps {
+  public enum RESULT_MODE {
+    PHYSICAL,
+    EXEC
+  }
+
+  public QueryResultsSteps runLimitedSQL(String queryText, String resultRowsCount) {
+    BasePage.getPage(QueryPage.class)
+        .setQueryType(QueryType.SQL)
+        .limitQueryResults(resultRowsCount)
+        .submitQuery(queryText);
+    return BaseSteps.getSteps(QueryResultsSteps.class);
+  }
 
   public QueryResultsSteps runSQL(String queryText) {
-    BasePage.getPage(NavigationPage.class)
-        .navigateQuery()
+    BasePage.getPage(QueryPage.class)
         .setQueryType(QueryType.SQL)
         .submitQuery(queryText);
     return BaseSteps.getSteps(QueryResultsSteps.class);
   }
 
   public QueryResultsSteps runPhysical(String queryText) {
-    BasePage.getPage(NavigationPage.class)
-        .navigateQuery()
+    BasePage.getPage(QueryPage.class)
         .setQueryType(QueryType.PHYSICAL)
         .submitQuery(queryText);
     return BaseSteps.getSteps(QueryResultsSteps.class);
   }
 
   public QueryResultsSteps runLogical(String queryText) {
-    BasePage.getPage(NavigationPage.class)
-        .navigateQuery()
+    BasePage.getPage(QueryPage.class)
         .setQueryType(QueryType.LOGICAL)
         .submitQuery(queryText);
     return BaseSteps.getSteps(QueryResultsSteps.class);
+  }
+
+  public static String prepareLogicalPlan(String queryText, RESULT_MODE result_mode) {
+    return queryText.replace("\"resultMode\" : \"LOGICAL\"", "\"resultMode\" : \"" + result_mode + "\"");
   }
 
   public QueryResultsSteps explainPlanForQuery(String queryText) {

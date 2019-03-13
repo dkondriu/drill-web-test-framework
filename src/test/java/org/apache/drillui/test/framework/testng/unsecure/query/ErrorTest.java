@@ -19,6 +19,7 @@ package org.apache.drillui.test.framework.testng.unsecure.query;
 import org.apache.drillui.test.framework.initial.TestProperties;
 import org.apache.drillui.test.framework.steps.webui.BaseSteps;
 import org.apache.drillui.test.framework.steps.webui.ErrorSteps;
+import org.apache.drillui.test.framework.steps.webui.NavigationSteps;
 import org.testng.annotations.Test;
 import org.apache.drillui.test.framework.steps.webui.QuerySteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
@@ -52,7 +53,8 @@ public class ErrorTest extends BaseUnsecureTest {
 
   @Test(groups = {"functional"})
   public void queryWithoutError() {
-    querySteps.runSQL("SELECT * FROM cp.`employee.json` LIMIT 9");
+    NavigationSteps.navigateQuery()
+        .runSQL("SELECT * FROM cp.`employee.json` LIMIT 9");
     assertTrue(ErrorSteps.getFullStackTrace().isEmpty());
   }
 

@@ -17,29 +17,38 @@
 package org.apache.drillui.test.framework.testng.unsecure.query;
 
 import org.apache.drillui.test.framework.steps.webui.BaseSteps;
+import org.apache.drillui.test.framework.steps.webui.NavigationSteps;
 import org.apache.drillui.test.framework.steps.webui.QueryExceptionsSteps;
+import org.apache.drillui.test.framework.steps.webui.QueryResultsSteps;
 import org.testng.annotations.Test;
 import org.apache.drillui.test.framework.steps.webui.QuerySteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertFalse;
 
 public class ResultsExceptionsTest extends BaseUnsecureTest {
-
   private QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
+  private QueryResultsSteps queryResultsSteps = BaseSteps.getSteps(QueryResultsSteps.class);
 
   @Test(groups = {"functional"})
   public void queryWithException() {
-    querySteps.runSQL("ELECT * FROM cp.`employee.json` LIMIT 9");
+    NavigationSteps.navigateQuery()
+        .runSQL("ELECT * FROM cp.`employee.json` LIMIT 9");
     assertTrue(QueryExceptionsSteps.hasException());
-    assertTrue(QueryExceptionsSteps.getFullStackTrace().startsWith("Query Failed: An Error Occurred"));
+    assertTrue(QueryExceptionsSteps.getFullStackTrace().contains("org.apache.drill.common.exceptions.UserRemoteException: PARSE ERROR: Non-query expression encountered in illegal context"));
   }
 
   @Test(groups = {"functional"})
-  public void queryWithoutException() {
+  public void backFromException() {
+    NavigationSteps.navigateQuery()
+        .runSQL("SELECT FROM cp.`employee.json` LIMIT 9");
+    assertTrue(QueryExceptionsSteps.hasException());
+    assertTrue(QueryExceptionsSteps.getFullStackTrace().contains("org.apache.drill.common.exceptions.UserRemoteException: PARSE ERROR: Encountered \"FROM\" at line 1, column 8."));
+    QueryExceptionsSteps.goBack();
     querySteps.runSQL("SELECT * FROM cp.`employee.json` LIMIT 9");
-    assertFalse(QueryExceptionsSteps.hasException());
+    assertEquals(queryResultsSteps.getRow(0).get(2), "Sheri");
   }
 
 }

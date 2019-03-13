@@ -16,6 +16,7 @@
  */
 package org.apache.drillui.test.framework.steps.webui;
 
+import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
 import org.apache.drillui.test.framework.pages.QueryResultsPage;
 
@@ -42,7 +43,72 @@ public final class QueryResultsSteps extends BaseSteps {
         .get(rowId);
   }
 
+  public List<List<String>> getTable() {
+    return getPage().getResultsTable();
+  }
+
+  public static void findInRows(String text) {
+    BasePage.getPage(QueryResultsPage.class)
+        .findInRows(text);
+  }
+
+  public static boolean isPaginationEnabled() {
+    QueryResultsPage queryResultsPage = BasePage.getPage(QueryResultsPage.class);
+    BaseSteps.setImplicitWait(0);
+    boolean hasPagination = queryResultsPage.hasPrevPage() ||
+        queryResultsPage.hasPaginationPages() ||
+        queryResultsPage.hasNextPage();
+    BaseSteps.resetImplicitWait();
+    return hasPagination;
+  }
+
+  public static int getPaginationPagesCount() {
+    BaseSteps.setImplicitWait(0);
+    int count = BasePage.getPage(QueryResultsPage.class)
+        .getPaginationPagesCount();
+    BaseSteps.resetImplicitWait();
+    return count;
+  }
+
+  public static void openPage(int pageNumber) {
+    BaseSteps.setImplicitWait(0);
+    BasePage.getPage(QueryResultsPage.class).openPage(pageNumber);
+    BaseSteps.resetImplicitWait();
+  }
+
   public String getQueryProfile() {
     return getPage().getQueryProfile();
+  }
+
+  public static boolean hasPrevPage() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .hasPrevPage();
+  }
+
+  public static boolean hasNextPage() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .hasNextPage();
+  }
+
+  public static String getPageRowsInfo() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getPageRowsInfo();
+  }
+
+  public static String getQueryStatus() {
+    return BasePage.getPage(QueryResultsPage.class)
+        .getQueryStatus();
+  }
+
+  public static void filterColumns(List<String> columns) {
+    BaseSteps.setImplicitWait(0);
+    BasePage.getPage(QueryResultsPage.class)
+        .filterColumns(columns);
+    BaseSteps.resetImplicitWait();
+  }
+
+  public QueryResultsSteps showResultRows(String rowsCount) {
+    BasePage.getPage(QueryResultsPage.class).showResultRows(rowsCount);
+    return BaseSteps.getSteps(QueryResultsSteps.class);
   }
 }

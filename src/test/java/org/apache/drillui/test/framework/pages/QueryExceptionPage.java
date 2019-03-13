@@ -21,16 +21,21 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class QueryExceptionPage extends BasePage {
-  @FindBy(xpath = "/html/body/div[2]")
+  @FindBy(css = "div.panel.panel-danger")
   private WebElement exceptionElement;
+
+  @FindBy(id = "backBtn")
+  private WebElement backButton;
 
   public String getFullStackTrace() {
     try {
-      exceptionElement.getText();
+      return exceptionElement.getText();
     } catch (NoSuchElementException e) {
       return "";
     }
-    String exception = exceptionElement.getText().replace("back", "").trim();
-    return exception.startsWith("Query Failed: ") ? exception : "";
+  }
+
+  public void goBack() {
+    backButton.click();
   }
 }

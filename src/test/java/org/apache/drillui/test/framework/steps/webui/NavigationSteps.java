@@ -18,11 +18,17 @@ package org.apache.drillui.test.framework.steps.webui;
 
 import org.apache.drillui.test.framework.pages.BasePage;
 import org.apache.drillui.test.framework.pages.NavigationPage;
+import org.apache.drillui.test.framework.pages.QueryPage;
 import org.apache.drillui.test.framework.pages.StoragePage;
 
 public final class NavigationSteps {
 
   private NavigationSteps() {
+  }
+
+  public static QuerySteps navigateQuery() {
+    BasePage.getPage(NavigationPage.class).navigateQuery();
+    return BaseSteps.getSteps(QuerySteps.class);
   }
 
   public static StoragePage navigateStorage() {

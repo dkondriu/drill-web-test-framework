@@ -19,6 +19,7 @@ package org.apache.drillui.test.framework.pages;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -28,14 +29,103 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class QueryResultsPage extends BasePage {
-  @FindBy(xpath = "//*[@id=\"result\"]/tbody/tr/td")
-  private WebElement queryResultLine;
-
   @FindBy(id = "result")
   private WebElement queryResultTable;
 
   @FindBy(xpath = "//*[@title=\"Open in new window\"]")
   private WebElement profileButton;
+
+  @FindBy(xpath = "/html/body/div[2]/div[2]/table/tbody/tr/td[1]/button/span[1]")
+  private WebElement queryResultStatus;
+
+  @FindBy(xpath = "//*[@id=\"result_filter\"]/label/input")
+  private WebElement rowsFilter;
+
+  @FindBy(className = "ColVis_MasterButton")
+  private WebElement showHideColumns;
+
+  @FindBy(xpath = "/html/body/ul")
+  private WebElement columnsListFilter;
+
+  @FindBy(className = "ColVis_collectionBackground")
+  private WebElement outsideColumnsFilter;
+
+  @FindBy(xpath = "//*[@id=\"result_length\"]/label/select")
+  private WebElement rowsPerPage;
+
+  @FindBy(id = "result_info")
+  private WebElement pageRowsInfo;
+
+  @FindBy(id = "result_previous")
+  private WebElement previousPage;
+
+  @FindBy(xpath = "//*[@id=\"result_paginate\"]/span")
+  private WebElement pagesList;
+
+  @FindBy(id = "result_next")
+  private WebElement nextPage;
+
+  public boolean hasPrevPage() {
+    return !previousPage.getAttribute("class").endsWith("ui-state-disabled");
+  }
+
+  public boolean hasPaginationPages() {
+    return pagesList.findElements(By.tagName("a")).size() > 1;
+  }
+
+  public int getPaginationPagesCount() {
+    return pagesList.findElements(By.tagName("a")).size();
+  }
+
+  public void openPage(int pageNumber) {
+    pagesList.findElements(By.tagName("a")).get(pageNumber - 1).click();
+  }
+
+  public boolean hasNextPage() {
+    return !nextPage.getAttribute("class").endsWith("ui-state-disabled");
+  }
+
+  public String getQueryStatus() {
+    return queryResultStatus.getText();
+  }
+
+  public String getPageRowsInfo() {
+    return pageRowsInfo.getText();
+  }
+
+  public void findInRows(String text) {
+    sendText(rowsFilter, text);
+  }
+
+  public void filterColumns(List<String> columns) {
+    showHideColumns.click();
+    List<WebElement> columnsElements = columnsListFilter.findElements(By.tagName("label"));
+    columnsElements.forEach(column -> {
+      if (columns.contains(column.findElement(By.tagName("span")).getText())) {
+        showColumn(column.findElement(By.tagName("input")));
+      } else {
+        hideColumn(column.findElement(By.tagName("input")));
+      }
+    });
+    outsideColumnsFilter.click();
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void showColumn(WebElement column) {
+    if (!column.isSelected()) {
+      column.click();
+    }
+  }
+
+  private void hideColumn(WebElement column) {
+    if (column.isSelected()) {
+      column.click();
+    }
+  }
 
   public List<String> getResultsTableHeader() {
     return Jsoup.parse(queryResultTable.getAttribute("outerHTML"))
@@ -76,7 +166,9 @@ public class QueryResultsPage extends BasePage {
     return result;
   }
 
-  public String getFirstResultCell() {
-    return queryResultLine.getText();
+  public QueryResultsPage showResultRows(String rowsCount) {
+    rowsPerPage.click();
+    rowsPerPage.findElement(By.xpath("//*[text() = '" + rowsCount + "']")).click();
+    return BasePage.getPage(QueryResultsPage.class);
   }
 }
