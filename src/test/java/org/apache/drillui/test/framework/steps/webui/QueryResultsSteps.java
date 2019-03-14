@@ -34,7 +34,8 @@ public final class QueryResultsSteps extends BaseSteps {
   }
 
   public static int columnsCount() {
-    return getPage().getResultsTableHeader()
+    return getPage().getResultsTable()
+        .get(0)
         .size();
   }
 

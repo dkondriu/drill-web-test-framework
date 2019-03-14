@@ -16,9 +16,6 @@
  */
 package org.apache.drillui.test.framework.pages;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -26,7 +23,6 @@ import org.openqa.selenium.support.FindBy;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class QueryResultsPage extends BasePage {
   @FindBy(id = "result")
@@ -127,28 +123,8 @@ public class QueryResultsPage extends BasePage {
     }
   }
 
-  public List<String> getResultsTableHeader() {
-    return Jsoup.parse(queryResultTable.getAttribute("outerHTML"))
-        .select("thead")
-        .select("tr")
-        .select("th")
-        .stream()
-        .map(Element::text)
-        .collect(Collectors.toList());
-  }
-
   public List<List<String>> getResultsTable() {
-    return Jsoup.parse(queryResultTable.getAttribute("outerHTML"))
-        .outputSettings(new Document.OutputSettings()
-            .prettyPrint(false))
-        .select("tbody")
-        .select("tr")
-        .stream()
-        .map(row -> row.select("td")
-            .stream()
-            .map(Element::html)
-            .collect(Collectors.toList()))
-        .collect(Collectors.toList());
+    return getTable(queryResultTable);
   }
 
   public String getQueryProfile() {

@@ -20,13 +20,12 @@ import org.apache.drillui.test.framework.steps.webui.BaseSteps;
 import org.apache.drillui.test.framework.steps.webui.NavigationSteps;
 import org.apache.drillui.test.framework.steps.webui.QueryExceptionsSteps;
 import org.apache.drillui.test.framework.steps.webui.QueryResultsSteps;
-import org.testng.annotations.Test;
 import org.apache.drillui.test.framework.steps.webui.QuerySteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
+import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertFalse;
 
 public class ResultsExceptionsTest extends BaseUnsecureTest {
   private QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
@@ -48,7 +47,7 @@ public class ResultsExceptionsTest extends BaseUnsecureTest {
     assertTrue(QueryExceptionsSteps.getFullStackTrace().contains("org.apache.drill.common.exceptions.UserRemoteException: PARSE ERROR: Encountered \"FROM\" at line 1, column 8."));
     QueryExceptionsSteps.goBack();
     querySteps.runSQL("SELECT * FROM cp.`employee.json` LIMIT 9");
-    assertEquals(queryResultsSteps.getRow(0).get(2), "Sheri");
+    assertEquals(queryResultsSteps.getRow(1).get(2), "Sheri");
   }
 
 }

@@ -16,16 +16,28 @@
  */
 package org.apache.drillui.test.framework.pages;
 
+import com.google.common.base.Stopwatch;
+import org.apache.drillui.test.framework.initial.TestProperties;
 import org.apache.drillui.test.framework.initial.WebBrowser;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class BasePage {
 
@@ -69,4 +81,100 @@ public abstract class BasePage {
     element.sendKeys(Keys.CONTROL, "v");
   }
 
+  protected void waitForCondition(Function<WebDriver, Boolean> condition) {
+    waitForCondition(condition, TestProperties.getInt("DEFAULT_TIMEOUT"));
+  }
+
+  protected void waitForCondition(Function<WebDriver, Boolean> condition, int timeOut) {
+    if (!condition.apply(getDriver())) {
+      new WebDriverWait(getDriver(), timeOut)
+          .until(condition);
+    }
+  }
+
+  protected void waitForCondition(Function<WebDriver, Boolean> condition, Runnable workaroundAction) {
+    int timeStep = 1;
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    boolean success = false;
+    while (!condition.apply(getDriver()) &&
+        stopwatch.elapsed(TimeUnit.SECONDS) < TestProperties.getInt("DEFAULT_TIMEOUT") - 1) {
+      try {
+        waitForCondition(condition, timeStep);
+        success = true;
+      } catch (Exception e) {
+        workaroundAction.run();
+      }
+    }
+    if (!success) {
+      waitForCondition(condition, timeStep);
+    }
+  }
+
+  protected boolean isElementStable(WebElement element) {
+    Point position = element.getLocation();
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    return position.equals(element.getLocation());
+  }
+
+  protected void forceClick(WebElement element) {
+    Actions actions = new Actions(getDriver());
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    int timeStep = 500;
+    boolean success = false;
+    while (stopwatch.elapsed(TimeUnit.SECONDS) < TestProperties.getInt("DEFAULT_TIMEOUT")) {
+      try {
+        element.click();
+        success = true;
+        break;
+      } catch (Exception e) {
+        actions.sendKeys(Keys.PAGE_UP)
+            .perform();
+        try {
+          Thread.sleep(timeStep);
+        } catch (InterruptedException e1) {
+          e1.printStackTrace();
+        }
+      }
+    }
+    if (!success) {
+      element.click();
+    }
+  }
+
+  protected List<List<String>> getTable(WebElement table) {
+    String tableSource = table.getAttribute("outerHTML");
+    List<List<String>> result = getTableHeader(tableSource);
+    result.addAll(getTableContent(tableSource));
+    return result;
+  }
+
+  private List<List<String>> getTableHeader(String table) {
+    return Jsoup.parse(table)
+        .select("thead")
+        .select("tr")
+        .stream()
+        .map(header -> header.select("th")
+            .stream()
+            .map(Element::text)
+            .collect(Collectors.toList()))
+        .collect(Collectors.toList());
+  }
+
+  private List<List<String>> getTableContent(String table) {
+    return Jsoup.parse(table)
+        .outputSettings(new Document.OutputSettings()
+            .prettyPrint(false))
+        .select("tbody")
+        .select("tr")
+        .stream()
+        .map(row -> row.select("td")
+            .stream()
+            .map(Element::html)
+            .collect(Collectors.toList()))
+        .collect(Collectors.toList());
+  }
 }

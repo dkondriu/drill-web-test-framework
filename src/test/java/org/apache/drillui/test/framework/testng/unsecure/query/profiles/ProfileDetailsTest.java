@@ -28,19 +28,25 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+
 import static org.testng.Assert.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.Assert.assertTrue;
 
 public class ProfileDetailsTest extends BaseUnsecureTest {
 
   private final String testQuery = "select * from cp.`tpch/nation.parquet` limit 5";
+
   private final QueryProfileDetailsSteps queryProfileDetailsSteps = BaseSteps.getSteps(QueryProfileDetailsSteps.class);
+
   private final QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
+
   private String queryProfile;
 
   @BeforeClass
   public final void setupProfileDetailsTest() {
     RestBaseSteps.setupStoragePlugins();
+    NavigationSteps.navigateQuery();
     queryProfile = querySteps.runSQL(testQuery)
         .getQueryProfile();
   }
@@ -55,7 +61,7 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
     queryProfileDetailsSteps.validatePage();
   }
 
-  @Test (priority = -1)
+  @Test(priority = -1)
   public void tabNavigationTest() {
     assertEquals(queryProfileDetailsSteps.activeTab(), "Query");
     assertEquals(queryProfileDetailsSteps.activePanel(), "query-query");
@@ -101,7 +107,7 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
 
   @Test
   public void rerunQuery() {
-    String newQueryProfile =  queryProfileDetailsSteps.navigateTab("Edit Query")
+    String newQueryProfile = queryProfileDetailsSteps.navigateTab("Edit Query")
         .rerunSQL()
         .getQueryProfile();
     String queryText = queryProfileDetailsSteps.openProfile(newQueryProfile)
@@ -112,8 +118,9 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
   @Test
   public void rerunPhysicalPlan() {
     // Getting the physical plan if not present
+    NavigationSteps.navigateQuery();
     String queryPlan = querySteps.explainPlanForQuery(testQuery)
-        .getRow(0).get(1);
+        .getRow(1).get(1);
     // Preparation: submitting the physical plan and getting the profile
     String newQueryProfile = NavigationSteps.navigateQuery()
         .runPhysical(queryPlan)
@@ -131,8 +138,9 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
   @Test
   public void rerunLogicalPlan() {
     // Getting the physical plan
+    NavigationSteps.navigateQuery();
     String queryPlan = querySteps.explainPlanLogicalForQuery(testQuery)
-        .getRow(0).get(1)
+        .getRow(1).get(1)
         .replace("\"LOGICAL\"", "\"EXEC\"");
     // Preparation: submitting the physical plan and opening the profile
     String newQueryProfile = NavigationSteps.navigateQuery()
@@ -156,5 +164,95 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
             "SelectionVectorRemover.*" +
             "Limit.*" +
             "Scan"));
+  }
+
+
+  @Test
+  public void verifyVisualPlan() {
+    QueryProfileDetailsSteps.VisualPlan expectedPlan = queryProfileDetailsSteps.new VisualPlan();
+    expectedPlan
+        .append("Screen 00-00")
+        .append("Project 00-01")
+        .append("SelectionVectorRemover 00-02")
+        .append("Limit 00-03")
+        .append("Scan 00-04");
+    assertEquals(queryProfileDetailsSteps.navigateTab("Visualized Plan")
+            .getVisualPlan(),
+        expectedPlan);
+  }
+
+  @Test
+  public void verifyComplexVisualPlan() {
+    QueryProfileDetailsSteps.VisualPlan expectedPlan = queryProfileDetailsSteps.new VisualPlan();
+    expectedPlan
+        .append("Screen 00-00")
+        .append("Project 00-01")
+        .append("SelectionVectorRemover 00-02")
+        .append("Limit 00-03")
+        .append("Limit 00-04")
+        .append("HashJoin 00-05")
+        .append("Project 00-06")
+        .append("Scan 00-08");
+    expectedPlan.getNode("HashJoin 00-05")
+        .append("Scan 00-07");
+    String complexSQL = "select t1.n_nationkey from cp.`tpch/nation.parquet` t1 join cp.`tpch/nation.parquet` t2 on t1.n_nationkey = t2.n_nationkey limit 5";
+    NavigationSteps.navigateQuery();
+    String complexPlanProfile = querySteps.runSQL(complexSQL)
+        .getQueryProfile();
+    QueryProfileDetailsSteps.VisualPlan actualPlan = queryProfileDetailsSteps.openProfile(complexPlanProfile)
+        .navigateTab("Visualized Plan")
+        .getVisualPlan();
+    assertEquals(actualPlan, expectedPlan);
+  }
+
+  @Test
+  public void verifyPrintPlan() {
+    String complexSQL = "select t1.n_nationkey from cp.`tpch/nation.parquet` t1 join cp.`tpch/nation.parquet` t2 on t1.n_nationkey = t2.n_nationkey limit 5";
+    NavigationSteps.navigateQuery();
+    String complexPlanProfile = querySteps.runSQL(complexSQL)
+        .getQueryProfile();
+    QueryProfileDetailsSteps.VisualPlan expectedPlan = queryProfileDetailsSteps.new VisualPlan();
+    expectedPlan
+        .append("Screen 00-00")
+        .append("Project 00-01")
+        .append("SelectionVectorRemover 00-02")
+        .append("Limit 00-03")
+        .append("Limit 00-04")
+        .append("HashJoin 00-05")
+        .append("Project 00-06")
+        .append("Scan 00-08");
+    expectedPlan.getNode("HashJoin 00-05")
+        .append("Scan 00-07");
+    QueryProfileDetailsSteps.VisualPlan actualPlan = queryProfileDetailsSteps.openProfile(complexPlanProfile)
+        .navigateTab("Visualized Plan")
+        .printPlan()
+        .getPrintingPlan();
+    queryProfileDetailsSteps.closePrintWindow();
+    assertEquals(actualPlan, expectedPlan);
+  }
+
+  @Test
+  public void verifyOperators() {
+    assertEquals(queryProfileDetailsSteps.getOperatorsList(),
+        Arrays.asList("00-xx-00 - SCREEN",
+            "00-xx-01 - PROJECT",
+            "00-xx-02 - SELECTION_VECTOR_REMOVER",
+            "00-xx-03 - LIMIT",
+            "00-xx-04 - PARQUET_ROW_GROUP_SCAN"));
+  }
+
+  @Test
+  public void verifyFullJSONProfile() {
+    assertEquals(queryProfileDetailsSteps.validateJson(), "Ok");
+  }
+
+  @Test
+  public void verifyCollapsibleItems() {
+    assertTrue(queryProfileDetailsSteps.clickAllCollapsibleItems()
+        .expandAllCollapsedItems()
+        .clickAllCollapsibleItemsReversed()
+        .isAllItemsCollapsed(), "Some items are not collapsed!");
+    assertTrue(queryProfileDetailsSteps.clickAllCollapsibleItems()
+        .isAllItemsExpanded());
   }
 }
