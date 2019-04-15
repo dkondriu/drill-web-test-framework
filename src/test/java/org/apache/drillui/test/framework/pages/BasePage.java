@@ -28,6 +28,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.awt.*;
@@ -81,15 +82,13 @@ public abstract class BasePage {
     element.sendKeys(Keys.CONTROL, "v");
   }
 
-  protected void waitForCondition(Function<WebDriver, Boolean> condition) {
+  protected <V> void waitForCondition(Function<WebDriver, V> condition) {
     waitForCondition(condition, TestProperties.getInt("DEFAULT_TIMEOUT"));
   }
 
-  protected void waitForCondition(Function<WebDriver, Boolean> condition, int timeOut) {
-    if (!condition.apply(getDriver())) {
+  protected <V> void waitForCondition(Function<WebDriver, V> condition, int timeOut) {
       new WebDriverWait(getDriver(), timeOut)
           .until(condition);
-    }
   }
 
   protected void waitForCondition(Function<WebDriver, Boolean> condition, Runnable workaroundAction) {
@@ -118,31 +117,6 @@ public abstract class BasePage {
       throw new RuntimeException(e);
     }
     return position.equals(element.getLocation());
-  }
-
-  protected void forceClick(WebElement element) {
-    Actions actions = new Actions(getDriver());
-    Stopwatch stopwatch = Stopwatch.createStarted();
-    int timeStep = 500;
-    boolean success = false;
-    while (stopwatch.elapsed(TimeUnit.SECONDS) < TestProperties.getInt("DEFAULT_TIMEOUT")) {
-      try {
-        element.click();
-        success = true;
-        break;
-      } catch (Exception e) {
-        actions.sendKeys(Keys.PAGE_UP)
-            .perform();
-        try {
-          Thread.sleep(timeStep);
-        } catch (InterruptedException e1) {
-          e1.printStackTrace();
-        }
-      }
-    }
-    if (!success) {
-      element.click();
-    }
   }
 
   protected List<List<String>> getTable(WebElement table) {

@@ -18,6 +18,8 @@
 package org.apache.drillui.test.framework.pages;
 
 import org.apache.drillui.test.framework.initial.TestProperties;
+import org.apache.drillui.test.framework.steps.webui.BaseSteps;
+import org.apache.drillui.test.framework.steps.webui.ConfirmDialogSteps;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -120,24 +122,19 @@ public class EditStoragePluginPage extends BasePage {
 
   public void delete() {
     deleteButton.get(0).click();
-    new WebDriverWait(getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT"))
-        .until(ExpectedConditions.alertIsPresent());
   }
 
   public String getMessage() {
-    new WebDriverWait(getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT"))
-        .until(driver -> message.isDisplayed());
+    waitForCondition(driver -> message.isDisplayed());
     return message.getText();
   }
 
   public void waitForEnabled() {
-    new WebDriverWait(getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT"))
-        .until(ExpectedConditions.stalenessOf(enableButton.get(0)));
+    waitForCondition(driver -> disableButton.get(0).isDisplayed());
   }
 
   public void waitForDisabled() {
-    new WebDriverWait(getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT"))
-        .until(ExpectedConditions.stalenessOf(disableButton.get(0)));
+    waitForCondition(driver -> enableButton.get(0).isDisplayed());
   }
 
   private void waitForTextAreaLoaded() {

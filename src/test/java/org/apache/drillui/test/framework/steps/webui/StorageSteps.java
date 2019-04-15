@@ -17,44 +17,71 @@
  */
 package org.apache.drillui.test.framework.steps.webui;
 
-import org.apache.drillui.test.framework.pages.BasePage;
 import org.apache.drillui.test.framework.pages.StoragePage;
+import static org.apache.drillui.test.framework.pages.BasePage.getPage;
+import static org.apache.drillui.test.framework.steps.webui.ConfirmDialogSteps.getConfirmDialog;
 
-public final class StorageSteps {
-
-  private StorageSteps() {
-  }
+public final class StorageSteps extends BaseSteps {
 
   public static boolean exists(String name) {
-    return BasePage.getPage(StoragePage.class).storagePluginExists(name);
+    return getStoragePage().storagePluginExists(name);
   }
 
   public static boolean enabled(String name) {
-    return BasePage.getPage(StoragePage.class).storagePluginEnabled(name);
+    return getStoragePage().storagePluginEnabled(name);
   }
 
   public static void enable(String name) {
-    BasePage.getPage(StoragePage.class).enableStoragePlugin(name);
+    getStoragePage().enableStoragePlugin(name);
   }
 
   public static void disable(String name) {
-    BasePage.getPage(StoragePage.class).disableStoragePlugin(name);
+    getStoragePage().disableStoragePlugin(name);
+    getConfirmDialog().confirmAction();
+    getStoragePage().waitStoragePluginToBeDisabled(name);
   }
 
-  public static void create(String name) {
-    BasePage.getPage(StoragePage.class)
+  public StorageSteps openCreatePluginDialog() {
+    getStoragePage()
+        .openNewStoragePluginDialog();
+    return this;
+  }
+
+  public static boolean addPluginMode() {
+    return getStoragePage().formTitlePresented() &&
+            getStoragePage().pluginNameInputPresented() &&
+            getStoragePage().closeButtonPresented() &&
+            getStoragePage().submitButtonPresented();
+  }
+
+  public StorageSteps fillNewPluginData(String name, String pluginConfig) {
+    getStoragePage()
         .setNewStoragePluginName(name)
-        .submitNewStoragePlugin();
+        .setNewStoragePluginConfig(pluginConfig);
+    return this;
+  }
+
+  public StorageSteps closeNewPluginForm() {
+    getStoragePage().closeNewPluginForm();
+    return this;
+  }
+
+  public StorageSteps submitNewPluginForm() {
+    getStoragePage().submitNewPluginForm();
+    return this;
+  }
+
+  public void create(String testPluginName, String testPluginConfig) {
+    openCreatePluginDialog();
+    fillNewPluginData(testPluginName, testPluginConfig);
+    submitNewPluginForm();
   }
 
   public static void update(String name) {
-    BasePage.getPage(StoragePage.class).updateStoragePlugin(name);
+    getStoragePage().updateStoragePlugin(name);
   }
 
-  public static void create(String name, String pluginConfig) {
-    create(name);
-    EditStoragePluginSteps.setPluginConfig(pluginConfig);
-    EditStoragePluginSteps.create();
-    EditStoragePluginSteps.back();
+  private static StoragePage getStoragePage() {
+    return getPage(StoragePage.class);
   }
 }

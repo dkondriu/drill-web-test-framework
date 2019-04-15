@@ -17,6 +17,7 @@
 package org.apache.drillui.test.framework.testng.secure.login;
 
 import org.apache.drillui.test.framework.initial.TestProperties;
+import org.apache.drillui.test.framework.steps.webui.BaseSteps;
 import org.apache.drillui.test.framework.testng.secure.BaseSecureTest;
 import org.testng.annotations.Test;
 import org.apache.drillui.test.framework.steps.webui.AuthSteps;
@@ -31,8 +32,21 @@ public class LoginTest extends BaseSecureTest {
         "Log Out (" + TestProperties.get("ADMIN_USER1_NAME") + ")", "Login failed");
   }
 
-  @Test(groups = {"functional"})
+  @Test(groups = {"functional"}, dependsOnMethods = {"testLogin"})
   public void testLogout() {
+    assertEquals(AuthSteps.logOut().getLoginText(), "Log In", "Logout failed");
+  }
+
+  @Test(groups = {"functional"}, dependsOnMethods = {"testLogout"})
+  public void testRedirect() {
+    //
+    AuthSteps.loginFromCustomUrl("/mainLogin?redirect=https%3A%2F%2Fyoutube.com", TestProperties.get("DRILL_USER_NAME"), TestProperties.get("DRILL_USER_PASSWORD"));
+    assertEquals(BaseSteps.getURL(), "/", "Redirection outside the Drill after login!");
+    assertEquals(AuthSteps.getLogoutText(), "Log Out (" + TestProperties.get("DRILL_USER_NAME") + ")", "Login from custom URL failed");
+  }
+
+  @Test(groups = {"functional"}, dependsOnMethods = {"testRedirect"})
+  public void testLogoutAfterRedirectLogin() {
     assertEquals(AuthSteps.logOut().getLoginText(), "Log In", "Logout failed");
   }
 }
