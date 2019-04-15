@@ -18,8 +18,12 @@
 
 package org.apache.drillui.test.framework.pages;
 
+import com.google.common.base.Stopwatch;
+import org.apache.drillui.test.framework.initial.TestProperties;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.HashMap;
@@ -27,12 +31,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class QueryProfileDetailsPage extends BasePage {
-
   @FindBy(id = "query-tabs")
   private WebElement tabs;
 
@@ -224,6 +228,31 @@ public class QueryProfileDetailsPage extends BasePage {
     waitForCondition(driver -> isElementStable(item));
     forceClick(item);
     waitForCondition(driver -> isElementStable(item));
+  }
+
+  private void forceClick(WebElement element) {
+    Actions actions = new Actions(getDriver());
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    int timeStep = 500;
+    boolean success = false;
+    while (stopwatch.elapsed(TimeUnit.SECONDS) < TestProperties.getInt("DEFAULT_TIMEOUT")) {
+      try {
+        element.click();
+        success = true;
+        break;
+      } catch (Exception e) {
+        actions.sendKeys(Keys.PAGE_UP)
+            .perform();
+        try {
+          Thread.sleep(timeStep);
+        } catch (InterruptedException e1) {
+          e1.printStackTrace();
+        }
+      }
+    }
+    if (!success) {
+      element.click();
+    }
   }
 
   public void expandAllCollapsedItems() {

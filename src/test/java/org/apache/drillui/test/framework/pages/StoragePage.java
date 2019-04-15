@@ -17,8 +17,9 @@
  */
 package org.apache.drillui.test.framework.pages;
 
-import org.apache.drillui.test.framework.steps.webui.BaseSteps;
+import org.apache.drillui.test.framework.initial.TestProperties;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -30,17 +31,26 @@ import java.util.stream.Stream;
 
 public class StoragePage extends BasePage {
 
-  @FindBy(xpath = "//*[text()='Enabled Storage Plugins']/following-sibling::div[@class='table-responsive']")
+  @FindBy(xpath = "//*[text()='Enabled Storage Plugins']/following-sibling::table")
   private WebElement enabledStoragePlugins;
 
-  @FindBy(xpath = "//*[text()='Disabled Storage Plugins']/following-sibling::div[@class='table-responsive']")
+  @FindBy(xpath = "//*[text()='Disabled Storage Plugins']/following-sibling::table")
   private WebElement disabledStoragePlugins;
 
-  @FindBy(id = "storageName")
-  private WebElement newStoragePluginInput;
+  @FindBy(css = "button[data-target='#new-plugin-modal']")
+  private WebElement newStoragePluginDialog;
 
-  @FindBy(xpath = "//button[text()='Create']")
-  private WebElement newStoragePluginSubmit;
+  @FindBy(id = "configuration")
+  private WebElement formTitle;
+
+  @FindBy(css = "input[placeholder='Storage Name']")
+  private WebElement newStoragePluginNameInput;
+
+  @FindBy(xpath = "//*[@id='editor']/textarea")
+  private WebElement newStoragePluginConfigInput;
+
+  @FindBy(id = "createForm")
+  private WebElement createFormButtons;
 
   private Map<String, WebElement> getEnabledStoragePlugins() {
     return getStoragePlugins(enabledStoragePlugins);
@@ -64,7 +74,7 @@ public class StoragePage extends BasePage {
   }
 
   private WebElement getButton(WebElement element, String text) {
-    return element.findElement(By.linkText(text));
+    return element.findElement(By.xpath("button[contains(.,'" + text + "')]"));
   }
 
   public boolean storagePluginExists(String name) {
@@ -83,29 +93,77 @@ public class StoragePage extends BasePage {
   public StoragePage enableStoragePlugin(String name) {
     WebElement button = getButton(getDisabledStoragePlugins().get(name), "Enable");
     button.click();
-    new WebDriverWait(getDriver(), 5).until(ExpectedConditions.stalenessOf(button));
+    new WebDriverWait(getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT")).until(ExpectedConditions.stalenessOf(button));
     return this;
   }
 
   public StoragePage disableStoragePlugin(String name) {
     WebElement button = getButton(getEnabledStoragePlugins().get(name), "Disable");
     button.click();
-    new WebDriverWait(getDriver(), 5).until(ExpectedConditions.stalenessOf(button));
     return this;
   }
 
-  public StoragePage exportPlugin(String name) {
-    //TODO: Add a way to manage and verify downloaded files
+  public StoragePage waitStoragePluginToBeDisabled(String name) {
+    waitForCondition(plugin -> isDisabledPluginDisplayed(name));
     return this;
+  }
+
+  public boolean isDisabledPluginDisplayed(String pluginName) {
+    try {
+      return getDisabledStoragePlugins().containsKey(pluginName);
+    } catch (StaleElementReferenceException e) {
+      return false;
+    }
+  }
+
+  public StoragePage openNewStoragePluginDialog() {
+    newStoragePluginDialog.click();
+    return this;
+  }
+
+  public boolean formTitlePresented() {
+    waitForCondition(driver -> formTitle.isDisplayed());
+    return formTitle.isDisplayed() && formTitle.getText().equals("New Storage Plugin");
+  }
+
+  public boolean pluginNameInputPresented() {
+    waitForCondition(driver -> newStoragePluginNameInput.isDisplayed());
+    return newStoragePluginNameInput.isDisplayed();
+  }
+
+  public boolean closeButtonPresented() {
+    WebElement closeButton = createFormButtons.findElement(By.cssSelector("button[type=button]"));
+    waitForCondition(driver -> closeButton.isDisplayed());
+    return closeButton.isDisplayed() && closeButton.isEnabled();
+  }
+
+  public boolean submitButtonPresented() {
+    WebElement submitButton = createFormButtons.findElement(By.xpath("//button[text()='Create']"));
+    waitForCondition(driver -> submitButton.isDisplayed());
+    return submitButton.isDisplayed() && submitButton.isEnabled();
   }
 
   public StoragePage setNewStoragePluginName(String name) {
-    sendText(newStoragePluginInput, name);
+    sendText(newStoragePluginNameInput, name);
     return this;
   }
 
-  public EditStoragePluginPage submitNewStoragePlugin() {
-    newStoragePluginSubmit.click();
-    return BasePage.getPage(EditStoragePluginPage.class);
+  public StoragePage setNewStoragePluginConfig(String storageConfig) {
+    sendText(newStoragePluginConfigInput, storageConfig);
+    return this;
+  }
+
+  public StoragePage closeNewPluginForm() {
+    WebElement closeButton = createFormButtons.findElement(By.cssSelector("button[type=button]"));
+    closeButton.click();
+    waitForCondition(ExpectedConditions.invisibilityOf(closeButton));
+    return this;
+  }
+
+  public StoragePage submitNewPluginForm() {
+    WebElement submitButton = createFormButtons.findElement(By.xpath("//button[text()='Create']"));
+    submitButton.click();
+    waitForCondition(ExpectedConditions.invisibilityOf(submitButton));
+    return this;
   }
 }

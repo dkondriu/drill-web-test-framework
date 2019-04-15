@@ -16,7 +16,6 @@
  */
 package org.apache.drillui.test.framework.steps.webui;
 
-import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
 import org.apache.drillui.test.framework.pages.QueryResultsPage;
 
@@ -102,10 +101,8 @@ public final class QueryResultsSteps extends BaseSteps {
   }
 
   public static void filterColumns(List<String> columns) {
-    BaseSteps.setImplicitWait(0);
     BasePage.getPage(QueryResultsPage.class)
         .filterColumns(columns);
-    BaseSteps.resetImplicitWait();
   }
 
   public QueryResultsSteps showResultRows(String rowsCount) {

@@ -16,7 +16,9 @@
  */
 package org.apache.drillui.test.framework.steps.webui;
 
+import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
+import org.apache.drillui.test.framework.pages.ChooseAuthMethodPage;
 import org.apache.drillui.test.framework.pages.NavigationPage;
 
 public final class AuthSteps {
@@ -25,8 +27,18 @@ public final class AuthSteps {
   }
 
   public static NavigationPage login(String login, String password) {
-    return BasePage.getPage(NavigationPage.class)
-        .navigateLogin()
+    BasePage.getPage(NavigationPage.class)
+        .navigateLogin();
+    return performPlainAunth(login, password);
+  }
+
+  public static NavigationPage loginFromCustomUrl(String url, String login, String password) {
+    WebBrowser.openURL(url);
+    return performPlainAunth(login, password);
+  }
+
+  private static NavigationPage performPlainAunth(String login, String password) {
+    return BasePage.getPage(ChooseAuthMethodPage.class)
         .openLoginPage()
         .setUserName(login)
         .setUserPassword(password)
@@ -36,5 +48,9 @@ public final class AuthSteps {
   public static NavigationPage logOut() {
     return BasePage.getPage(NavigationPage.class)
         .navigateLogout();
+  }
+  public static String getLogoutText() {
+    return BasePage.getPage(NavigationPage.class)
+        .getLogoutText();
   }
 }

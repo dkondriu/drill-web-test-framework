@@ -39,31 +39,6 @@ public class EditStoragePluginSteps {
         .back();
   }
 
-  public static boolean addPluginMode() {
-    BaseSteps.setImplicitWait(0);
-    boolean result = getPage().backButtonPresented() &&
-        getPage().createButtonPresented() &&
-        !getPage().updateButtonPresented() &&
-        !getPage().disableButtonPresented() &&
-        !getPage().exportButtonPresented() &&
-        !getPage().deleteButtonPresented();
-    BaseSteps.resetImplicitWait();
-    return result;
-  }
-
-  public static boolean editPluginMode() {
-    BaseSteps.setImplicitWait(0);
-    boolean result = getPage().backButtonPresented() &&
-        !getPage().createButtonPresented() &&
-        getPage().updateButtonPresented() &&
-        (getPage().disableButtonPresented() ^
-            getPage().enableButtonPresented()) &&
-        getPage().exportButtonPresented() &&
-        getPage().deleteButtonPresented();
-    BaseSteps.resetImplicitWait();
-    return result;
-  }
-
   public static boolean enabled() {
     BaseSteps.setImplicitWait(0);
     boolean result = getPage().disableButtonPresented() &&
@@ -92,10 +67,6 @@ public class EditStoragePluginSteps {
 
   public static String getPluginConfig() {
     return getPage().getPluginConfig();
-  }
-
-  public static void create() {
-    getPage().create();
   }
 
   public static void update() {
