@@ -17,7 +17,7 @@
  */
 package org.apache.drillui.test.framework.pages;
 
-import org.apache.drillui.test.framework.steps.webui.BaseSteps;
+import org.apache.drillui.test.framework.steps.webui.AlertSteps;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -30,17 +30,31 @@ import java.util.stream.Stream;
 
 public class StoragePage extends BasePage {
 
-  @FindBy(xpath = "//*[text()='Enabled Storage Plugins']/following-sibling::div[@class='table-responsive']")
+  // @FindBy(xpath = "//*[text()='Enabled Storage Plugins']/following-sibling::div[@class='table-responsive']")
+  @FindBy(xpath = "/html/body/div[2]/div[3]")
   private WebElement enabledStoragePlugins;
 
-  @FindBy(xpath = "//*[text()='Disabled Storage Plugins']/following-sibling::div[@class='table-responsive']")
+  // @FindBy(xpath = "//*[text()='Disabled Storage Plugins']/following-sibling::div[@class='table-responsive']")
+  @FindBy(xpath = "/html/body/div[2]/div[4]")
   private WebElement disabledStoragePlugins;
 
-  @FindBy(id = "storageName")
-  private WebElement newStoragePluginInput;
+  @FindBy(css = "button[data-target='#new-plugin-modal']")
+  private WebElement newStoragePluginDialog;
 
-  @FindBy(xpath = "//button[text()='Create']")
-  private WebElement newStoragePluginSubmit;
+  @FindBy(xpath = "//*[@id=\"configuration\"]")
+  private WebElement formTitle;
+
+  @FindBy(css = "input[placeholder='Storage Name']")
+  private WebElement newStoragePluginNameInput;
+
+  @FindBy(xpath = "//*[@id=\"editor\"]/textarea")
+  private WebElement newStoragePluginConfigInput;
+
+  @FindBy(xpath = "//*[@id=\"createForm\"]/div[2]/button[1]")
+  private WebElement closeButton;
+
+  @FindBy(xpath = "//*[@id=\"createForm\"]/div[2]/button[2]")
+  private WebElement submitButton;
 
   private Map<String, WebElement> getEnabledStoragePlugins() {
     return getStoragePlugins(enabledStoragePlugins);
@@ -64,7 +78,7 @@ public class StoragePage extends BasePage {
   }
 
   private WebElement getButton(WebElement element, String text) {
-    return element.findElement(By.linkText(text));
+    return element.findElement(By.xpath("button[contains(.,'" + text + "')]"));
   }
 
   public boolean storagePluginExists(String name) {
@@ -90,6 +104,8 @@ public class StoragePage extends BasePage {
   public StoragePage disableStoragePlugin(String name) {
     WebElement button = getButton(getEnabledStoragePlugins().get(name), "Disable");
     button.click();
+    new WebDriverWait(getDriver(), 5).until(ExpectedConditions.alertIsPresent());
+    AlertSteps.acceptAlert();
     new WebDriverWait(getDriver(), 5).until(ExpectedConditions.stalenessOf(button));
     return this;
   }
@@ -99,13 +115,56 @@ public class StoragePage extends BasePage {
     return this;
   }
 
-  public StoragePage setNewStoragePluginName(String name) {
-    sendText(newStoragePluginInput, name);
+  public StoragePage openNewStoragePluginDialog() {
+    newStoragePluginDialog.click();
     return this;
   }
 
-  public EditStoragePluginPage submitNewStoragePlugin() {
-    newStoragePluginSubmit.click();
-    return BasePage.getPage(EditStoragePluginPage.class);
+  public boolean formTitlePresented() {
+    new WebDriverWait(getDriver(), 5)
+        .until(ExpectedConditions.visibilityOf(formTitle));
+    return formTitle.isDisplayed() && formTitle.getText().equals("New Storage Plugin");
+  }
+
+  public boolean pluginNameInputPresented() {
+    new WebDriverWait(getDriver(), 5)
+        .until(ExpectedConditions.visibilityOf(newStoragePluginNameInput));
+    return newStoragePluginNameInput.isDisplayed();
+  }
+
+  public boolean closeButtonPresented() {
+    new WebDriverWait(getDriver(), 5)
+        .until(ExpectedConditions.visibilityOf(closeButton));
+    return closeButton.isDisplayed() && closeButton.isEnabled();
+  }
+
+  public boolean submitButtonPresented() {
+    new WebDriverWait(getDriver(), 5)
+        .until(ExpectedConditions.visibilityOf(submitButton));
+    return submitButton.isDisplayed() && submitButton.isEnabled();
+  }
+
+  public StoragePage setNewStoragePluginName(String name) {
+    sendText(newStoragePluginNameInput, name);
+    return this;
+  }
+
+  public StoragePage setNewStoragePluginConfig(String storageConfig) {
+    sendText(newStoragePluginConfigInput, storageConfig);
+    return this;
+  }
+
+  public StoragePage closeNewPluginForm() {
+    closeButton.click();
+    new WebDriverWait(getDriver(), 5)
+        .until(ExpectedConditions.invisibilityOf(closeButton));
+    return this;
+  }
+
+  public StoragePage submitNewPluginForm() {
+    submitButton.click();
+    new WebDriverWait(getDriver(), 5)
+        .until(ExpectedConditions.invisibilityOf(submitButton));
+    return this;
   }
 }

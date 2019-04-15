@@ -33,7 +33,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class StoragePluginsCRUDTest extends BaseUnsecureTest {
-
+  private final StorageSteps storageSteps = BaseSteps.getSteps(StorageSteps.class);
   private String testPluginConfig =
       "{\n" +
       "  \"type\": \"kafka\",\n" +
@@ -50,10 +50,6 @@ public class StoragePluginsCRUDTest extends BaseUnsecureTest {
   @BeforeClass
   public void setupStoragePlugins() {
     RestBaseSteps.setupStoragePlugins();
-  }
-
-  @BeforeMethod
-  public void beforeMethod() {
     NavigationSteps.navigateStorage();
     if (StorageSteps.exists(testPluginName)) {
       StorageSteps.update(testPluginName);
@@ -62,44 +58,49 @@ public class StoragePluginsCRUDTest extends BaseUnsecureTest {
     }
   }
 
+  @BeforeMethod
+  public void beforeMethod() {
+    NavigationSteps.navigateStorage();
+  }
+
   @Test(groups = {"functional"})
   public void addPluginCancel() {
-    StorageSteps.create(testPluginName);
-    assertTrue(EditStoragePluginSteps.addPluginMode());
-    assertEquals(EditStoragePluginSteps.getPluginConfig(), "null");
-    EditStoragePluginSteps.setPluginConfig(testPluginConfig);
-    EditStoragePluginSteps.back();
+    storageSteps.openCreatePluginDialog();
+    assertTrue(StorageSteps.addPluginMode());
+    storageSteps.fillNewPluginData(testPluginName, testPluginConfig)
+        .closeNewPluginForm();
     assertEquals(BaseSteps.getURL(), "/storage");
     assertFalse(StorageSteps.exists(testPluginName));
   }
 
   @Test(groups = {"functional"})
   public void addPluginCreate() {
-    StorageSteps.create(testPluginName);
-    EditStoragePluginSteps.setPluginConfig(testPluginConfig);
-    EditStoragePluginSteps.create();
-    assertTrue(EditStoragePluginSteps.editPluginMode());
-    EditStoragePluginSteps.back();
+    storageSteps.openCreatePluginDialog();
+    assertTrue(StorageSteps.addPluginMode());
+    storageSteps.fillNewPluginData(testPluginName, testPluginConfig)
+            .submitNewPluginForm();
     assertEquals(BaseSteps.getURL(), "/storage");
     assertTrue(StorageSteps.exists(testPluginName));
+    assertFalse(StorageSteps.enabled(testPluginName));
   }
 
   @Test(groups = {"functional"})
   public void addPluginExisting() {
-    StorageSteps.create(testPluginName, testPluginConfig);
-    StorageSteps.create(testPluginName);
-    assertTrue(EditStoragePluginSteps.editPluginMode());
+    storageSteps.openCreatePluginDialog()
+        .fillNewPluginData(testPluginName, testPluginConfig.replace("\"enabled\": false", "\"enabled\": true"))
+        .submitNewPluginForm();
+    assertTrue(StorageSteps.enabled(testPluginName));
   }
 
   @Test(groups = {"functional"})
   public void updatePluginUnableToParse() {
-    StorageSteps.create(testPluginName, testPluginConfig);
+    storageSteps.create(testPluginName, testPluginConfig);
     StorageSteps.update(testPluginName);
     String modifiedConfig = EditStoragePluginSteps.getPluginConfig()
         .toUpperCase();
     EditStoragePluginSteps.setPluginConfig(modifiedConfig);
     EditStoragePluginSteps.update();
-    assertEquals(EditStoragePluginSteps.getMessage(), "Please retry: error (unable to parse JSON)");
+    assertEquals(EditStoragePluginSteps.getMessage(), "Please retry: Error (unable to parse JSON)");
     EditStoragePluginSteps.back();
     StorageSteps.update(testPluginName);
     assertEquals(EditStoragePluginSteps.getPluginConfig(), testPluginConfig);
@@ -107,13 +108,13 @@ public class StoragePluginsCRUDTest extends BaseUnsecureTest {
 
   @Test(groups = {"functional"})
   public void updatePluginUnableInvalidMapping() {
-    StorageSteps.create(testPluginName, testPluginConfig);
+    storageSteps.create(testPluginName, testPluginConfig);
     StorageSteps.update(testPluginName);
     String modifiedConfig = EditStoragePluginSteps.getPluginConfig()
         .replace("kafka", "KAFKA");
     EditStoragePluginSteps.setPluginConfig(modifiedConfig);
     EditStoragePluginSteps.update();
-    assertEquals(EditStoragePluginSteps.getMessage(), "Please retry: error (invalid JSON mapping)");
+    assertEquals(EditStoragePluginSteps.getMessage(), "Please retry: Error (invalid JSON mapping)");
     EditStoragePluginSteps.back();
     StorageSteps.update(testPluginName);
     assertEquals(EditStoragePluginSteps.getPluginConfig(), testPluginConfig);
@@ -121,13 +122,13 @@ public class StoragePluginsCRUDTest extends BaseUnsecureTest {
 
   @Test(groups = {"functional"})
   public void updatePluginSuccess() {
-    StorageSteps.create(testPluginName, testPluginConfig);
+    storageSteps.create(testPluginName, testPluginConfig);
     StorageSteps.update(testPluginName);
     String modifiedConfig = EditStoragePluginSteps.getPluginConfig()
         .replace("9092", "1111");
     EditStoragePluginSteps.setPluginConfig(modifiedConfig);
     EditStoragePluginSteps.update();
-    assertEquals(EditStoragePluginSteps.getMessage(), "success");
+    assertEquals(EditStoragePluginSteps.getMessage(), "Success");
     EditStoragePluginSteps.back();
     StorageSteps.update(testPluginName);
     assertEquals(EditStoragePluginSteps.getPluginConfig(), modifiedConfig);
@@ -135,20 +136,20 @@ public class StoragePluginsCRUDTest extends BaseUnsecureTest {
 
   @Test(groups = {"functional"})
   public void updatePluginEnableDisable() {
-    StorageSteps.create(testPluginName, testPluginConfig);
+    storageSteps.create(testPluginName, testPluginConfig);
     StorageSteps.update(testPluginName);
     String modifiedConfig = EditStoragePluginSteps.getPluginConfig()
         .replace("\"enabled\": false", "\"enabled\": true");
     EditStoragePluginSteps.setPluginConfig(modifiedConfig);
     EditStoragePluginSteps.update();
-    assertEquals(EditStoragePluginSteps.getMessage(), "success");
+    assertEquals(EditStoragePluginSteps.getMessage(), "Success");
     assertTrue(EditStoragePluginSteps.waitForEnabled());
     EditStoragePluginSteps.back();
     assertTrue(StorageSteps.enabled(testPluginName));
     StorageSteps.update(testPluginName);
     EditStoragePluginSteps.setPluginConfig(testPluginConfig);
     EditStoragePluginSteps.update();
-    assertEquals(EditStoragePluginSteps.getMessage(), "success");
+    assertEquals(EditStoragePluginSteps.getMessage(), "Success");
     assertTrue(EditStoragePluginSteps.waitForDisabled());
     EditStoragePluginSteps.back();
     assertFalse(StorageSteps.enabled(testPluginName));
@@ -156,16 +157,16 @@ public class StoragePluginsCRUDTest extends BaseUnsecureTest {
 
   @Test(groups = {"functional"})
   public void enableDisablePlugin() {
-    StorageSteps.create(testPluginName, testPluginConfig);
+    storageSteps.create(testPluginName, testPluginConfig);
     StorageSteps.update(testPluginName);
     EditStoragePluginSteps.enable();
-    assertEquals(EditStoragePluginSteps.getMessage(), "success");
+    assertEquals(EditStoragePluginSteps.getMessage(), "Success");
     assertTrue(EditStoragePluginSteps.waitForEnabled());
     EditStoragePluginSteps.back();
     assertTrue(StorageSteps.enabled(testPluginName));
     StorageSteps.update(testPluginName);
     EditStoragePluginSteps.disable();
-    assertEquals(EditStoragePluginSteps.getMessage(), "success");
+    assertEquals(EditStoragePluginSteps.getMessage(), "Success");
     assertTrue(EditStoragePluginSteps.waitForDisabled());
     EditStoragePluginSteps.back();
     assertFalse(StorageSteps.enabled(testPluginName));
@@ -173,7 +174,7 @@ public class StoragePluginsCRUDTest extends BaseUnsecureTest {
 
   @Test(groups = {"functional"})
   public void deletePlugin() {
-    StorageSteps.create(testPluginName, testPluginConfig);
+    storageSteps.create(testPluginName, testPluginConfig);
     StorageSteps.update(testPluginName);
     EditStoragePluginSteps.delete();
     AlertSteps.declineAlert();
@@ -183,6 +184,7 @@ public class StoragePluginsCRUDTest extends BaseUnsecureTest {
     StorageSteps.update(testPluginName);
     EditStoragePluginSteps.delete();
     AlertSteps.acceptAlert();
+    EditStoragePluginSteps.back();
     BaseSteps.waitForURL("/storage");
     assertFalse(StorageSteps.exists(testPluginName));
   }
