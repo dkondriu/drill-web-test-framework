@@ -16,6 +16,9 @@
  */
 package org.apache.drillui.test.framework.testng.unsecure.nav;
 
+import org.apache.drillui.test.framework.steps.webui.BaseSteps;
+import org.apache.drillui.test.framework.steps.webui.NavigationSteps;
+import static org.testng.Assert.assertEquals;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
 import org.testng.annotations.Test;
 
@@ -23,6 +26,39 @@ public class NavigationTest extends BaseUnsecureTest {
 
   @Test(groups = {"functional"})
   public void testNav() {
+    NavigationSteps.navigateQuery();
+    assertEquals(BaseSteps.getURL(), "/query");
+    try {
+      Thread.sleep(3000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    NavigationSteps.navigateStorage();
+    assertEquals(BaseSteps.getURL(), "/storage");
+    try {
+      Thread.sleep(3000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test(groups = {"functional"})
+  public void testNavFail() {
+    NavigationSteps.navigateQuery();
+    assertEquals(BaseSteps.getURL(), "/query");
+    try {
+      Thread.sleep(3000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    NavigationSteps.navigateStorage();
+    assertEquals(BaseSteps.getURL(), "/storage123");
+    try {
+      Thread.sleep(3000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
 }
+

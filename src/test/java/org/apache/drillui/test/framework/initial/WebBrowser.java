@@ -16,49 +16,44 @@
  */
 package org.apache.drillui.test.framework.initial;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 public abstract class WebBrowser {
 
-  private static WebDriver driver;
+  //private static WebDriver driver;
+  private static RemoteWebDriver driver;
 
   private static LinkedList<String> parentWindows = new LinkedList<>();
 
-  private static void init() {
-    switch (TestProperties.get("DRIVER_TYPE")) {
-      case "CHROME":
-        System.setProperty("webdriver.chrome.driver", getWebdriversPath());
-        driver = new ChromeDriver();
-        break;
-      case "FIREFOX":
-        System.setProperty("webdriver.gecko.driver", getWebdriversPath());
-        driver = new FirefoxDriver();
-        break;
-      case "IE":
-        System.setProperty("webdriver.ie.driver", getWebdriversPath());
-        driver = new InternetExplorerDriver();
-        break;
-      case "EDGE":
-        System.setProperty("webdriver.edge.driver", getWebdriversPath());
-        driver = new EdgeDriver();
-        break;
-      default:
-        System.setProperty("webdriver.chrome.driver", getWebdriversPath());
-        driver = new ChromeDriver();
-    }
+  private static void init() throws MalformedURLException {
+    DesiredCapabilities capabilities = new DesiredCapabilities();
+    capabilities.setBrowserName("chrome");
+    capabilities.setVersion("74.0");
+    capabilities.setCapability("enableVNC", true);
+    capabilities.setCapability("enableVideo", false);
+    capabilities.setCapability("screenResolution", "1920x1080x24");
+
+    driver = new RemoteWebDriver(
+        URI.create("http://192.168.122.15:4444/wd/hub").toURL(),
+        capabilities
+    );
+    driver.manage().window().setSize(new Dimension(1920, 1080));
     resetImplicitWait();
     openURL("/");
-    maximizeWindow();
   }
 
   private static String getWebdriversPath() {
@@ -79,7 +74,11 @@ public abstract class WebBrowser {
 
   public static WebDriver getDriver() {
     if (driver == null) {
-      init();
+      try {
+        init();
+      } catch (MalformedURLException e) {
+        e.printStackTrace();
+      }
     }
 
     return driver;
