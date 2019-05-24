@@ -26,7 +26,7 @@ public class BaseUnsecureTest extends BaseTest {
   @BeforeSuite
   public final void beforeSuite() {
     if (TestProperties.getBool("SECURE_DRILL")) {
-      AuthSteps.login(TestProperties.get("DRILL_USER_NAME"), TestProperties.get("DRILL_USER_PASSWORD"));
+      AuthSteps.login(TestProperties.get("ADMIN_USER1_NAME"), TestProperties.get("ADMIN_USER1_PASSWORD"));
     }
   }
 

@@ -30,8 +30,8 @@ public final class RestSecuritySteps {
   public static SessionFilter getDefaultSession() {
     return TestProperties.getBool("SECURE_DRILL") ?
         login(
-            TestProperties.get("DRILL_USER_NAME"),
-            TestProperties.get("DRILL_USER_PASSWORD")) :
+            TestProperties.get("ADMIN_USER1_NAME"),
+            TestProperties.get("ADMIN_USER1_PASSWORD")) :
         new SessionFilter();
   }
 

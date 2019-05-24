@@ -25,5 +25,6 @@ public class BaseRestTest {
   public void setupRestAssured() {
     RestAssured.port = Integer.parseInt(TestProperties.get("DRILL_PORT"));
     RestAssured.baseURI = TestProperties.get("DRILL_HOST");
+    
   }
 }

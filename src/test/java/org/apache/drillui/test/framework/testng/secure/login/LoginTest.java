@@ -27,8 +27,8 @@ public class LoginTest extends BaseSecureTest {
   @Test(groups = {"functional"})
   public void testLogin() {
     assertEquals(
-        AuthSteps.login(TestProperties.get("DRILL_USER_NAME"), TestProperties.get("DRILL_USER_PASSWORD")).getLogoutText(),
-        "Log Out (" + TestProperties.get("DRILL_USER_NAME") + ")", "Login failed");
+        AuthSteps.login(TestProperties.get("ADMIN_USER1_NAME"), TestProperties.get("ADMIN_USER1_PASSWORD")).getLogoutText(),
+        "Log Out (" + TestProperties.get("ADMIN_USER1_NAME") + ")", "Login failed");
   }
 
   @Test(groups = {"functional"})
