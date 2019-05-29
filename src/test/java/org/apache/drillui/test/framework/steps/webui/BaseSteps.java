@@ -16,7 +16,7 @@
  */
 package org.apache.drillui.test.framework.steps.webui;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.apache.drillui.test.framework.pages.BasePage;
 import org.openqa.selenium.WebDriver;
@@ -66,7 +66,7 @@ public class BaseSteps {
   }
 
   public static void waitForURL(String url) {
-    new WebDriverWait(WebBrowser.getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT"))
+    new WebDriverWait(WebBrowser.getDriver(), PropertiesConst.DEFAULT_TIMEOUT)
         .until(driver -> WebBrowser.getURL().equals(url)
     );
   }

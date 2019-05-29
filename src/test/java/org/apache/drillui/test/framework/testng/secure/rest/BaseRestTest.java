@@ -19,6 +19,7 @@ package org.apache.drillui.test.framework.testng.secure.rest;
 import io.restassured.RestAssured;
 import io.restassured.authentication.FormAuthConfig;
 import io.restassured.filter.session.SessionFilter;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.apache.drillui.test.framework.initial.TestProperties;
 import org.testng.annotations.BeforeSuite;
 
@@ -35,8 +36,8 @@ public class BaseRestTest {
 
   @BeforeSuite
   public void initUsers() {
-    RestAssured.port = Integer.parseInt(TestProperties.get("DRILL_PORT"));
-    RestAssured.baseURI = TestProperties.get("DRILL_HOST");
+    RestAssured.port = PropertiesConst.DRILL_PORT;
+    RestAssured.baseURI = PropertiesConst.DRILL_HOST;
 
     RestAssured.given()
         .auth()

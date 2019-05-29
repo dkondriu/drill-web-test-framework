@@ -16,7 +16,7 @@
  */
 package org.apache.drillui.test.framework.testng.unsecure.query;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.apache.drillui.test.framework.steps.webui.BaseSteps;
 import org.apache.drillui.test.framework.steps.webui.ErrorSteps;
 import org.apache.drillui.test.framework.steps.webui.NavigationSteps;
@@ -30,14 +30,15 @@ import static org.testng.Assert.assertTrue;
 
 public class ErrorTest extends BaseUnsecureTest {
 
-  private QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
+  private final QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
+  private final NavigationSteps navigationSteps = BaseSteps.getSteps(NavigationSteps.class);
 
   @Test(groups = {"functional"})
   public void queryWithError() {
     BaseSteps.openUrl("/djmfhhgkdjs");
     String error = ErrorSteps.getFullStackTrace();
     assertFalse(error.isEmpty());
-    switch (TestProperties.get("DRIVER_TYPE")) {
+    switch (PropertiesConst.DRIVER_TYPE) {
       case "FIREFOX":
         assertEquals(error, "errorMessage \"HTTP 404 Not Found\"");
         break;
@@ -53,7 +54,7 @@ public class ErrorTest extends BaseUnsecureTest {
 
   @Test(groups = {"functional"})
   public void queryWithoutError() {
-    NavigationSteps.navigateQuery()
+    navigationSteps.navigateQuery()
         .runSQL("SELECT * FROM cp.`employee.json` LIMIT 9");
     assertTrue(ErrorSteps.getFullStackTrace().isEmpty());
   }

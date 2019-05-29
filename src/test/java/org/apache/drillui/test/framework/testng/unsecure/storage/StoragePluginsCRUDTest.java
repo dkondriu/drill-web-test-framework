@@ -34,6 +34,8 @@ import static org.testng.Assert.assertTrue;
 
 public class StoragePluginsCRUDTest extends BaseUnsecureTest {
   private final StorageSteps storageSteps = BaseSteps.getSteps(StorageSteps.class);
+  private final NavigationSteps navigationSteps = BaseSteps.getSteps(NavigationSteps.class);
+
   private String testPluginConfig =
       "{\n" +
       "  \"type\": \"kafka\",\n" +
@@ -53,7 +55,7 @@ public class StoragePluginsCRUDTest extends BaseUnsecureTest {
 
   @BeforeMethod
   public void beforeMethod() {
-    NavigationSteps.navigateStorage();
+    navigationSteps.navigateStorage();
     if (StorageSteps.exists(testPluginName)) {
       StorageSteps.update(testPluginName);
       EditStoragePluginSteps.delete();

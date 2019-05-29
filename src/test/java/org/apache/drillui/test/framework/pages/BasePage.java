@@ -17,7 +17,7 @@
 package org.apache.drillui.test.framework.pages;
 
 import com.google.common.base.Stopwatch;
-import org.apache.drillui.test.framework.initial.TestProperties;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.apache.drillui.test.framework.initial.WebBrowser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,11 +26,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.HashMap;
@@ -83,7 +80,7 @@ public abstract class BasePage {
   }
 
   protected <V> void waitForCondition(Function<WebDriver, V> condition) {
-    waitForCondition(condition, TestProperties.getInt("DEFAULT_TIMEOUT"));
+    waitForCondition(condition, PropertiesConst.DEFAULT_TIMEOUT);
   }
 
   protected <V> void waitForCondition(Function<WebDriver, V> condition, int timeOut) {
@@ -96,7 +93,7 @@ public abstract class BasePage {
     Stopwatch stopwatch = Stopwatch.createStarted();
     boolean success = false;
     while (!condition.apply(getDriver()) &&
-        stopwatch.elapsed(TimeUnit.SECONDS) < TestProperties.getInt("DEFAULT_TIMEOUT") - 1) {
+        stopwatch.elapsed(TimeUnit.SECONDS) < PropertiesConst.DEFAULT_TIMEOUT - 1) {
       try {
         waitForCondition(condition, timeStep);
         success = true;

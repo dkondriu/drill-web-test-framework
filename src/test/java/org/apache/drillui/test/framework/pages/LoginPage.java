@@ -22,6 +22,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class LoginPage extends BasePage {
+
   @FindBy(xpath = "/html/body/div[2]/div[2]/form/fieldset/div/h4")
   private WebElement loginTitle;
 

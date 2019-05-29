@@ -36,33 +36,35 @@ public class ResultsTableTest extends BaseUnsecureTest {
 
   private final QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
   private final QueryResultsSteps queryResultsSteps = BaseSteps.getSteps(QueryResultsSteps.class);
+  private final NavigationSteps navigationSteps = BaseSteps.getSteps(NavigationSteps.class);
 
   @BeforeMethod
   public void navigateQuery() {
-    NavigationSteps.navigateQuery();
+    navigationSteps.navigateQuery();
   }
 
   @Test(groups = {"functional"})
   public void testSubmitQuery() {
     querySteps.runSQL("SELECT * FROM cp.`employee.json` LIMIT 9");
-    assertEquals(QueryResultsSteps.rowsCount(), 10);
-    assertEquals(QueryResultsSteps.columnsCount(), 16);
+
+    assertEquals(queryResultsSteps.rowsCount(), 10);
+    assertEquals(queryResultsSteps.columnsCount(), 16);
     assertEquals(queryResultsSteps.getRow(1), Arrays.asList("1", "Sheri Nowmer", "Sheri", "Nowmer", "1", "President", "0", "1", "1961-08-26", "1994-12-01 00:00:00.0", "80000.0", "0", "Graduate Degree", "S", "F", "Senior Management"));
-    assertFalse(QueryResultsSteps.isPaginationEnabled());
-    assertEquals(QueryResultsSteps.getQueryStatus(), "COMPLETED");
+    assertFalse(queryResultsSteps.isPaginationEnabled());
+    assertEquals(queryResultsSteps.getQueryStatus(), "COMPLETED");
   }
 
   @Test(groups = {"functional"})
   public void testSubmitPhysicalPlan() {
     List<List<String>> sqlResult = querySteps.runSQL("select * from cp.`employee.json` LIMIT 5")
         .getTable();
-    String physicalPlan = NavigationSteps.navigateQuery()
+    String physicalPlan = navigationSteps.navigateQuery()
         .runSQL("explain plan for select * from cp.`employee.json` LIMIT 5")
         .getRow(1)
         .get(1);
-    NavigationSteps.navigateQuery()
+    navigationSteps.navigateQuery()
         .runPhysical(physicalPlan);
-    assertEquals(sqlResult.size(), QueryResultsSteps.rowsCount());
+    assertEquals(sqlResult.size(), queryResultsSteps.rowsCount());
     for (int i = 0; i < sqlResult.size(); i++) {
       assertEquals(sqlResult.get(i), queryResultsSteps.getRow(i));
     }
@@ -72,13 +74,13 @@ public class ResultsTableTest extends BaseUnsecureTest {
   public void testSubmitLogicalPlan() {
     List<List<String>> sqlResult = querySteps.runSQL("select * from cp.`employee.json` LIMIT 5")
         .getTable();
-    String logicalPlan = NavigationSteps.navigateQuery()
+    String logicalPlan = navigationSteps.navigateQuery()
         .runSQL("explain plan without implementation for select * from cp.`employee.json` LIMIT 5")
         .getRow(1)
         .get(1);
-    NavigationSteps.navigateQuery()
+    navigationSteps.navigateQuery()
         .runLogical(QuerySteps.prepareLogicalPlan(logicalPlan, RESULT_MODE.EXEC));
-    assertEquals(sqlResult.size(), QueryResultsSteps.rowsCount());
+    assertEquals(sqlResult.size(), queryResultsSteps.rowsCount());
     for (int i = 0; i < sqlResult.size(); i++) {
       assertEquals(sqlResult.get(i), queryResultsSteps.getRow(i));
     }
@@ -87,35 +89,35 @@ public class ResultsTableTest extends BaseUnsecureTest {
   @Test(groups = {"functional"})
   public void testPagination() {
     querySteps.runSQL("select * from cp.`employee.json` LIMIT 33");
-    assertFalse(QueryResultsSteps.hasPrevPage());
-    assertTrue(QueryResultsSteps.hasNextPage());
-    assertEquals(QueryResultsSteps.getPageRowsInfo(), "Showing 1 to 10 of 33 entries");
-    assertEquals(QueryResultsSteps.getPaginationPagesCount(), 4);
-    QueryResultsSteps.openPage(2);
-    assertTrue(QueryResultsSteps.hasPrevPage());
-    assertTrue(QueryResultsSteps.hasNextPage());
-    assertEquals(QueryResultsSteps.getPageRowsInfo(), "Showing 11 to 20 of 33 entries");
-    QueryResultsSteps.openPage(4);
-    assertTrue(QueryResultsSteps.hasPrevPage());
-    assertFalse(QueryResultsSteps.hasNextPage());
-    assertEquals(QueryResultsSteps.getPageRowsInfo(), "Showing 31 to 33 of 33 entries");
-    QueryResultsSteps.openPage(1);
-    assertFalse(QueryResultsSteps.hasPrevPage());
-    assertTrue(QueryResultsSteps.hasNextPage());
-    assertEquals(QueryResultsSteps.getPageRowsInfo(), "Showing 1 to 10 of 33 entries");
+    assertFalse(queryResultsSteps.hasPrevPage());
+    assertTrue(queryResultsSteps.hasNextPage());
+    assertEquals(queryResultsSteps.getPageRowsInfo(), "Showing 1 to 10 of 33 entries");
+    assertEquals(queryResultsSteps.getPaginationPagesCount(), 4);
+    queryResultsSteps.openPage(2);
+    assertTrue(queryResultsSteps.hasPrevPage());
+    assertTrue(queryResultsSteps.hasNextPage());
+    assertEquals(queryResultsSteps.getPageRowsInfo(), "Showing 11 to 20 of 33 entries");
+    queryResultsSteps.openPage(4);
+    assertTrue(queryResultsSteps.hasPrevPage());
+    assertFalse(queryResultsSteps.hasNextPage());
+    assertEquals(queryResultsSteps.getPageRowsInfo(), "Showing 31 to 33 of 33 entries");
+    queryResultsSteps.openPage(1);
+    assertFalse(queryResultsSteps.hasPrevPage());
+    assertTrue(queryResultsSteps.hasNextPage());
+    assertEquals(queryResultsSteps.getPageRowsInfo(), "Showing 1 to 10 of 33 entries");
   }
 
   // @Test(groups = {"functional"}) // Disabled due to DRILL-6960
   public void testLimitResults() {
     querySteps.runLimitedSQL("select * from cp.`employee.json` LIMIT 33", "13");
-    assertEquals(QueryResultsSteps.getPaginationPagesCount(), 2);
-    assertEquals(QueryResultsSteps.getPageRowsInfo(), "Showing 1 to 10 of 13 entries");
+    assertEquals(queryResultsSteps.getPaginationPagesCount(), 2);
+    assertEquals(queryResultsSteps.getPageRowsInfo(), "Showing 1 to 10 of 13 entries");
   }
 
   @Test(groups = {"functional"})
   public void testColumnsFilter() {
     querySteps.runSQL("select * from cp.`employee.json` LIMIT 3");
-    QueryResultsSteps.filterColumns(Arrays.asList("employee_id", "full_name"));
+    queryResultsSteps.filterColumns(Arrays.asList("employee_id", "full_name"));
     assertEquals(queryResultsSteps.getRow(1).size(), 2);
     assertEquals(queryResultsSteps.getRow(1).get(0), "1");
     assertEquals(queryResultsSteps.getRow(1).get(1), "Sheri Nowmer");
@@ -124,19 +126,19 @@ public class ResultsTableTest extends BaseUnsecureTest {
   @Test(groups = {"functional"})
   public void testRowsFilter() {
     querySteps.runSQL("select * from cp.`employee.json` LIMIT 3");
-    QueryResultsSteps.findInRows("Nowmer");
+    queryResultsSteps.findInRows("Nowmer");
     assertEquals(queryResultsSteps.getTable().size(), 2);
     assertEquals(queryResultsSteps.getRow(1).get(3), "Nowmer");
-    assertEquals(QueryResultsSteps.getPageRowsInfo(), "Showing 1 to 1 of 1 entries (filtered from 3 total entries)");
+    assertEquals(queryResultsSteps.getPageRowsInfo(), "Showing 1 to 1 of 1 entries (filtered from 3 total entries)");
   }
 
   @Test(groups = {"functional"})
   public void testRowsOutputCounter() {
     querySteps.runSQL("select * from cp.`employee.json` LIMIT 3");
-    QueryResultsSteps.findInRows("Nowmer");
+    queryResultsSteps.findInRows("Nowmer");
     assertEquals(queryResultsSteps.getTable().size(), 2);
     assertEquals(queryResultsSteps.getRow(1).get(3), "Nowmer");
-    assertEquals(QueryResultsSteps.getPageRowsInfo(), "Showing 1 to 1 of 1 entries (filtered from 3 total entries)");
+    assertEquals(queryResultsSteps.getPageRowsInfo(), "Showing 1 to 1 of 1 entries (filtered from 3 total entries)");
   }
 
   @Test(groups = {"functional"})

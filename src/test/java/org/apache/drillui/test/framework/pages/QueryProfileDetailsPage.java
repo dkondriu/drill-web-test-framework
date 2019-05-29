@@ -19,13 +19,12 @@
 package org.apache.drillui.test.framework.pages;
 
 import com.google.common.base.Stopwatch;
-import org.apache.drillui.test.framework.initial.TestProperties;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -235,7 +234,7 @@ public class QueryProfileDetailsPage extends BasePage {
     Stopwatch stopwatch = Stopwatch.createStarted();
     int timeStep = 500;
     boolean success = false;
-    while (stopwatch.elapsed(TimeUnit.SECONDS) < TestProperties.getInt("DEFAULT_TIMEOUT")) {
+    while (stopwatch.elapsed(TimeUnit.SECONDS) < PropertiesConst.DEFAULT_TIMEOUT) {
       try {
         element.click();
         success = true;

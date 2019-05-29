@@ -17,9 +17,7 @@
  */
 package org.apache.drillui.test.framework.pages;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
-import org.apache.drillui.test.framework.steps.webui.BaseSteps;
-import org.apache.drillui.test.framework.steps.webui.ConfirmDialogSteps;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -104,7 +102,7 @@ public class EditStoragePluginPage extends BasePage {
 
   public void create() {
     createButton.get(0).click();
-    new WebDriverWait(getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT"))
+    new WebDriverWait(getDriver(), PropertiesConst.DEFAULT_TIMEOUT)
         .until(ExpectedConditions.stalenessOf(createButton.get(0)));
   }
 
@@ -139,7 +137,7 @@ public class EditStoragePluginPage extends BasePage {
 
   private void waitForTextAreaLoaded() {
     if (getTextAreaContent().equals("")) {
-      new WebDriverWait(getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT"))
+      new WebDriverWait(getDriver(), PropertiesConst.DEFAULT_TIMEOUT)
           .until(driver -> !getTextAreaContent().equals(""));
     }
   }

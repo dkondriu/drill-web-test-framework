@@ -21,23 +21,20 @@ import org.apache.drillui.test.framework.pages.BasePage;
 import org.apache.drillui.test.framework.pages.ChooseAuthMethodPage;
 import org.apache.drillui.test.framework.pages.NavigationPage;
 
-public final class AuthSteps {
+public final class AuthSteps extends BaseSteps{
 
-  private AuthSteps() {
-  }
-
-  public static NavigationPage login(String login, String password) {
+  public NavigationPage login(String login, String password) {
     BasePage.getPage(NavigationPage.class)
         .navigateLogin();
     return performPlainAunth(login, password);
   }
 
-  public static NavigationPage loginFromCustomUrl(String url, String login, String password) {
+  public NavigationPage loginFromCustomUrl(String url, String login, String password) {
     WebBrowser.openURL(url);
     return performPlainAunth(login, password);
   }
 
-  private static NavigationPage performPlainAunth(String login, String password) {
+  private NavigationPage performPlainAunth(String login, String password) {
     return BasePage.getPage(ChooseAuthMethodPage.class)
         .openLoginPage()
         .setUserName(login)
@@ -45,11 +42,11 @@ public final class AuthSteps {
         .submit();
   }
 
-  public static NavigationPage logOut() {
+  public NavigationPage logOut() {
     return BasePage.getPage(NavigationPage.class)
         .navigateLogout();
   }
-  public static String getLogoutText() {
+  public String getLogoutText() {
     return BasePage.getPage(NavigationPage.class)
         .getLogoutText();
   }

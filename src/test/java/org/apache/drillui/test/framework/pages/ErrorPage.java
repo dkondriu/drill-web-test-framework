@@ -16,7 +16,7 @@
  */
 package org.apache.drillui.test.framework.pages;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -45,7 +45,7 @@ public class ErrorPage extends BasePage {
   }
 
   private WebElement getBrowserErrorElement() {
-    switch (TestProperties.get("DRIVER_TYPE")) {
+    switch (PropertiesConst.DRIVER_TYPE) {
       case "FIREFOX":
         return errorElementFirefox;
       case "CHROME":

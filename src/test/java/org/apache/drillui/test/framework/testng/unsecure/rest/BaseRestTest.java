@@ -17,14 +17,15 @@
 package org.apache.drillui.test.framework.testng.unsecure.rest;
 
 import io.restassured.RestAssured;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.apache.drillui.test.framework.initial.TestProperties;
 import org.testng.annotations.BeforeSuite;
 
 public class BaseRestTest {
   @BeforeSuite
   public void setupRestAssured() {
-    RestAssured.port = Integer.parseInt(TestProperties.get("DRILL_PORT"));
-    RestAssured.baseURI = TestProperties.get("DRILL_HOST");
+    RestAssured.port = PropertiesConst.DRILL_PORT;
+    RestAssured.baseURI = PropertiesConst.DRILL_HOST;
     
   }
 }

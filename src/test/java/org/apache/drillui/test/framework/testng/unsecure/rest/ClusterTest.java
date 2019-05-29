@@ -16,7 +16,7 @@
  */
 package org.apache.drillui.test.framework.testng.unsecure.rest;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
@@ -36,7 +36,7 @@ public class ClusterTest extends BaseRestTest {
         .body("drillbits.dataPort", hasItem("31012"))
         .body("drillbits[0].current", equalTo(true))
         .body("drillbits.versionMatch", everyItem(equalTo(true)))
-        .body("currentVersion", equalTo(TestProperties.get("DRILL_VERSION")))
+        .body("currentVersion", equalTo(PropertiesConst.DRILL_VERSION))
         .body("userEncryptionEnabled", equalTo(false))
         .body("bitEncryptionEnabled", equalTo(false))
         .body("authEnabled", equalTo(false));

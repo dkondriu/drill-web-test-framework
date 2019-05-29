@@ -28,12 +28,13 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class ResultsExceptionsTest extends BaseUnsecureTest {
-  private QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
-  private QueryResultsSteps queryResultsSteps = BaseSteps.getSteps(QueryResultsSteps.class);
+  private final QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
+  private final QueryResultsSteps queryResultsSteps = BaseSteps.getSteps(QueryResultsSteps.class);
+  private final NavigationSteps navigationSteps = BaseSteps.getSteps(NavigationSteps.class);
 
   @Test(groups = {"functional"})
   public void queryWithException() {
-    NavigationSteps.navigateQuery()
+    navigationSteps.navigateQuery()
         .runSQL("ELECT * FROM cp.`employee.json` LIMIT 9");
     assertTrue(QueryExceptionsSteps.hasException());
     assertTrue(QueryExceptionsSteps.getFullStackTrace().contains("org.apache.drill.common.exceptions.UserRemoteException: PARSE ERROR: Non-query expression encountered in illegal context"));
@@ -41,7 +42,7 @@ public class ResultsExceptionsTest extends BaseUnsecureTest {
 
   @Test(groups = {"functional"})
   public void backFromException() {
-    NavigationSteps.navigateQuery()
+    navigationSteps.navigateQuery()
         .runSQL("SELECT FROM cp.`employee.json` LIMIT 9");
     assertTrue(QueryExceptionsSteps.hasException());
     assertTrue(QueryExceptionsSteps.getFullStackTrace().contains("org.apache.drill.common.exceptions.UserRemoteException: PARSE ERROR: Encountered \"FROM\" at line 1, column 8."));

@@ -16,24 +16,25 @@
  */
 package org.apache.drillui.test.framework.testng.unsecure;
 
-import org.apache.drillui.test.framework.initial.TestProperties;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.apache.drillui.test.framework.testng.BaseTest;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.apache.drillui.test.framework.steps.webui.AuthSteps;
 
 public class BaseUnsecureTest extends BaseTest {
+  private AuthSteps authSteps = new AuthSteps();
   @BeforeSuite
   public final void beforeSuite() {
-    if (TestProperties.getBool("SECURE_DRILL")) {
-      AuthSteps.login(TestProperties.get("ADMIN_USER1_NAME"), TestProperties.get("ADMIN_USER1_PASSWORD"));
+    if (PropertiesConst.SECURE_DRILL) {
+      authSteps.login(PropertiesConst.ADMIN_1_NAME, PropertiesConst.ADMIN_1_PASSWORD);
     }
   }
 
   @AfterSuite
   public final void afterSuite() {
-    if (TestProperties.getBool("SECURE_DRILL")) {
-      AuthSteps.logOut();
+    if (PropertiesConst.SECURE_DRILL) {
+     authSteps.logOut();
     }
   }
 }

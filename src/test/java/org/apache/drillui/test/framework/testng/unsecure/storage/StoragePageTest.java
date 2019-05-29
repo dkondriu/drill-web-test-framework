@@ -18,6 +18,7 @@
 package org.apache.drillui.test.framework.testng.unsecure.storage;
 
 import org.apache.drillui.test.framework.steps.restapi.RestBaseSteps;
+import org.apache.drillui.test.framework.steps.webui.BaseSteps;
 import org.apache.drillui.test.framework.steps.webui.NavigationSteps;
 import org.apache.drillui.test.framework.steps.webui.StorageSteps;
 import org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest;
@@ -30,6 +31,8 @@ import static org.testng.Assert.assertTrue;
 
 public class StoragePageTest extends BaseUnsecureTest {
 
+  private final NavigationSteps navigationSteps = BaseSteps.getSteps(NavigationSteps.class);
+
   @BeforeClass
   public void setupStoragePlugins() {
     RestBaseSteps.setupStoragePlugins();
@@ -37,7 +40,7 @@ public class StoragePageTest extends BaseUnsecureTest {
 
   @BeforeMethod
   public void navigateStorage() {
-    NavigationSteps.navigateStorage();
+   navigationSteps.navigateStorage();
   }
 
   @Test(groups = {"functional"})

@@ -17,6 +17,7 @@
  */
 package org.apache.drillui.test.framework.pages;
 
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.apache.drillui.test.framework.initial.TestProperties;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -93,7 +94,7 @@ public class StoragePage extends BasePage {
   public StoragePage enableStoragePlugin(String name) {
     WebElement button = getButton(getDisabledStoragePlugins().get(name), "Enable");
     button.click();
-    new WebDriverWait(getDriver(), TestProperties.getInt("DEFAULT_TIMEOUT")).until(ExpectedConditions.stalenessOf(button));
+    new WebDriverWait(getDriver(), PropertiesConst.DEFAULT_TIMEOUT).until(ExpectedConditions.stalenessOf(button));
     return this;
   }
 

@@ -23,16 +23,16 @@ import java.util.List;
 
 public final class QueryResultsSteps extends BaseSteps {
 
-  private static QueryResultsPage getPage() {
+  private QueryResultsPage getPage() {
     return BasePage.getPage(QueryResultsPage.class);
   }
 
-  public static int rowsCount() {
+  public int rowsCount() {
     return getPage().getResultsTable()
         .size();
   }
 
-  public static int columnsCount() {
+  public int columnsCount() {
     return getPage().getResultsTable()
         .get(0)
         .size();
@@ -47,12 +47,12 @@ public final class QueryResultsSteps extends BaseSteps {
     return getPage().getResultsTable();
   }
 
-  public static void findInRows(String text) {
+  public void findInRows(String text) {
     BasePage.getPage(QueryResultsPage.class)
         .findInRows(text);
   }
 
-  public static boolean isPaginationEnabled() {
+  public boolean isPaginationEnabled() {
     QueryResultsPage queryResultsPage = BasePage.getPage(QueryResultsPage.class);
     BaseSteps.setImplicitWait(0);
     boolean hasPagination = queryResultsPage.hasPrevPage() ||
@@ -62,7 +62,7 @@ public final class QueryResultsSteps extends BaseSteps {
     return hasPagination;
   }
 
-  public static int getPaginationPagesCount() {
+  public int getPaginationPagesCount() {
     BaseSteps.setImplicitWait(0);
     int count = BasePage.getPage(QueryResultsPage.class)
         .getPaginationPagesCount();
@@ -70,7 +70,7 @@ public final class QueryResultsSteps extends BaseSteps {
     return count;
   }
 
-  public static void openPage(int pageNumber) {
+  public void openPage(int pageNumber) {
     BaseSteps.setImplicitWait(0);
     BasePage.getPage(QueryResultsPage.class).openPage(pageNumber);
     BaseSteps.resetImplicitWait();
@@ -80,27 +80,27 @@ public final class QueryResultsSteps extends BaseSteps {
     return getPage().getQueryProfile();
   }
 
-  public static boolean hasPrevPage() {
+  public boolean hasPrevPage() {
     return BasePage.getPage(QueryResultsPage.class)
         .hasPrevPage();
   }
 
-  public static boolean hasNextPage() {
+  public boolean hasNextPage() {
     return BasePage.getPage(QueryResultsPage.class)
         .hasNextPage();
   }
 
-  public static String getPageRowsInfo() {
+  public String getPageRowsInfo() {
     return BasePage.getPage(QueryResultsPage.class)
         .getPageRowsInfo();
   }
 
-  public static String getQueryStatus() {
+  public String getQueryStatus() {
     return BasePage.getPage(QueryResultsPage.class)
         .getQueryStatus();
   }
 
-  public static void filterColumns(List<String> columns) {
+  public void filterColumns(List<String> columns) {
     BasePage.getPage(QueryResultsPage.class)
         .filterColumns(columns);
   }

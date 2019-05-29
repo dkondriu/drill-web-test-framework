@@ -28,10 +28,11 @@ import static org.testng.Assert.assertEquals;
 public class DateOutputTest extends BaseUnsecureTest {
 
   private final QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
+  private final NavigationSteps navigationSteps=BaseSteps.getSteps(NavigationSteps.class);
 
   @BeforeMethod
   public void navigateQuery() {
-    NavigationSteps.navigateQuery();
+   navigationSteps.navigateQuery();
   }
 
   @Test(groups = {"functional"})

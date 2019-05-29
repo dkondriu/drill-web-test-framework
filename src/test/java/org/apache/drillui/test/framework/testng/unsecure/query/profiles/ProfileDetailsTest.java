@@ -34,19 +34,16 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class ProfileDetailsTest extends BaseUnsecureTest {
-
   private final String testQuery = "select * from cp.`tpch/nation.parquet` limit 5";
-
   private final QueryProfileDetailsSteps queryProfileDetailsSteps = BaseSteps.getSteps(QueryProfileDetailsSteps.class);
-
   private final QuerySteps querySteps = BaseSteps.getSteps(QuerySteps.class);
-
+  private final NavigationSteps navigationSteps = BaseSteps.getSteps(NavigationSteps.class);
   private String queryProfile;
 
   @BeforeClass
   public final void setupProfileDetailsTest() {
     RestBaseSteps.setupStoragePlugins();
-    NavigationSteps.navigateQuery();
+    navigationSteps.navigateQuery();
     queryProfile = querySteps.runSQL(testQuery)
         .getQueryProfile();
   }
@@ -118,11 +115,11 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
   @Test
   public void rerunPhysicalPlan() {
     // Getting the physical plan if not present
-    NavigationSteps.navigateQuery();
+    navigationSteps.navigateQuery();
     String queryPlan = querySteps.explainPlanForQuery(testQuery)
         .getRow(1).get(1);
     // Preparation: submitting the physical plan and getting the profile
-    String newQueryProfile = NavigationSteps.navigateQuery()
+    String newQueryProfile = navigationSteps.navigateQuery()
         .runPhysical(queryPlan)
         .getQueryProfile();
     // The test itself
@@ -138,12 +135,12 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
   @Test
   public void rerunLogicalPlan() {
     // Getting the physical plan
-    NavigationSteps.navigateQuery();
+    navigationSteps.navigateQuery();
     String queryPlan = querySteps.explainPlanLogicalForQuery(testQuery)
         .getRow(1).get(1)
         .replace("\"LOGICAL\"", "\"EXEC\"");
     // Preparation: submitting the physical plan and opening the profile
-    String newQueryProfile = NavigationSteps.navigateQuery()
+    String newQueryProfile = navigationSteps.navigateQuery()
         .runLogical(queryPlan)
         .getQueryProfile();
     // The test itself
@@ -196,7 +193,7 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
     expectedPlan.getNode("HashJoin 00-05")
         .append("Scan 00-07");
     String complexSQL = "select t1.n_nationkey from cp.`tpch/nation.parquet` t1 join cp.`tpch/nation.parquet` t2 on t1.n_nationkey = t2.n_nationkey limit 5";
-    NavigationSteps.navigateQuery();
+    navigationSteps.navigateQuery();
     String complexPlanProfile = querySteps.runSQL(complexSQL)
         .getQueryProfile();
     QueryProfileDetailsSteps.VisualPlan actualPlan = queryProfileDetailsSteps.openProfile(complexPlanProfile)
@@ -208,7 +205,7 @@ public class ProfileDetailsTest extends BaseUnsecureTest {
   @Test
   public void verifyPrintPlan() {
     String complexSQL = "select t1.n_nationkey from cp.`tpch/nation.parquet` t1 join cp.`tpch/nation.parquet` t2 on t1.n_nationkey = t2.n_nationkey limit 5";
-    NavigationSteps.navigateQuery();
+    navigationSteps.navigateQuery();
     String complexPlanProfile = querySteps.runSQL(complexSQL)
         .getQueryProfile();
     QueryProfileDetailsSteps.VisualPlan expectedPlan = queryProfileDetailsSteps.new VisualPlan();

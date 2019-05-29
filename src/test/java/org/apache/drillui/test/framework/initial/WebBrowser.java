@@ -35,7 +35,7 @@ public abstract class WebBrowser {
   private static LinkedList<String> parentWindows = new LinkedList<>();
 
   private static void init() {
-    switch (TestProperties.get("DRIVER_TYPE")) {
+    switch (PropertiesConst.DRIVER_TYPE) {
       case "CHROME":
         System.setProperty("webdriver.chrome.driver", getWebdriversPath());
         driver = new ChromeDriver();
@@ -62,7 +62,7 @@ public abstract class WebBrowser {
   }
 
   private static String getWebdriversPath() {
-    String path = "webdrivers/" + TestProperties.OS + "_" + TestProperties.get("DRIVER_TYPE");
+    String path = "webdrivers/" + TestProperties.OS + "_" + PropertiesConst.DRIVER_TYPE;
     if(TestProperties.OS.equals("WINDOWS")) {
       path += ".exe";
     }
@@ -74,7 +74,7 @@ public abstract class WebBrowser {
   }
 
   public static void resetImplicitWait () {
-    setImplicitWait(TestProperties.getInt("DEFAULT_TIMEOUT"));
+    setImplicitWait(PropertiesConst.DEFAULT_TIMEOUT);
   }
 
   public static WebDriver getDriver() {
@@ -86,7 +86,7 @@ public abstract class WebBrowser {
   }
 
   public static void openURL(String url) {
-    getDriver().get(TestProperties.get("DRILL_HOST") + ":" + TestProperties.get("DRILL_PORT") + url);
+    getDriver().get(PropertiesConst.DRILL_HOST + ":" + PropertiesConst.DRILL_PORT + url);
   }
 
   public static String getURL() {
@@ -128,7 +128,7 @@ public abstract class WebBrowser {
   }
 
   public static void waitForWindowOpening(int numberOfOpenWindows) {
-    new WebDriverWait(driver, TestProperties.getInt("DEFAULT_TIMEOUT"))
+    new WebDriverWait(driver, PropertiesConst.DEFAULT_TIMEOUT)
         .until(driver -> driver.getWindowHandles().size() != numberOfOpenWindows);
   }
 }

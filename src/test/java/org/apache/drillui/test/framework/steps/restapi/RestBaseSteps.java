@@ -19,6 +19,7 @@ package org.apache.drillui.test.framework.steps.restapi;
 
 import io.restassured.RestAssured;
 import org.apache.commons.io.IOUtils;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 import org.apache.drillui.test.framework.initial.TestProperties;
 
 import java.io.InputStream;
@@ -51,8 +52,8 @@ public final class RestBaseSteps {
   }
 
   public static void setupREST() {
-    RestAssured.baseURI = TestProperties.get("DRILL_HOST");
-    RestAssured.port = TestProperties.getInt("DRILL_PORT");
+    RestAssured.baseURI = PropertiesConst.DRILL_HOST;
+    RestAssured.port = PropertiesConst.DRILL_PORT;
   }
 
   private static String getPluginFromResource(String resource) {
@@ -65,7 +66,7 @@ public final class RestBaseSteps {
   }
 
   private static String getDefaultDfsPlugin() {
-    String pluginPath = TestProperties.getBool("DISTRIBUTED_MODE") ?
+    String pluginPath = PropertiesConst.DISTRIBUTED_MODE ?
         "restapi/storage/plugins/DfsDefaultMapRFS.json" :
         "restapi/storage/plugins/DfsDefaultEmbedded.json";
     return getPluginFromResource(pluginPath);

@@ -20,7 +20,7 @@ package org.apache.drillui.test.framework.steps.restapi;
 import io.restassured.RestAssured;
 import io.restassured.authentication.FormAuthConfig;
 import io.restassured.filter.session.SessionFilter;
-import org.apache.drillui.test.framework.initial.TestProperties;
+import org.apache.drillui.test.framework.initial.PropertiesConst;
 
 public final class RestSecuritySteps {
 
@@ -28,10 +28,8 @@ public final class RestSecuritySteps {
   }
 
   public static SessionFilter getDefaultSession() {
-    return TestProperties.getBool("SECURE_DRILL") ?
-        login(
-            TestProperties.get("ADMIN_USER1_NAME"),
-            TestProperties.get("ADMIN_USER1_PASSWORD")) :
+    return PropertiesConst.SECURE_DRILL ?
+        login(PropertiesConst.ADMIN_1_NAME, PropertiesConst.ADMIN_1_PASSWORD) :
         new SessionFilter();
   }
 
