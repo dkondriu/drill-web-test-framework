@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<!-- mvn clean test -Dsurefire.suiteXmlFiles=test_suites/functional.xml -->
+<suite name="Secure tests" verbose="2" annotations="JDK">
+  <test name="a-t1" preserve-order="true" >
+    <packages>
+      <package name="org.apache.drill_web_test_framework.rest_api.tests.unsecure.*" />
+    </packages>
+  </test>
+</suite>
