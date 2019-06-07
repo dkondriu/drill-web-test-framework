@@ -1,5 +1,5 @@
 .idea
-drill-webui-test-framework.iml
+*.iml
 target
 conf/init.properties
 conf\init.properties
