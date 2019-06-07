@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<!-- mvn clean test -Dsurefire.suiteXmlFiles=test_suites/security.xml -DDRIVER_TYPE=FIREFOX -->
+<!-- mvn clean test -Dsurefire.suiteXmlFiles=test_suites/web_ui/security.xml -DDRIVER_TYPE=FIREFOX -->
 <suite name="Secure tests" verbose="2" annotations="JDK">
   <listeners>
     <listener class-name="org.apache.drill_web_test_framework.web_ui.tests.TestEventsListener" />

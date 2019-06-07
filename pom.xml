@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.cybervisiontech</groupId>
-  <artifactId>drill-webui-test-framework</artifactId>
+  <artifactId>drill-web-test-framework</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
 

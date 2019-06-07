@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<!-- mvn clean test -Dsurefire.suiteXmlFiles=test_suites/security.xml -->
+<!-- mvn clean test -Dsurefire.suiteXmlFiles=test_suites/rest_api/security.xml -->
 <suite name="Secure tests" verbose="2" annotations="JDK">
   <test name="a-t1" preserve-order="true" >
     <packages>
