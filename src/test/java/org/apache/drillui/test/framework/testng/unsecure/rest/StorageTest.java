@@ -107,7 +107,7 @@ public class StorageTest extends BaseRestTest {
         .post("/storage/testPlugin.json")
         .then()
         .statusCode(200)
-        .body(containsString("success"));
+        .body(containsString("Success"));
   }
   @Test(dependsOnMethods = {"addNewPlugin"})
   public void getTestPlugin() {
