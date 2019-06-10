@@ -42,7 +42,7 @@ public abstract class WebBrowser {
   private static void init() throws MalformedURLException {
     DesiredCapabilities capabilities = new DesiredCapabilities();
     capabilities.setBrowserName(TestProperties.get("DRIVER_TYPE").toLowerCase());
-    capabilities.setVersion("75.0");
+    capabilities.setVersion("74.0");
     capabilities.setCapability("enableVNC", true);
     capabilities.setCapability("enableVideo", false);
     capabilities.setCapability("screenResolution", "1920x1080x24");
