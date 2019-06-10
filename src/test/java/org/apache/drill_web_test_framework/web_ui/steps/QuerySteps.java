@@ -27,7 +27,7 @@ public final class QuerySteps extends BaseSteps {
   }
 
   public QueryResultsSteps runLimitedSQL(String queryText, String resultRowsCount) {
-    BasePage.getPage(QueryPage.class)
+    getQueryPage()
         .setQueryType(QueryType.SQL)
         .limitQueryResults(resultRowsCount)
         .submitQuery(queryText);
@@ -35,21 +35,21 @@ public final class QuerySteps extends BaseSteps {
   }
 
   public QueryResultsSteps runSQL(String queryText) {
-    BasePage.getPage(QueryPage.class)
+    getQueryPage()
         .setQueryType(QueryType.SQL)
         .submitQuery(queryText);
     return getSteps(QueryResultsSteps.class);
   }
 
   public QueryResultsSteps runPhysical(String queryText) {
-    BasePage.getPage(QueryPage.class)
+    getQueryPage()
         .setQueryType(QueryType.PHYSICAL)
         .submitQuery(queryText);
     return getSteps(QueryResultsSteps.class);
   }
 
   public QueryResultsSteps runLogical(String queryText) {
-    BasePage.getPage(QueryPage.class)
+    getQueryPage()
         .setQueryType(QueryType.LOGICAL)
         .submitQuery(queryText);
     return getSteps(QueryResultsSteps.class);
@@ -65,5 +65,9 @@ public final class QuerySteps extends BaseSteps {
 
   public QueryResultsSteps explainPlanLogicalForQuery(String queryText) {
     return runSQL("explain plan without implementation for " + queryText);
+  }
+
+  private QueryPage getQueryPage() {
+    return BasePage.getPage(QueryPage.class);
   }
 }

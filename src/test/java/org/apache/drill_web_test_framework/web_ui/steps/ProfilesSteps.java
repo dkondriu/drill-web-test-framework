@@ -22,14 +22,18 @@ import org.apache.drill_web_test_framework.web_ui.pages.ProfilesPage;
 
 public class ProfilesSteps extends BaseSteps {
   public boolean isQueryProfileINList(String queryProfile) {
-    return BasePage.getPage(ProfilesPage.class).isQueryProfileINList(queryProfile);
+    return getProfilesPage().isQueryProfileINList(queryProfile);
   }
 
   public boolean isUsersNameInProfileList(String userName) {
-    return BasePage.getPage(ProfilesPage.class).isUsersNameInProfileList(userName);
+    return getProfilesPage().isUsersNameInProfileList(userName);
   }
 
   public void selectAllInDropDownList() {
-    BasePage.getPage(ProfilesPage.class).selectAllInDropDownList();
+    getProfilesPage().selectAllInDropDownList();
+  }
+
+  private ProfilesPage getProfilesPage() {
+    return BasePage.getPage(ProfilesPage.class);
   }
 }

@@ -16,23 +16,41 @@
  */
 package org.apache.drill_web_test_framework.web_ui.steps;
 
-import org.apache.drill_web_test_framework.web_ui.pages.BasePage;
 import org.apache.drill_web_test_framework.web_ui.pages.NavigationPage;
-import org.apache.drill_web_test_framework.web_ui.pages.StoragePage;
-import org.apache.drill_web_test_framework.web_ui.pages.ProfilesPage;
+
+import static org.apache.drill_web_test_framework.web_ui.pages.BasePage.getPage;
 
 public final class NavigationSteps extends BaseSteps {
 
   public QuerySteps navigateQuery() {
-    BasePage.getPage(NavigationPage.class).navigateQuery();
-    return BaseSteps.getSteps(QuerySteps.class);
+    getNavigationPage().navigateQuery();
+    return getSteps(QuerySteps.class);
   }
 
-  public StoragePage navigateStorage() {
-    return BasePage.getPage(NavigationPage.class).navigateStorage();
+  public StorageSteps navigateStorage() {
+    getNavigationPage().navigateStorage();
+    return getSteps(StorageSteps.class);
   }
 
-  public ProfilesPage navigateProfiles() {
-    return BasePage.getPage(NavigationPage.class).navigateProfiles();
+  public ProfilesSteps navigateProfiles() {
+    getNavigationPage().navigateProfiles();
+    return getSteps(ProfilesSteps.class);
+  }
+
+  public NavigationSteps navigateLogout() {
+    getNavigationPage().navigateLogout();
+    return getSteps(NavigationSteps.class);
+  }
+
+  public String getLoginText() {
+    return getNavigationPage().getLoginText();
+  }
+
+  public String getLogoutText() {
+    return getNavigationPage().getLogoutText();
+  }
+
+  private NavigationPage getNavigationPage() {
+    return getPage(NavigationPage.class);
   }
 }

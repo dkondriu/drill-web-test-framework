@@ -50,9 +50,9 @@ public final class StorageSteps extends BaseSteps {
 
   public static boolean addPluginMode() {
     return getStoragePage().formTitlePresented() &&
-            getStoragePage().pluginNameInputPresented() &&
-            getStoragePage().closeButtonPresented() &&
-            getStoragePage().submitButtonPresented();
+        getStoragePage().pluginNameInputPresented() &&
+        getStoragePage().closeButtonPresented() &&
+        getStoragePage().submitButtonPresented();
   }
 
   public StorageSteps fillNewPluginData(String name, String pluginConfig) {

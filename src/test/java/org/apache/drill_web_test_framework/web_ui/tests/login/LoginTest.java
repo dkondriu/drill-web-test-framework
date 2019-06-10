@@ -44,28 +44,28 @@ public class LoginTest extends BaseTest {
   public void adminsViewVsUsersViewInSecurityMode() {
     //Step 1. Run query for Admin1
     assertEquals(authSteps.login(PropertiesConst.ADMIN_1_NAME, PropertiesConst.ADMIN_1_PASSWORD).navigateQuery()
-        .submitQuery(defaultQueryString)
+        .runSQL(defaultQueryString)
         .getQueryStatus(), completedStatus);
     String admin_1_QueryProfile = queryResultsSteps.getQueryProfile();
     authSteps.logOut();
 
     //Step 2. Run query for Admin2
     assertEquals(authSteps.login(PropertiesConst.ADMIN_2_NAME, PropertiesConst.ADMIN_2_PASSWORD).navigateQuery()
-        .submitQuery(defaultQueryString)
+        .runSQL(defaultQueryString)
         .getQueryStatus(), completedStatus);
     String admin_2_QueryProfile = queryResultsSteps.getQueryProfile();
     authSteps.logOut();
 
     //Step 3. Run query for User1
     assertEquals(authSteps.login(PropertiesConst.USER_1_NAME, PropertiesConst.USER_1_PASSWORD).navigateQuery()
-        .submitQuery(defaultQueryString)
+        .runSQL(defaultQueryString)
         .getQueryStatus(), completedStatus);
     String user_1_QueryProfile = queryResultsSteps.getQueryProfile();
     authSteps.logOut();
 
     //Step 4. Run query for User2
     assertEquals(authSteps.login(PropertiesConst.USER_2_NAME, PropertiesConst.USER_2_PASSWORD).navigateQuery()
-        .submitQuery(defaultQueryString)
+        .runSQL(defaultQueryString)
         .getQueryStatus(), completedStatus);
     String user_2_QueryProfile = queryResultsSteps.getQueryProfile();
     authSteps.logOut();

@@ -16,39 +16,49 @@
  */
 package org.apache.drill_web_test_framework.web_ui.steps;
 
-import org.apache.drill_web_test_framework.web_ui.pages.BasePage;
-import org.apache.drill_web_test_framework.web_ui.pages.NavigationPage;
 import org.apache.drill_web_test_framework.web_ui.WebBrowser;
 import org.apache.drill_web_test_framework.web_ui.pages.ChooseAuthMethodPage;
+import org.apache.drill_web_test_framework.web_ui.pages.NavigationPage;
 
+import static org.apache.drill_web_test_framework.web_ui.pages.BasePage.getPage;
 
-public final class AuthSteps extends BaseSteps{
+public final class AuthSteps extends BaseSteps {
 
-  public NavigationPage login(String login, String password) {
-    BasePage.getPage(NavigationPage.class)
+  public NavigationSteps login(String login, String password) {
+    getNavigationPage()
         .navigateLogin();
-    return performPlainAunth(login, password);
+    return performPlainAuth(login, password);
   }
 
-  public NavigationPage loginFromCustomUrl(String url, String login, String password) {
+  public NavigationSteps loginFromCustomUrl(String url, String login, String password) {
     WebBrowser.openURL(url);
-    return performPlainAunth(login, password);
+    return performPlainAuth(login, password);
   }
 
-  private NavigationPage performPlainAunth(String login, String password) {
-    return BasePage.getPage(ChooseAuthMethodPage.class)
+  private NavigationSteps performPlainAuth(String login, String password) {
+    getPage(ChooseAuthMethodPage.class)
         .openLoginPage()
         .setUserName(login)
         .setUserPassword(password)
         .submit();
+    return getNavigationSteps();
   }
 
-  public NavigationPage logOut() {
-    return BasePage.getPage(NavigationPage.class)
+  public NavigationSteps logOut() {
+    return getNavigationSteps()
         .navigateLogout();
   }
+
   public String getLogoutText() {
-    return BasePage.getPage(NavigationPage.class)
+    return getNavigationSteps()
         .getLogoutText();
+  }
+
+  private NavigationPage getNavigationPage() {
+    return getPage(NavigationPage.class);
+  }
+
+  private NavigationSteps getNavigationSteps() {
+    return getSteps(NavigationSteps.class);
   }
 }
