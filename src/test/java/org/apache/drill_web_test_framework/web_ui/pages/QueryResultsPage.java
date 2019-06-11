@@ -145,6 +145,20 @@ public class QueryResultsPage extends BasePage {
   public QueryResultsPage showResultRows(String rowsCount) {
     rowsPerPage.click();
     rowsPerPage.findElement(By.xpath("//*[text() = '" + rowsCount + "']")).click();
+    if (!rowsCount.equals("ALL")) {
+      waitForRowsCount((Integer.parseInt(rowsCount) + 1));
+    } else {
+      Matcher matcher = Pattern.compile("([\\d]+)\\w*entries")
+          .matcher(pageRowsInfo.getText());
+      if (matcher.find()) {
+        waitForRowsCount((Integer.parseInt(matcher.group(1)) + 1));
+      }
+    }
+    return getPage(QueryResultsPage.class);
+  }
+
+  public QueryResultsPage waitForRowsCount(int rowsCount) {
+    waitForCondition(driver -> getResultsTable().size() == rowsCount);
     return getPage(QueryResultsPage.class);
   }
 }

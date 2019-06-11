@@ -107,11 +107,11 @@ public class ResultsTableTest extends FunctionalTest {
     assertEquals(queryResultsSteps.getPageRowsInfo(), "Showing 1 to 10 of 33 entries");
   }
 
-  // @Test(groups = {"functional"}) // Disabled due to DRILL-6960
+  //@Test(groups = {"functional"}) // Functional is unstable. Rows are always limited after first usage
   public void testLimitResults() {
     querySteps.runLimitedSQL("select * from cp.`employee.json` LIMIT 33", "13");
     assertEquals(queryResultsSteps.getPaginationPagesCount(), 2);
-    assertEquals(queryResultsSteps.getPageRowsInfo(), "Showing 1 to 10 of 13 entries");
+    assertEquals(queryResultsSteps.getPageRowsInfo(), "Showing 1 to 10 of 13 entries [NOTE: Results are auto-limited to max 13 rows]");
   }
 
   @Test(groups = {"functional"})
@@ -143,7 +143,8 @@ public class ResultsTableTest extends FunctionalTest {
 
   @Test(groups = {"functional"})
   public void testShowEntries() {
-    assertEquals(querySteps.runSQL("select * from cp.`employee.json` LIMIT 150").getTable().size(), 11);
+    querySteps.runSQL("select * from cp.`employee.json` LIMIT 150")
+        .waitForRowsCount(11);
     assertEquals(queryResultsSteps.showResultRows("25").getTable().size(), 26);
     assertEquals(queryResultsSteps.showResultRows("50").getTable().size(), 51);
     assertEquals(queryResultsSteps.showResultRows("75").getTable().size(), 76);

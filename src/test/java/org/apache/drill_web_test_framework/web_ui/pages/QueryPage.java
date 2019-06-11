@@ -44,10 +44,10 @@ public class QueryPage extends BasePage {
   @FindBy(xpath = "//*[@id=\"queryForm\"]/button")
   private WebElement submitButton;
 
-  @FindBy(xpath = "//*[@id=\"queryForm\"]/input[1]")
+  @FindBy(css = "input[value='limit']")
   private WebElement limitResultsCheckbox;
 
-  @FindBy(id = "queryLimit")
+  @FindBy(id = "autoLimit")
   private WebElement limitResultsInput;
 
   public WebElement getQueryTypeLabel() {
