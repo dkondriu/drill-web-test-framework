@@ -38,14 +38,14 @@ public abstract class WebBrowser {
 
   private static void init() throws MalformedURLException {
     DesiredCapabilities capabilities = new DesiredCapabilities();
-    capabilities.setBrowserName(TestProperties.get("DRIVER_TYPE").toLowerCase());
+    capabilities.setBrowserName("chrome");
     capabilities.setVersion("75.0");
     capabilities.setCapability("enableVNC", true);
     capabilities.setCapability("enableVideo", false);
     capabilities.setCapability("screenResolution", "1920x1080x24");
     
     driver = new RemoteWebDriver(
-        URI.create("http://192.168.122.15:4444/wd/hub").toURL(), 
+        URI.create("http://192.168.122.15:4444/").toURL(), 
         capabilities
     );
     driver.manage().window().setSize(new Dimension(1920, 1080));
