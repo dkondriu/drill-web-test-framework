@@ -45,7 +45,7 @@ public abstract class WebBrowser {
     capabilities.setCapability("screenResolution", "1920x1080x24");
     
     driver = new RemoteWebDriver(
-        URI.create("http://10.234.238.57:4444/").toURL(), 
+        URI.create("http://10.234.238.57:4444/wd/hub").toURL(), 
         capabilities
     );
     driver.manage().window().setSize(new Dimension(1920, 1080));
