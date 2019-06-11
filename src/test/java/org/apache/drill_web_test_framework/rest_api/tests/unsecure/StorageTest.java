@@ -104,7 +104,7 @@ public class StorageTest extends BaseRestTest {
         .post("/storage/testPlugin.json")
         .then()
         .statusCode(200)
-        .body(containsString("success"));
+        .body(containsString("Success"));
   }
   @Test(dependsOnMethods = {"addNewPlugin"})
   public void getTestPlugin() {
@@ -165,7 +165,7 @@ public class StorageTest extends BaseRestTest {
         .post("/storage/testPlugin.json")
         .then()
         .statusCode(200)
-        .body(containsString("success"));
+        .body(containsString("Success"));
   }
   @Test(dependsOnMethods = {"updateTestPlugin"})
   public void checkUpdatedTestPlugin() {
@@ -251,7 +251,7 @@ public class StorageTest extends BaseRestTest {
         .get("/storage/testPlugin/enable/false")
         .then()
         .statusCode(200)
-        .body(containsString("success"));
+        .body(containsString("Success"));
   }
   @Test(dependsOnMethods = {"disableTestPlugin"})
   public void verifyDisabledTestPlugin() {
@@ -270,7 +270,7 @@ public class StorageTest extends BaseRestTest {
         .delete("/storage/testPlugin.json")
         .then()
         .statusCode(200)
-        .body(containsString("success"));
+        .body(containsString("Success"));
   }
   @Test(dependsOnMethods = {"deleteTestPlugin"})
   public void checkDeleteTestPlugin() {

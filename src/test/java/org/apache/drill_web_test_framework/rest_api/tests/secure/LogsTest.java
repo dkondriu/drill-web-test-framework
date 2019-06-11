@@ -35,7 +35,7 @@ public class LogsTest extends BaseRestTest {
         .get("/logs.json")
         .then()
         .statusCode(500)
-        .body(containsString("HTTP 403 Forbidden"));
+        .body(containsString("User not authorized."));
   }
   //todo: what if sqlline.log file is not yet created?
   //@Test

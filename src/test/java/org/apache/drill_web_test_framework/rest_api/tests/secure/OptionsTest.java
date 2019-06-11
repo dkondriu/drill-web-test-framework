@@ -32,7 +32,7 @@ public class OptionsTest extends BaseRestTest {
         .get("/options.json")
         .then()
         .statusCode(500)
-        .body(containsString("HTTP 403 Forbidden"));
+        .body(containsString("User not authorized."));
   }
   @Test
   public void adminAccessOptionsPage() {

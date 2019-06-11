@@ -17,6 +17,7 @@
 package org.apache.drill_web_test_framework.rest_api.tests.secure;
 
 import io.restassured.response.Response;
+import org.apache.drill_web_test_framework.properties.PropertiesConst;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class ProfilesTest extends BaseRestTest {
         .get("/profiles.json")
         .then()
         .statusCode(200)
-        .body("finishedQueries.user", everyItem(equalTo(drillUserName)));
+        .body("finishedQueries.user", everyItem(equalTo(PropertiesConst.USER_1_NAME)));
   }
   @Test
   public void adminProfilesPage() {
@@ -54,7 +55,7 @@ public class ProfilesTest extends BaseRestTest {
         .get("/profiles.json")
         .then()
         .statusCode(200)
-        .body("finishedQueries.user", hasItems(drillUserName, drillSecondUserName, drillAdminUserName));
+        .body("finishedQueries.user", hasItems(PropertiesConst.USER_1_NAME, PropertiesConst.USER_2_NAME, PropertiesConst.ADMIN_1_NAME));
   }
   // Where to get test data for the query???
   //@Test

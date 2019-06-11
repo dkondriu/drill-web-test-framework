@@ -34,7 +34,7 @@ public class StorageTest extends BaseRestTest {
         .get("/storage.json")
         .then()
         .statusCode(500)
-        .body(containsString("HTTP 403 Forbidden"));
+        .body(containsString("User not authorized."));
   }
   @Test
   public void adminStoragePage() {
@@ -105,7 +105,7 @@ public class StorageTest extends BaseRestTest {
         .post("/storage/testPlugin1.json")
         .then()
         .statusCode(500)
-        .body(containsString("HTTP 403 Forbidden"));
+        .body(containsString("User not authorized."));
   }
   @Test
   public void adminAddPlugin() {
@@ -133,7 +133,7 @@ public class StorageTest extends BaseRestTest {
         .post("/storage/testPlugin1.json")
         .then()
         .statusCode(200)
-        .body(containsString("success"));
+        .body(containsString("Success"));
   }
   @Test(dependsOnMethods = {"adminAddPlugin"})
   public void checkTestPlugin() {
@@ -180,7 +180,7 @@ public class StorageTest extends BaseRestTest {
         .post("/storage/testPlugin1.json")
         .then()
         .statusCode(200)
-        .body(containsString("success"));
+        .body(containsString("Success"));
   }
   @Test(dependsOnMethods = {"adminUpdateTestPlugin"})
   public void nonAdminDeletePlugin() {
@@ -190,7 +190,7 @@ public class StorageTest extends BaseRestTest {
         .delete("/storage/testPlugin1.json")
         .then()
         .statusCode(500)
-        .body(containsString("HTTP 403 Forbidden"));
+        .body(containsString("User not authorized."));
   }
   @Test(dependsOnMethods = {"adminUpdateTestPlugin"})
   public void adminDeletePlugin() {
@@ -200,6 +200,6 @@ public class StorageTest extends BaseRestTest {
         .delete("/storage/testPlugin1.json")
         .then()
         .statusCode(200)
-        .body(containsString("success"));
+        .body(containsString("Success"));
   }
 }
