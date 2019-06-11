@@ -6,15 +6,7 @@
   </listeners>
   <test name="a-t1" preserve-order="true" >
     <classes>
-      <!--class name="org.apache.drillui.test.framework.testng.unsecure.BaseUnsecureTest" /-->
       <class name="org.apache.drillui.test.framework.testng.unsecure.nav.NavigationTest" />
-      <!--class name="org.apache.drillui.test.framework.testng.unsecure.query.DateOutputTest" />
-      <class name="org.apache.drillui.test.framework.testng.unsecure.query.ResultsTableTest" />
-      <class name="org.apache.drillui.test.framework.testng.unsecure.query.ErrorTest" />
-      <class name="org.apache.drillui.test.framework.testng.unsecure.query.ResultsExceptionsTest" />
-      <class name="org.apache.drillui.test.framework.testng.unsecure.query.profiles.ProfileDetailsTest" />
-      <class name="org.apache.drillui.test.framework.testng.unsecure.storage.StoragePageTest" />
-      <class name="org.apache.drillui.test.framework.testng.unsecure.storage.StoragePluginsCRUDTest" /-->
     </classes>
   </test>
 </suite>
