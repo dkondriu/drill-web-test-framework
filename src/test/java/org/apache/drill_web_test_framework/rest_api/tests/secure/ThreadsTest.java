@@ -32,7 +32,7 @@ public class ThreadsTest extends BaseRestTest {
         .get("/status/threads")
         .then()
         .statusCode(500)
-        .body(containsString("HTTP 403 Forbidden"));
+        .body(containsString("User not authorized."));
   }
 
   @Test

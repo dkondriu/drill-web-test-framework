@@ -23,12 +23,6 @@ import org.apache.drill_web_test_framework.properties.PropertiesConst;
 import org.testng.annotations.BeforeSuite;
 
 public class BaseRestTest {
-  public static String drillUserName = "mapr1";
-  public static String drillUserPassword = "mapr";
-  public static String drillSecondUserName = "mapr2";
-  public static String drillSecondUserPassword = "mapr";
-  public static String drillAdminUserName = "mapr";
-  public static String drillAdminUserPassword = "mapr";
   public static SessionFilter adminSessionFilter = new SessionFilter();
   public static SessionFilter nonAdminSessionFilter = new SessionFilter();
   public static SessionFilter secondNonAdminSessionFilter = new SessionFilter();
@@ -40,7 +34,7 @@ public class BaseRestTest {
 
     RestAssured.given()
         .auth()
-        .form(drillAdminUserName, drillAdminUserPassword, new FormAuthConfig(
+        .form(PropertiesConst.ADMIN_1_NAME, PropertiesConst.ADMIN_1_PASSWORD, new FormAuthConfig(
             "/j_security_check",
             "j_username",
             "j_password")
@@ -51,7 +45,7 @@ public class BaseRestTest {
 
     RestAssured.given()
         .auth()
-        .form(drillUserName, drillUserPassword, new FormAuthConfig(
+        .form(PropertiesConst.USER_1_NAME, PropertiesConst.USER_1_PASSWORD, new FormAuthConfig(
             "/j_security_check",
             "j_username",
             "j_password"))
@@ -61,7 +55,7 @@ public class BaseRestTest {
 
     RestAssured.given()
         .auth()
-        .form(drillSecondUserName, drillSecondUserPassword, new FormAuthConfig(
+        .form(PropertiesConst.USER_2_NAME, PropertiesConst.USER_2_PASSWORD, new FormAuthConfig(
             "/j_security_check",
             "j_username",
             "j_password"))

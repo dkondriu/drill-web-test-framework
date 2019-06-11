@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.apache.drill_web_test_framework.rest_api.tests.unsecure;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.text.SimpleDateFormat;
@@ -25,6 +26,21 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.containsString;
 
 public class LogsTest extends BaseRestTest {
+  @BeforeClass
+  public void runSimpleQuery() {
+    String query = "{" +
+        "   \"queryType\": \"SQL\"," +
+        "   \"query\": \"SELECT * FROM cp.`employee.json` LIMIT 2\"" +
+        "}";
+    given()
+        .body(query)
+        .with()
+        .contentType("application/json")
+        .when()
+        .post("/query.json")
+        .then()
+        .statusCode(200);
+  }
   //todo: what if sqlline.log file is not yet created?
   @Test
   public void checkLogsPage() {
