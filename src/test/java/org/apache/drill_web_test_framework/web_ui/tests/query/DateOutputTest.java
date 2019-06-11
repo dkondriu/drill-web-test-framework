@@ -37,23 +37,15 @@ public class DateOutputTest extends FunctionalTest {
 
   @Test(groups = {"functional"})
   public void selectDateQuery() {
-    String result = querySteps.runSQL("select date '2017-04-06';")
+    String result = querySteps.runSQL("SELECT date '2017-04-06';")
         .getRow(1).get(0);
     String expected = "2017-04-06";
     assertEquals(result, expected);
   }
 
   @Test(groups = {"functional"})
-  public void selectDateQuery2() {
-    String result = querySteps.runSQL("SELECT * FROM cp.`employee.json`;")
-        .getRow(1).get(0);
-    String expected = "1";
-    assertEquals(result, expected);
-  }
-
-  @Test(groups = {"functional"})
   public void selectTimestampZeroQuery() {
-    String result = querySteps.runSQL("select timestamp '2017-04-06 11:22:33';")
+    String result = querySteps.runSQL("SELECT timestamp '2017-04-06 11:22:33';")
         .getRow(1).get(0);
     String expected = "2017-04-06T11:22:33";
     assertEquals(result, expected);
@@ -61,7 +53,7 @@ public class DateOutputTest extends FunctionalTest {
 
   @Test(groups = {"functional"})
   public void selectTimestampOneQuery() {
-    String result = querySteps.runSQL("select timestamp '2017-04-06 11:22:33.1';")
+    String result = querySteps.runSQL("SELECT timestamp '2017-04-06 11:22:33.1';")
         .getRow(1).get(0);
     String expected = "2017-04-06T11:22:33.100";
     assertEquals(result, expected);
@@ -69,7 +61,7 @@ public class DateOutputTest extends FunctionalTest {
 
   @Test(groups = {"functional"})
   public void selectTimestampTwoQuery() {
-    String result = querySteps.runSQL("select timestamp '2017-04-06 11:22:33.12';")
+    String result = querySteps.runSQL("SELECT timestamp '2017-04-06 11:22:33.12';")
         .getRow(1).get(0);
     String expected = "2017-04-06T11:22:33.120";
     assertEquals(result, expected);
@@ -77,7 +69,7 @@ public class DateOutputTest extends FunctionalTest {
 
   @Test(groups = {"functional"})
   public void selectTimestampThreeQuery() {
-    String result = querySteps.runSQL("select timestamp '2017-04-06 11:22:33.123';")
+    String result = querySteps.runSQL("SELECT timestamp '2017-04-06 11:22:33.123';")
         .getRow(1).get(0);
     String expected = "2017-04-06T11:22:33.123";
     assertEquals(result, expected);
@@ -85,7 +77,7 @@ public class DateOutputTest extends FunctionalTest {
 
   @Test(groups = {"functional"})
   public void selectTimeQuery() {
-    String result = querySteps.runSQL("select time '11:22:33';")
+    String result = querySteps.runSQL("SELECT time '11:22:33';")
         .getRow(1).get(0);
     String expected = "11:22:33";
     assertEquals(result, expected);

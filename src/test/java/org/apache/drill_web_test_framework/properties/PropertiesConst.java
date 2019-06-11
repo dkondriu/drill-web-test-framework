@@ -40,6 +40,7 @@ public class PropertiesConst {
 
   // Browser to use. Supported types: CHROME (default), FIREFOX, IE, EDGE
   public static final String DRIVER_TYPE = TestProperties.get("DRIVER_TYPE");
+  public static final boolean RUN_ON_SELENOID = TestProperties.getBool("RUN_ON_SELENOID");
 
   // Timeout to load pages (in seconds)
   public static final int DEFAULT_TIMEOUT = TestProperties.getInt("DEFAULT_TIMEOUT");

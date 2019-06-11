@@ -23,6 +23,7 @@ USER_2_PASSWORD =
 
 # Browser to use. Supported types: CHROME (default), FIREFOX, IE, EDGE
 DRIVER_TYPE = CHROME
+RUN_ON_SELENOID = false
 
 # Timeout to load pages (in seconds)
 DEFAULT_TIMEOUT = 5
