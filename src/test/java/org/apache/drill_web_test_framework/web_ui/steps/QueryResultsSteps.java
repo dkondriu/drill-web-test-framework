@@ -109,4 +109,10 @@ public final class QueryResultsSteps extends BaseSteps {
     BasePage.getPage(QueryResultsPage.class).showResultRows(rowsCount);
     return getSteps(QueryResultsSteps.class);
   }
+
+  public QueryResultsSteps waitForRowsCount(int rowsCount) {
+    BasePage.getPage(QueryResultsPage.class)
+        .waitForRowsCount(rowsCount);
+    return getSteps(QueryResultsSteps.class);
+  }
 }
