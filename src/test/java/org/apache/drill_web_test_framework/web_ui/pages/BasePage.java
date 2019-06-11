@@ -37,6 +37,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static io.restassured.RestAssured.given;
+
 public abstract class BasePage {
 
   private static Map<Class<? extends BasePage>, BasePage> pages;
@@ -73,8 +75,16 @@ public abstract class BasePage {
   }
 
   protected static void sendText(WebElement element, String text) {
-    Toolkit.getDefaultToolkit().getSystemClipboard()
-        .setContents(new StringSelection(text), null);
+    if (PropertiesConst.RUN_ON_SELENOID) {
+      String url = PropertiesConst.DRILL_HOST + ":4444/clipboard/" + WebBrowser.sessionId;
+      given()
+          .body(text)
+          .when()
+          .post(url);
+    } else {
+      Toolkit.getDefaultToolkit().getSystemClipboard()
+          .setContents(new StringSelection(text), null);
+    }
     element.sendKeys(Keys.CONTROL, "a");
     element.sendKeys(Keys.CONTROL, "v");
   }

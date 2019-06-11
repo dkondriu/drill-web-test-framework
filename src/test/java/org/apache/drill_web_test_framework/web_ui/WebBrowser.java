@@ -18,49 +18,85 @@ package org.apache.drill_web_test_framework.web_ui;
 
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
 import org.apache.drill_web_test_framework.properties.TestProperties;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class WebBrowser {
-
+  public static String sessionId;
   private static WebDriver driver;
-
+  private static Map<String, String> driverVersions = Stream.of(new String[][]{
+      {"CHROME", "75.0"},
+      {"FIREFOX", "67.0"},
+      {"OPERA", "60.0"},
+  }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+  private static Map<String, Class> driverClasses = Stream.of(new Object[][]{
+      {"CHROME", ChromeDriver.class},
+      {"FIREFOX", FirefoxDriver.class},
+      {"IE", InternetExplorerDriver.class},
+      {"EDGE", EdgeDriver.class},
+  }).collect(Collectors.toMap(data -> (String) data[0], data -> (Class) data[1]));
   private static LinkedList<String> parentWindows = new LinkedList<>();
 
   private static void init() {
-    switch (PropertiesConst.DRIVER_TYPE) {
-      case "CHROME":
-        System.setProperty("webdriver.chrome.driver", getWebdriversPath());
-        driver = new ChromeDriver();
-        break;
-      case "FIREFOX":
-        System.setProperty("webdriver.gecko.driver", getWebdriversPath());
-        driver = new FirefoxDriver();
-        break;
-      case "IE":
-        System.setProperty("webdriver.ie.driver", getWebdriversPath());
-        driver = new InternetExplorerDriver();
-        break;
-      case "EDGE":
-        System.setProperty("webdriver.edge.driver", getWebdriversPath());
-        driver = new EdgeDriver();
-        break;
-      default:
-        System.setProperty("webdriver.chrome.driver", getWebdriversPath());
-        driver = new ChromeDriver();
+    System.setProperty(
+        "webdriver." +
+            (PropertiesConst.DRIVER_TYPE.equals("FIREFOX") ?
+                "gecko" :
+                PropertiesConst.DRIVER_TYPE.toLowerCase())
+            + ".driver",
+        getWebdriversPath());
+    try {
+      driver = PropertiesConst.RUN_ON_SELENOID ?
+          getRemoteWebDriver(driverVersions.get(PropertiesConst.DRIVER_TYPE)) :
+          ((WebDriver) driverClasses.get(PropertiesConst.DRIVER_TYPE).newInstance());
+    } catch (InstantiationException | IllegalAccessException e) {
+      throw new RuntimeException(e);
     }
+
     resetImplicitWait();
-    openURL("/");
-    maximizeWindow();
+    if (PropertiesConst.RUN_ON_SELENOID) {
+      driver.manage().window().setSize(new Dimension(1920, 1080));
+      openURL("/");
+    } else {
+      openURL("/");
+      maximizeWindow();
+    }
+  }
+
+  private static WebDriver getRemoteWebDriver(String driverVersion) {
+    RemoteWebDriver remoteDriver = null;
+    DesiredCapabilities capabilities = new DesiredCapabilities();
+    capabilities.setBrowserName(PropertiesConst.DRIVER_TYPE.toLowerCase());
+    capabilities.setVersion(driverVersion);
+    capabilities.setCapability("enableVNC", true);
+    capabilities.setCapability("enableVideo", false);
+    capabilities.setCapability("screenResolution", "1920x1080x24");
+    try {
+      remoteDriver = new RemoteWebDriver(
+          URI.create(PropertiesConst.DRILL_HOST + ":4444/wd/hub").toURL(),
+          capabilities
+      );
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
+    }
+    sessionId = remoteDriver.getSessionId().toString();
+    return remoteDriver;
   }
 
   private static String getWebdriversPath() {
