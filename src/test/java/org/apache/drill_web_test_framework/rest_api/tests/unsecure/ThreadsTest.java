@@ -26,6 +26,7 @@ public class ThreadsTest extends BaseRestTest {
   @Test
   public void checkThreadsPage() {
     given()
+        .filter(sessionFilter)
         .when()
         .get("/status/threads")
         .then()

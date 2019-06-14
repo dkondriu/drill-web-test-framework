@@ -17,14 +17,18 @@
 package org.apache.drill_web_test_framework.rest_api.tests.unsecure;
 
 import io.restassured.RestAssured;
+import io.restassured.filter.session.SessionFilter;
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
+import org.apache.drill_web_test_framework.rest_api.data.RestSecuritySteps;
 import org.testng.annotations.BeforeSuite;
 
 public class BaseRestTest {
+  protected SessionFilter sessionFilter;
+
   @BeforeSuite
   public void setupRestAssured() {
     RestAssured.port = PropertiesConst.DRILL_PORT;
     RestAssured.baseURI = PropertiesConst.DRILL_HOST;
-    
+    sessionFilter = RestSecuritySteps.getDefaultSession();
   }
 }

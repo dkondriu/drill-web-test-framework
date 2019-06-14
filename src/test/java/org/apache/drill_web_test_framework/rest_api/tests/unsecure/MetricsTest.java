@@ -25,6 +25,7 @@ public class MetricsTest extends BaseRestTest {
   //@Test
   public void checkMetricsPage() {
     given()
+        .filter(sessionFilter)
         .when()
         .get("/status/metrics")
         .then()

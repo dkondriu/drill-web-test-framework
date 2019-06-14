@@ -25,6 +25,7 @@ public class OptionsTest extends BaseRestTest {
   @Test
   public void getOptions() {
     given()
+        .filter(sessionFilter)
         .when()
         .get("/options.json")
         .then()

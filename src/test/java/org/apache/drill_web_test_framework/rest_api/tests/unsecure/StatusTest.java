@@ -25,6 +25,7 @@ public class StatusTest extends BaseRestTest {
   @Test
   public void getStatusJson() {
     given()
+        .filter(sessionFilter)
         .when()
         .get("/status.json")
         .then().statusCode(200)

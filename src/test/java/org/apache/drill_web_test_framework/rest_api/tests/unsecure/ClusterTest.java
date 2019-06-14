@@ -28,6 +28,7 @@ public class ClusterTest extends BaseRestTest {
   @Test
   public void getClusterJson() {
     given()
+        .filter(sessionFilter)
         .when()
         .get("/cluster.json")
         .then().statusCode(200)
@@ -39,6 +40,6 @@ public class ClusterTest extends BaseRestTest {
         .body("currentVersion", equalTo(PropertiesConst.DRILL_VERSION))
         .body("userEncryptionEnabled", equalTo(false))
         .body("bitEncryptionEnabled", equalTo(false))
-        .body("authEnabled", equalTo(false));
+        .body("authEnabled", equalTo(PropertiesConst.SECURE_DRILL));
   }
 }
