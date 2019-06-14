@@ -44,10 +44,15 @@
       <version>${rest-assured.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
       <version>${json.version}</version>
+    </dependency>-->
+    <dependency>
+      <groupId>com.tdunning</groupId>
+      <artifactId>json</artifactId>
+      <version>1.8</version>
     </dependency>
     <dependency>
       <groupId>org.jsoup</groupId>

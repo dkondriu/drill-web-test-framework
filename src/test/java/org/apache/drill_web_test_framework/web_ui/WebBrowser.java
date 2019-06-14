@@ -18,6 +18,7 @@ package org.apache.drill_web_test_framework.web_ui;
 
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
 import org.apache.drill_web_test_framework.properties.TestProperties;
+import org.json.JSONObject;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -28,23 +29,24 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.restassured.RestAssured.given;
+
 public abstract class WebBrowser {
   public static String sessionId;
+  private static String browserVersion = getSelenoidBrowserVersion();
   private static WebDriver driver;
-  private static Map<String, String> driverVersions = Stream.of(new String[][]{
-      {"CHROME", "75.0"},
-      {"FIREFOX", "67.0"},
-      {"OPERA", "60.0"},
-  }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
   private static Map<String, Class> driverClasses = Stream.of(new Object[][]{
       {"CHROME", ChromeDriver.class},
       {"FIREFOX", FirefoxDriver.class},
@@ -63,7 +65,7 @@ public abstract class WebBrowser {
         getWebdriversPath());
     try {
       driver = PropertiesConst.RUN_ON_SELENOID ?
-          getRemoteWebDriver(driverVersions.get(PropertiesConst.DRIVER_TYPE)) :
+          getRemoteWebDriver(browserVersion) :
           ((WebDriver) driverClasses.get(PropertiesConst.DRIVER_TYPE).newInstance());
     } catch (InstantiationException | IllegalAccessException e) {
       throw new RuntimeException(e);
@@ -97,6 +99,16 @@ public abstract class WebBrowser {
     }
     sessionId = remoteDriver.getSessionId().toString();
     return remoteDriver;
+  }
+
+  private static String getSelenoidBrowserVersion() {
+    JSONObject selenoidStatus = new JSONObject(given().get(PropertiesConst.DRILL_HOST + ":4444/status").getBody().print());
+    LinkedList<String> versions = new LinkedList<>();
+    versions.addAll(selenoidStatus.getJSONObject("browsers").getJSONObject(PropertiesConst.DRIVER_TYPE.toLowerCase()).keySet());
+    if (versions.isEmpty()) {
+      throw new RuntimeException("Can't get Selenoid browser version! Status response was - " + selenoidStatus.toString());
+    }
+    return versions.get(versions.size() - 1);
   }
 
   private static String getWebdriversPath() {
