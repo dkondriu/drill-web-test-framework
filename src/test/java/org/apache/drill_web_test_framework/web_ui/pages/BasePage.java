@@ -76,7 +76,7 @@ public abstract class BasePage {
 
   protected static void sendText(WebElement element, String text) {
     if (PropertiesConst.RUN_ON_SELENOID) {
-      String url = PropertiesConst.DRILL_HOST + ":4444/clipboard/" + WebBrowser.sessionId;
+      String url = PropertiesConst.DRILL_HOST + ":4444/clipboard/" + WebBrowser.getSessionId();
       given()
           .body(text)
           .when()
