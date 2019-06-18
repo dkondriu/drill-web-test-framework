@@ -84,8 +84,9 @@ public class NavigationPage extends BasePage {
     logs.click();
   }
 
-  public void navigateOptions() {
+  public OptionsPage navigateOptions() {
     options.click();
+    return getPage(OptionsPage.class);
   }
 
   public void navigateDocumentation() {

@@ -42,6 +42,11 @@ public final class NavigationSteps extends BaseSteps {
     return getSteps(NavigationSteps.class);
   }
 
+  public OptionsSteps navigateOptions() {
+    getNavigationPage().navigateOptions();
+    return getSteps(OptionsSteps.class);
+  }
+
   public String getLoginText() {
     return getNavigationPage().getLoginText();
   }
