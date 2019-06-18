@@ -19,7 +19,7 @@
 package org.apache.drill_web_test_framework.web_ui.tests.query.profiles;
 
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
-import org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps;
+import org.apache.drill_web_test_framework.rest_api.data.RestStorageSteps;
 import org.apache.drill_web_test_framework.web_ui.steps.BaseSteps;
 import org.apache.drill_web_test_framework.web_ui.steps.NavigationSteps;
 import org.apache.drill_web_test_framework.web_ui.steps.QueryProfileDetailsSteps;
@@ -44,7 +44,7 @@ public class ProfileDetailsTest extends FunctionalTest {
 
   @BeforeClass
   public final void setupProfileDetailsTest() {
-    RestBaseSteps.setupStoragePlugins();
+    RestStorageSteps.setupStoragePlugins();
     navigationSteps.navigateQuery();
     queryProfile = querySteps.runSQL(testQuery)
         .getQueryProfile();

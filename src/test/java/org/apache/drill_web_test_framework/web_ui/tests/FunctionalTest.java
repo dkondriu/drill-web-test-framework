@@ -17,12 +17,14 @@
 package org.apache.drill_web_test_framework.web_ui.tests;
 
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
+import org.apache.drill_web_test_framework.rest_api.data.RestStorageSteps;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.apache.drill_web_test_framework.web_ui.steps.AuthSteps;
 
 public class FunctionalTest extends BaseTest {
   private AuthSteps authSteps = new AuthSteps();
+
   @BeforeSuite
   public final void beforeSuite() {
     if (PropertiesConst.SECURE_DRILL) {
@@ -32,8 +34,9 @@ public class FunctionalTest extends BaseTest {
 
   @AfterSuite
   public final void afterSuite() {
+    RestStorageSteps.restorePlugins();
     if (PropertiesConst.SECURE_DRILL) {
-     authSteps.logOut();
+      authSteps.logOut();
     }
   }
 }
