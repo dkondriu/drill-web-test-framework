@@ -18,6 +18,7 @@ package org.apache.drill_web_test_framework.web_ui;
 
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
 import org.apache.drill_web_test_framework.properties.TestProperties;
+import org.json.JSONObject;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -37,21 +38,24 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.restassured.RestAssured.given;
+
 public abstract class WebBrowser {
-  public static String sessionId;
+  private static String sessionId;
+  private static String browserVersion = getSelenoidBrowserVersion();
   private static WebDriver driver;
-  private static Map<String, String> driverVersions = Stream.of(new String[][]{
-      {"CHROME", "75.0"},
-      {"FIREFOX", "67.0"},
-      {"OPERA", "60.0"},
-  }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+  private static LinkedList<String> parentWindows = new LinkedList<>();
+
+  public static String getSessionId() {
+    return sessionId;
+  }
+
   private static Map<String, Class> driverClasses = Stream.of(new Object[][]{
       {"CHROME", ChromeDriver.class},
       {"FIREFOX", FirefoxDriver.class},
       {"IE", InternetExplorerDriver.class},
       {"EDGE", EdgeDriver.class},
   }).collect(Collectors.toMap(data -> (String) data[0], data -> (Class) data[1]));
-  private static LinkedList<String> parentWindows = new LinkedList<>();
 
   private static void init() {
     System.setProperty(
@@ -63,7 +67,7 @@ public abstract class WebBrowser {
         getWebdriversPath());
     try {
       driver = PropertiesConst.RUN_ON_SELENOID ?
-          getRemoteWebDriver(driverVersions.get(PropertiesConst.DRIVER_TYPE)) :
+          getRemoteWebDriver(browserVersion) :
           ((WebDriver) driverClasses.get(PropertiesConst.DRIVER_TYPE).newInstance());
     } catch (InstantiationException | IllegalAccessException e) {
       throw new RuntimeException(e);
@@ -97,6 +101,21 @@ public abstract class WebBrowser {
     }
     sessionId = remoteDriver.getSessionId().toString();
     return remoteDriver;
+  }
+
+  private static String getSelenoidBrowserVersion() {
+    JSONObject selenoidStatus = new JSONObject(given()
+        .get(PropertiesConst.DRILL_HOST + ":4444/status")
+        .getBody()
+        .print());
+    LinkedList<String> versions = new LinkedList<>(
+        selenoidStatus.getJSONObject("browsers")
+            .getJSONObject(PropertiesConst.DRIVER_TYPE.toLowerCase())
+            .keySet());
+    if (versions.isEmpty()) {
+      throw new RuntimeException("Can't get Selenoid browser version! Status response was - " + selenoidStatus.toString());
+    }
+    return versions.getLast();
   }
 
   private static String getWebdriversPath() {
