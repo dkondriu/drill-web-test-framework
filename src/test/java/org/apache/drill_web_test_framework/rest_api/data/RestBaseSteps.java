@@ -18,60 +18,15 @@
 package org.apache.drill_web_test_framework.rest_api.data;
 
 import io.restassured.RestAssured;
-import org.apache.commons.io.IOUtils;
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
-
-import java.io.InputStream;
-import java.nio.charset.Charset;
 
 public final class RestBaseSteps {
 
-  private static boolean storagePluginsSetupComplete = false;
-
   private RestBaseSteps() {
-  }
-
-  public static void setupStoragePlugins() {
-    if (storagePluginsSetupComplete) {
-      return;
-    }
-    boolean status;
-    setupREST();
-    status = RestStorageSteps.updateStoragePlugin(
-        getDefaultDfsPlugin(),
-        RestSecuritySteps.getDefaultSession());
-    status = status && RestStorageSteps.updateStoragePlugin(
-        getOpenTSDBPlugin(),
-        RestSecuritySteps.getDefaultSession()
-    );
-    if (!status) {
-      throw new RuntimeException("Some of the plugins did not updated!");
-    }
-    storagePluginsSetupComplete = true;
   }
 
   public static void setupREST() {
     RestAssured.baseURI = PropertiesConst.DRILL_HOST;
     RestAssured.port = PropertiesConst.DRILL_PORT;
-  }
-
-  private static String getPluginFromResource(String resource) {
-    try (InputStream file = RestBaseSteps.class.getClassLoader()
-        .getResourceAsStream(resource)) {
-      return IOUtils.toString(file, Charset.defaultCharset());
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private static String getDefaultDfsPlugin() {
-    String pluginPath = PropertiesConst.DISTRIBUTED_MODE ?
-        "restapi/storage/plugins/DfsDefaultMapRFS.json" :
-        "restapi/storage/plugins/DfsDefaultEmbedded.json";
-    return getPluginFromResource(pluginPath);
-  }
-
-  private static String getOpenTSDBPlugin() {
-    return getPluginFromResource("restapi/storage/plugins/OpenTSDB.json");
   }
 }

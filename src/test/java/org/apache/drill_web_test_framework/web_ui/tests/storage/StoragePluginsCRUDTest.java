@@ -17,7 +17,7 @@
  */
 package org.apache.drill_web_test_framework.web_ui.tests.storage;
 
-import org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps;
+import org.apache.drill_web_test_framework.rest_api.data.RestStorageSteps;
 import org.apache.drill_web_test_framework.web_ui.steps.BaseSteps;
 import org.apache.drill_web_test_framework.web_ui.steps.EditStoragePluginSteps;
 import org.apache.drill_web_test_framework.web_ui.steps.NavigationSteps;
@@ -49,7 +49,7 @@ public class StoragePluginsCRUDTest extends FunctionalTest {
 
   @BeforeClass
   public void setupStoragePlugins() {
-    RestBaseSteps.setupStoragePlugins();
+    RestStorageSteps.setupStoragePlugins();
   }
 
   @BeforeMethod
