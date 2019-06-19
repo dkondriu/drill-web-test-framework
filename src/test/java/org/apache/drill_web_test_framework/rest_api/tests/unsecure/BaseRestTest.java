@@ -23,7 +23,7 @@ import org.apache.drill_web_test_framework.rest_api.data.RestSecuritySteps;
 import org.testng.annotations.BeforeSuite;
 
 public class BaseRestTest {
-  protected SessionFilter sessionFilter;
+  protected static SessionFilter sessionFilter;
 
   @BeforeSuite
   public void setupRestAssured() {
