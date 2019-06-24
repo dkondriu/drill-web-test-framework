@@ -42,7 +42,6 @@ import static io.restassured.RestAssured.given;
 
 public abstract class WebBrowser {
   private static String sessionId;
-  private static String browserVersion = getSelenoidBrowserVersion();
   private static WebDriver driver;
   private static LinkedList<String> parentWindows = new LinkedList<>();
 
@@ -67,7 +66,7 @@ public abstract class WebBrowser {
         getWebdriversPath());
     try {
       driver = PropertiesConst.RUN_ON_SELENOID ?
-          getRemoteWebDriver(browserVersion) :
+          getRemoteWebDriver(getSelenoidBrowserVersion()) :
           ((WebDriver) driverClasses.get(PropertiesConst.DRIVER_TYPE).newInstance());
     } catch (InstantiationException | IllegalAccessException e) {
       throw new RuntimeException(e);
