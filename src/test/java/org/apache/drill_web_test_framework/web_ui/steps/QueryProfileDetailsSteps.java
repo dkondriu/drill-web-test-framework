@@ -133,7 +133,7 @@ public class QueryProfileDetailsSteps extends BaseSteps {
     SoftAssert softAssert = new SoftAssert();
     List<List<String>> operatorOverview = getPage().getOperatorOverview();
     softAssert.assertEquals(operatorOverview.get(0),
-        Arrays.asList("Operator ID", "Type", "Avg Setup Time", "Max Setup Time", "Avg Process Time", "Max Process Time", "Min Wait Time", "Avg Wait Time", "Max Wait Time", "% Fragment Time", "% Query Time", "Rows", "Avg Peak Memory", "Max Peak Memory"));
+        Arrays.asList("Operator ID", "Type", "Avg Setup Time", "Max Setup Time", "Avg Process Time", "Max Process Time", "Min Wait Time", "Avg Wait Time", "Max Wait Time", "% Fragment Time", "% Query Time", "Rows (Estimated)", "Avg Peak Memory", "Max Peak Memory"));
     operatorOverview.stream()
         .skip(1)
         .forEach(operator -> {
@@ -143,7 +143,7 @@ public class QueryProfileDetailsSteps extends BaseSteps {
               softAssert.assertTrue(operator.get(i).matches("\\d+\\.\\d+s"), "Wrong time value!"));
           IntStream.range(9, 11).forEach(i ->
               softAssert.assertTrue(operator.get(i).matches("\\d+\\.\\d+%"), "Wrong time percentage!"));
-          softAssert.assertTrue(operator.get(11).matches("^[0-9]{1,3}(,[0-9]{3})*$"), "Wrong number of rows!");
+          softAssert.assertTrue(operator.get(11).matches("^[0-9]+ \\([0-9]+\\)$"), "Wrong number of rows!");
           IntStream.range(12, 14).forEach(i ->
               softAssert.assertTrue(operator.get(i).matches("(\\d+\\D+|-)"), "Wrong memory value!"));
         });

@@ -28,6 +28,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.HashMap;
@@ -94,8 +95,8 @@ public abstract class BasePage {
   }
 
   protected <V> void waitForCondition(Function<WebDriver, V> condition, int timeOut) {
-      new WebDriverWait(getDriver(), timeOut)
-          .until(condition);
+    new WebDriverWait(getDriver(), timeOut)
+        .until(condition);
   }
 
   protected void waitForCondition(Function<WebDriver, Boolean> condition, Runnable workaroundAction) {
@@ -127,9 +128,13 @@ public abstract class BasePage {
   }
 
   protected List<List<String>> getTable(WebElement table) {
+    return getTable(table, true);
+  }
+
+  protected List<List<String>> getTable(WebElement table, boolean extractHtml) {
     String tableSource = table.getAttribute("outerHTML");
     List<List<String>> result = getTableHeader(tableSource);
-    result.addAll(getTableContent(tableSource));
+    result.addAll(getTableContent(tableSource, extractHtml));
     return result;
   }
 
@@ -145,7 +150,7 @@ public abstract class BasePage {
         .collect(Collectors.toList());
   }
 
-  private List<List<String>> getTableContent(String table) {
+  private List<List<String>> getTableContent(String table, boolean extractHtml) {
     return Jsoup.parse(table)
         .outputSettings(new Document.OutputSettings()
             .prettyPrint(false))
@@ -154,7 +159,7 @@ public abstract class BasePage {
         .stream()
         .map(row -> row.select("td")
             .stream()
-            .map(Element::html)
+            .map(extractHtml ? Element::html : Element::text)
             .collect(Collectors.toList()))
         .collect(Collectors.toList());
   }
