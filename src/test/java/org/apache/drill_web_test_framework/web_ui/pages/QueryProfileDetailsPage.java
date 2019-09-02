@@ -192,7 +192,7 @@ public class QueryProfileDetailsPage extends BasePage {
   }
 
   public List<List<String>> getOperatorOverview() {
-    return getTable(operatorOverview);
+    return getTable(operatorOverview, false);
   }
 
   public List<List<List<String>>> getOperators() {
