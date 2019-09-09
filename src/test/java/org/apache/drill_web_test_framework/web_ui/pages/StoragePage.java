@@ -118,6 +118,8 @@ public class StoragePage extends BasePage {
 
   public StoragePage openNewStoragePluginDialog() {
     newStoragePluginDialog.click();
+    waitForCondition(ExpectedConditions.elementToBeClickable(newStoragePluginNameInput));
+    waitForCondition(driver -> newStoragePluginConfigInput.isEnabled());
     return this;
   }
 
