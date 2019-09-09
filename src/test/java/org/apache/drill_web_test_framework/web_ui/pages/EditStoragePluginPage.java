@@ -69,6 +69,8 @@ public class EditStoragePluginPage extends BasePage {
   }
 
   public void back() {
+    waitForCondition(driver -> !backButton.isEmpty());
+    waitForCondition(ExpectedConditions.elementToBeClickable(backButton.get(0)));
     backButton.get(0).click();
   }
 
