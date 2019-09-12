@@ -16,13 +16,32 @@
  */
 package org.apache.drill_web_test_framework.rest_api.tests.unsecure;
 
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 public class MetricsTest extends BaseRestTest {
-  // todo: run some successfully query before this method
-  //@Test
+  @BeforeClass
+  public void runSimpleQuery() {
+    String query = "{" +
+        "   \"queryType\": \"SQL\"," +
+        "   \"query\": \"SELECT * FROM cp.`employee.json` LIMIT 2\"" +
+        "}";
+    given()
+        .filter(sessionFilter)
+        .body(query)
+        .with()
+        .contentType("application/json")
+        .when()
+        .post("/query.json")
+        .then()
+        .statusCode(200);
+  }
+
+  @Test
   public void checkMetricsPage() {
     given()
         .filter(sessionFilter)
@@ -32,7 +51,7 @@ public class MetricsTest extends BaseRestTest {
         .statusCode(200)
         .body("gauges.count.value", greaterThan(0))
         .body("gauges.'daemon.count'.value", greaterThan(0))
-        .body("gauges.'heap.used'.value", greaterThan(0))
+        .body("gauges.'heap.used'.value", greaterThan(0L))
         .body("counters.'drill.connections.rpc.control.unencrypted'.count", greaterThanOrEqualTo(0))
         .body("counters.'drill.connections.rpc.user.unencrypted'.count", greaterThanOrEqualTo(0))
         .body("counters.'drill.queries.completed'.count", greaterThan(0))

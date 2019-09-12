@@ -57,8 +57,9 @@ public class LogsTest extends BaseRestTest {
         .body("name", hasItems(
             equalTo("drillbit.log"),
             equalTo("drillbit.out"),
-            equalTo("drillbit_queries.json"),
-            equalTo("sqlline.log")))
+            equalTo("drillbit_queries.json")
+            //equalTo("sqlline.log")
+        ))
         .body("lastModified", hasItem(containsString(df.format(new Date()))));
   }
 

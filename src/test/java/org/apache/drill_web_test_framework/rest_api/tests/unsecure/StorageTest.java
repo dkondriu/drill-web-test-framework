@@ -17,6 +17,8 @@
 package org.apache.drill_web_test_framework.rest_api.tests.unsecure;
 
 import io.restassured.response.Response;
+import org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -34,6 +36,18 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 public class StorageTest extends BaseRestTest {
+  private String queryId_1 = null;
+
+  @BeforeClass
+  public void removePluginIfExists() {
+    given()
+        .filter(sessionFilter)
+        .when()
+        .delete("/storage/testplugin.json")
+        .then()
+        .statusCode(200);
+  }
+
   @Test
   public void testStoragePage() {
     given()
@@ -91,13 +105,13 @@ public class StorageTest extends BaseRestTest {
   @Test
   public void addNewPlugin() {
     String newPlugin = "{" +
-        "  \"name\":\"testPlugin\"," +
+        "  \"name\":\"testplugin\"," +
         "  \"config\": {" +
         "    \"type\": \"file\"," +
         "    \"enabled\": \"false\"," +
         "    \"connection\": \"maprfs:///\"," +
         "    \"workspaces\": {" +
-        "      \"drillTestDirP1\": {" +
+        "      \"drilltestdirp1\": {" +
         "        \"location\": \"/drill/testdata/p1tests\"," +
         "        \"writable\": \"false\"," +
         "        \"defaultInputFormat\": \"parquet\"" +
@@ -116,25 +130,24 @@ public class StorageTest extends BaseRestTest {
         .statusCode(200)
         .body(containsString("Success"));
   }
+
   @Test(dependsOnMethods = {"addNewPlugin"})
   public void getTestPlugin() {
     given()
         .filter(sessionFilter)
         .when()
-        .get("/storage/testPlugin.json")
+        .get("/storage/testplugin.json")
         .then()
         .statusCode(200)
-        .body("name", equalTo("testPlugin"))
+        .body("name", equalTo("testplugin"))
         .body("config.enabled", equalTo(false))
         .body("config.workspaces.drilltestdirp1.location", equalTo("/drill/testdata/p1tests"));
-        // drillTestDirP1 changed to drilltestdirp1 after plugin created
-        //.body("config.workspaces.drillTestDirP1.location", equalTo("/drill/testdata/p1tests"));
   }
 
   //Disable due to DRILL-6306-Should not be able to run queries against disabled storage plugins
   //@Test(dependsOnMethods = {"updateTestPlugin"})
   public void queryTestPlugin() {
-    String query = "{\"queryType\":\"SQL\",\"query\":\"SELECT * FROM cp.`employee.json` LIMIT 2\"}";
+    String query = "{\"queryType\":\"SQL\",\"query\":\"SELECT * FROM testplugin.drilltestdirp1.voter\"}";
     given()
         .filter(sessionFilter)
         .body(query)
@@ -150,13 +163,13 @@ public class StorageTest extends BaseRestTest {
   @Test(dependsOnMethods = {"addNewPlugin", "getTestPlugin"})//Use this dependency for now due to DRILL-6306
   public void updateTestPlugin() {
     String updatePlugin = "{" +
-    "  \"name\": \"testPlugin\"," +
+    "  \"name\": \"testplugin\"," +
     "  \"config\": {" +
     "    \"type\": \"file\"," +
     "    \"enabled\": \"true\"," +
     "    \"connection\": \"maprfs:///\"," +
     "    \"workspaces\": {" +
-    "      \"drillTestDirP1\": {" +
+    "      \"drilltestdirp1\": {" +
     "        \"location\": \"/drill/testdata/p1tests\"," +
     "        \"writable\": \"true\"," +
     "        \"defaultInputFormat\": \"parquet\"" +
@@ -175,37 +188,33 @@ public class StorageTest extends BaseRestTest {
         .with()
         .contentType("application/json")
         .when()
-        .post("/storage/testPlugin.json")
+        .post("/storage/testplugin.json")
         .then()
         .statusCode(200)
         .body(containsString("Success"));
   }
+
   @Test(dependsOnMethods = {"updateTestPlugin"})
   public void checkUpdatedTestPlugin() {
     given()
         .filter(sessionFilter)
         .when()
-        .get("/storage/testPlugin.json")
+        .get("/storage/testplugin.json")
         .then()
         .statusCode(200)
         .body("config.enabled", is(true))
         .root("config.workspaces")
         .body("drilltestdirp1.writable", is(true))
-        // drillTestDirP1 changed to drilltestdirp1 after plugin updated
-        //.body("drillTestDirP1.writable", is(true))
         .body("testschema.location", equalTo("/drill/testdata"));
-        // testSchema changed to testschema after plugin updated
-        //.body("testSchema.location", equalTo("/drill/testdata"));
   }
   // How to create test tables in the new Storage Plugin???
-  //@Test(dependsOnMethods = {"checkUpdatedTestPlugin"})
+  @Test(dependsOnMethods = {"updateTestPlugin"})
   public void queryUpdatedTestPlugin() {
+    RestBaseSteps.runQuery("DROP TABLE IF EXISTS testplugin.drilltestdirp1.voter", sessionFilter);
+    RestBaseSteps.runQuery("CREATE TABLE testplugin.drilltestdirp1.voter AS SELECT * FROM cp.`employee.json` LIMIT 2", sessionFilter);
     String query = "{" +
         "   \"queryType\": \"SQL\"," +
-        //"   \"query\": \"select count(*) as total_cnt from `testPlugin.drillTestDirP1`.voter\"" +
-        "   \"query\": \"DROP TABLE IF EXISTS testPlugin.drillTestDirP1.`employee`;" +
-        "     CREATE TABLE testPlugin.drillTestDirP1.`employee` AS SELECT * FROM cp.`employee.json` LIMIT 2;\"" +
-        "     SELECT * FROM cp.`employee.json` LIMIT 2\"" +
+        "   \"query\": \"select count(*) as total_cnt from `testplugin.drilltestdirp1`.voter\"" +
         "}";
     given()
         .filter(sessionFilter)
@@ -216,8 +225,8 @@ public class StorageTest extends BaseRestTest {
         .post("/query.json")
         .then()
         .statusCode(200)
-        .body("columns[0]", equalTo("employee_id"))
-        .body("rows.employee_id[0]",equalTo("1"));
+        .body("columns[0]", equalTo("total_cnt"))
+        .body("rows.total_cnt[0]",equalTo("2"));
         //.body("columns[0]", equalTo("total_cnt"))
         //.body("rows.total_cnt[0]",equalTo("1000"));
     //Get the response
@@ -232,11 +241,10 @@ public class StorageTest extends BaseRestTest {
       }
       break;
     }
-    String queryId_1 = response.jsonPath().param("i", i).getString("finishedQueries.queryId[i]");
-//  }
-//  Dependencies in the tests!!!
-//  @Test
-//  public void verifyTestQueryProfileInfo() {
+    queryId_1 = response.jsonPath().param("i", i).getString("finishedQueries.queryId[i]");
+  }
+  @Test(dependsOnMethods = {"queryUpdatedTestPlugin"})
+  public void verifyTestQueryProfileInfo() {
 
     given()
         .filter(sessionFilter)
@@ -246,7 +254,7 @@ public class StorageTest extends BaseRestTest {
         .then()
         .statusCode(200)
         .body("state", equalTo(2))
-        .body("query", equalTo("select count(*) as total_cnt from `testPlugin.drillTestDirP1`.voter"))
+        .body("query", equalTo("select count(*) as total_cnt from `testplugin.drilltestdirp1`.voter"))
         .body("plan", containsString("Screen"))
         .body("plan", containsString("Project"))
         .body("plan", containsString("DirectScan"))
@@ -265,7 +273,7 @@ public class StorageTest extends BaseRestTest {
     given()
         .filter(sessionFilter)
         .when()
-        .get("/storage/testPlugin/enable/false")
+        .get("/storage/testplugin/enable/false")
         .then()
         .statusCode(200)
         .body(containsString("Success"));
@@ -275,10 +283,10 @@ public class StorageTest extends BaseRestTest {
     given()
         .filter(sessionFilter)
         .when()
-        .get("/storage/testPlugin.json")
+        .get("/storage/testplugin.json")
         .then()
         .statusCode(200)
-        .body("name", equalTo("testPlugin"))
+        .body("name", equalTo("testplugin"))
         .body("config.enabled", equalTo(false));
   }
   @Test(dependsOnMethods = {"verifyDisabledTestPlugin"})
@@ -286,7 +294,7 @@ public class StorageTest extends BaseRestTest {
     given()
         .filter(sessionFilter)
         .when()
-        .delete("/storage/testPlugin.json")
+        .delete("/storage/testplugin.json")
         .then()
         .statusCode(200)
         .body(containsString("Success"));
@@ -296,10 +304,10 @@ public class StorageTest extends BaseRestTest {
     given()
         .filter(sessionFilter)
         .when()
-        .get("/storage/testPlugin.json")
+        .get("/storage/testplugin.json")
         .then()
         .statusCode(200)
-        .body("name", equalTo("testPlugin"))
+        .body("name", equalTo("testplugin"))
         .body(not(contains("workspaces")))
         .body(not(contains("type")))
         .body(not(contains("workspaces")))

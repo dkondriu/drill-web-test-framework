@@ -17,8 +17,15 @@
 package org.apache.drill_web_test_framework.rest_api.tests.unsecure;
 
 import io.restassured.response.Response;
+import org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
@@ -26,30 +33,30 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
 public class ProfilesTest extends BaseRestTest {
-  // Where to get test data for the query???
-  //@Test
+  private static String largeQuery = null;
+  @BeforeClass
+  public static void getLargeQuery() {
+    StringBuffer sqlQuery = new StringBuffer();
+    try (Stream<String> stream = Files.lines(new File("queries/large_query.sql").toPath())) {
+      stream.forEach(sqlQuery::append);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    largeQuery = sqlQuery.toString();
+  }
+
+  @Test
   public void checkRunnningQueryProfile() throws InterruptedException {
-    String sqlQuery = "select count (distinct ss_customer_sk),count(distinct ss_item_sk),count(distinct ss_store_sk),max(ss_ticket_number),sum(ss_item_sk),max(ss_net_profit) from `dfs.tpcds_sf100_parquet`.store_sales";
-    String queryText = "{\"queryType\":\"SQL\", \"query\": \"" + sqlQuery + "\"}";
-    given()
-        .filter(sessionFilter)
-        .body(queryText)
-        .with()
-        .contentType("application/json")
-        .when()
-        .post("/query.json")
-        .then()
-        .statusCode(200);
-    //put 3 seconds sleep time to make sure the query is in a running state
-    Thread.sleep(3000);
+    RestBaseSteps.runQueryInBackground(largeQuery, sessionFilter);
+    //put 10 seconds sleep time to make sure the query is in a running state
+    Thread.sleep(10000);
     Response response = get("/profiles.json").then().extract().response();
     //Extract the entries for runningQueries from the response
     List<String> jsonResponse = response.jsonPath().getList("runningQueries");
     //Iterate through the repsonse to find the matching running query
     int i;
     for (i = 0; i <= jsonResponse.size(); i++) {
-      String query = sqlQuery;
-      if (query.equalsIgnoreCase(response.jsonPath().param("i", i).getString("runningQueries.query[i]"))) {
+      if (largeQuery.equalsIgnoreCase(response.jsonPath().param("i", i).getString("runningQueries.query[i]"))) {
         break;
       }
       break;
@@ -62,36 +69,26 @@ public class ProfilesTest extends BaseRestTest {
         .get("/profiles/{queryID}.json")
         .then().statusCode(200)
         .body("state", equalTo(1))
-        .body("query", containsString("select count (distinct ss_customer_sk),count(distinct ss_item_sk),count(distinct ss_store_sk),max(ss_ticket_number),sum(ss_item_sk),max(ss_net_profit)"))
+        //.body("query", containsString("select count (distinct ss_customer_sk),count(distinct ss_item_sk),count(distinct ss_store_sk),max(ss_ticket_number),sum(ss_item_sk),max(ss_net_profit)"))
+        .body("query", containsString(largeQuery.trim()))
         .body(containsString("majorFragmentId"))
         .body(containsString("minorFragmentId"))
         .body(containsString("minorFragmentProfile"))
         .body(containsString("operatorProfile"));
   }
-  // Where to get test data for the query???
-  //@Test
+
+  @Test
   public void cancelRunningQuery() throws InterruptedException {
-    String sqlQuery = "select max(ss_sold_date_sk),min(ss_sold_time_sk),count(distinct ss_store_sk) from `dfs.tpcds_sf100_parquet`.store_sales";
-    String queryText = "{\"queryType\":\"SQL\", \"query\": \"" + sqlQuery + "\"}";
-    given()
-        .filter(sessionFilter)
-        .body(queryText)
-        .with()
-        .contentType("application/json")
-        .when()
-        .post("/query.json")
-        .then()
-        .statusCode(200);
-    //put 2 seconds sleep time here to make sure query is in running state
-    Thread.sleep(2000);
+    RestBaseSteps.runQueryInBackground(largeQuery, sessionFilter);
+    //put 10 seconds sleep time here to make sure query is in running state
+    Thread.sleep(10000);
     Response response = get("/profiles.json").then().extract().response();
     //Extract the entries for runningQueries from the response
     List<String> jsonResponse = response.jsonPath().getList("runningQueries");
     //Iterate through the repsonse to find the matching running query
     int i;
     for (i = 0; i <= jsonResponse.size(); i++) {
-      String query = sqlQuery;
-      if (query.equalsIgnoreCase(response.jsonPath().param("i", i).getString("runningQueries.query[i]"))) {
+      if (largeQuery.equalsIgnoreCase(response.jsonPath().param("i", i).getString("runningQueries.query[i]"))) {
         break;
       }
       break;
@@ -105,8 +102,8 @@ public class ProfilesTest extends BaseRestTest {
         .get("/profiles/cancel/{queryID}")
         .then()
         .statusCode(200);
-    //put 10 seconds sleep time here for query to completely cancelled
-    Thread.sleep(10000);
+    //put 5 seconds sleep time here for query to completely cancelled
+    Thread.sleep(5000);
     given()
         .filter(sessionFilter)
         .pathParam("queryID", queryId)

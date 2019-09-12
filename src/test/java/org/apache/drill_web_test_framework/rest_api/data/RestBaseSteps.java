@@ -18,7 +18,10 @@
 package org.apache.drill_web_test_framework.rest_api.data;
 
 import io.restassured.RestAssured;
+import io.restassured.filter.session.SessionFilter;
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
+
+import static io.restassured.RestAssured.given;
 
 public final class RestBaseSteps {
 
@@ -28,5 +31,33 @@ public final class RestBaseSteps {
   public static void setupREST() {
     RestAssured.baseURI = PropertiesConst.DRILL_HOST;
     RestAssured.port = PropertiesConst.DRILL_PORT;
+  }
+
+  public static void runQueryInBackground(String query, SessionFilter sessionFilter) {
+    String queryText = "{\"queryType\":\"SQL\", \"query\": \"" + query + "\"}";
+    new Thread(() -> {
+      given()
+          .filter(sessionFilter)
+          .body(queryText)
+          .with()
+          .contentType("application/json")
+          .when()
+          .post("/query.json")
+          .then()
+          .statusCode(200);
+    }).start();
+  }
+
+  public static void runQuery(String query, SessionFilter sessionFilter) {
+    String queryText = "{\"queryType\":\"SQL\", \"query\": \"" + query + "\"}";
+    given()
+        .filter(sessionFilter)
+        .body(queryText)
+        .with()
+        .contentType("application/json")
+        .when()
+        .post("/query.json")
+        .then()
+        .statusCode(200);
   }
 }

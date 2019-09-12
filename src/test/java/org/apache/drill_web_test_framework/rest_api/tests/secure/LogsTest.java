@@ -38,7 +38,7 @@ public class LogsTest extends BaseRestTest {
         .body(containsString("User not authorized."));
   }
   //todo: what if sqlline.log file is not yet created?
-  //@Test
+  @Test
   public void adminAccessLogsPage() {
     SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
     given()
@@ -50,8 +50,9 @@ public class LogsTest extends BaseRestTest {
         .body("name", hasItems(
             equalTo("drillbit.log"),
             equalTo("drillbit.out"),
-            equalTo("drillbit_queries.json"),
-            equalTo("sqlline.log")))
+            equalTo("drillbit_queries.json")
+            //equalTo("sqlline.log")
+        ))
         .body("lastModified", hasItems(containsString(df.format(new Date()))));
   }
 }
