@@ -37,7 +37,6 @@ public class LogsTest extends BaseRestTest {
         .statusCode(500)
         .body(containsString("User not authorized."));
   }
-  //todo: what if sqlline.log file is not yet created?
   @Test
   public void adminAccessLogsPage() {
     SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");

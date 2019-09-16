@@ -33,21 +33,21 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
 public class ProfilesTest extends BaseRestTest {
-  private static String largeQuery = null;
+  private static String bigQuery = null;
   @BeforeClass
   public static void getLargeQuery() {
     StringBuffer sqlQuery = new StringBuffer();
-    try (Stream<String> stream = Files.lines(new File("queries/large_query.sql").toPath())) {
+    try (Stream<String> stream = Files.lines(new File("queries/big_query.sql").toPath())) {
       stream.forEach(sqlQuery::append);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    largeQuery = sqlQuery.toString();
+    bigQuery = sqlQuery.toString();
   }
 
   @Test
   public void checkRunnningQueryProfile() throws InterruptedException {
-    RestBaseSteps.runQueryInBackground(largeQuery, sessionFilter);
+    RestBaseSteps.runQueryInBackground(bigQuery, sessionFilter);
     //put 10 seconds sleep time to make sure the query is in a running state
     Thread.sleep(10000);
     Response response = get("/profiles.json").then().extract().response();
@@ -56,7 +56,7 @@ public class ProfilesTest extends BaseRestTest {
     //Iterate through the repsonse to find the matching running query
     int i;
     for (i = 0; i <= jsonResponse.size(); i++) {
-      if (largeQuery.equalsIgnoreCase(response.jsonPath().param("i", i).getString("runningQueries.query[i]"))) {
+      if (bigQuery.equalsIgnoreCase(response.jsonPath().param("i", i).getString("runningQueries.query[i]"))) {
         break;
       }
       break;
@@ -70,7 +70,7 @@ public class ProfilesTest extends BaseRestTest {
         .then().statusCode(200)
         .body("state", equalTo(1))
         //.body("query", containsString("select count (distinct ss_customer_sk),count(distinct ss_item_sk),count(distinct ss_store_sk),max(ss_ticket_number),sum(ss_item_sk),max(ss_net_profit)"))
-        .body("query", containsString(largeQuery.trim()))
+        .body("query", containsString(bigQuery.trim()))
         .body(containsString("majorFragmentId"))
         .body(containsString("minorFragmentId"))
         .body(containsString("minorFragmentProfile"))
@@ -79,7 +79,7 @@ public class ProfilesTest extends BaseRestTest {
 
   @Test
   public void cancelRunningQuery() throws InterruptedException {
-    RestBaseSteps.runQueryInBackground(largeQuery, sessionFilter);
+    RestBaseSteps.runQueryInBackground(bigQuery, sessionFilter);
     //put 10 seconds sleep time here to make sure query is in running state
     Thread.sleep(10000);
     Response response = get("/profiles.json").then().extract().response();
@@ -88,7 +88,7 @@ public class ProfilesTest extends BaseRestTest {
     //Iterate through the repsonse to find the matching running query
     int i;
     for (i = 0; i <= jsonResponse.size(); i++) {
-      if (largeQuery.equalsIgnoreCase(response.jsonPath().param("i", i).getString("runningQueries.query[i]"))) {
+      if (bigQuery.equalsIgnoreCase(response.jsonPath().param("i", i).getString("runningQueries.query[i]"))) {
         break;
       }
       break;
