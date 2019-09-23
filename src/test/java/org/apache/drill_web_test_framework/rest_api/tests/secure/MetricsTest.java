@@ -16,11 +16,13 @@
  */
 package org.apache.drill_web_test_framework.rest_api.tests.secure;
 
+import io.restassured.response.ValidatableResponse;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.testng.Assert.assertTrue;
 
 public class MetricsTest extends BaseRestTest {
   @Test
@@ -42,7 +44,7 @@ public class MetricsTest extends BaseRestTest {
 
   @Test
   public void adminMetricsPage() {
-    given()
+    ValidatableResponse response = given()
         .filter(adminSessionFilter)
         .when()
         .get("/status/metrics")
@@ -50,11 +52,11 @@ public class MetricsTest extends BaseRestTest {
         .statusCode(200)
         .body("gauges.count.value", greaterThan(0))
         .body("gauges.'daemon.count'.value", greaterThan(0))
-        .body("gauges.'heap.used'.value", greaterThan(0L))
         .body("counters.'drill.connections.rpc.control.unencrypted'.count", greaterThanOrEqualTo(0))
         .body("counters.'drill.connections.rpc.user.unencrypted'.count", greaterThanOrEqualTo(0))
         .body("counters.'drill.queries.completed'.count", greaterThan(0))
         .body("histograms.'drill.allocator.huge.hist'.count", greaterThanOrEqualTo(0))
         .body("histograms.'drill.allocator.normal.hist'.max", greaterThan(0));
+    assertTrue(Long.parseLong(response.extract().jsonPath().getString("gauges.'heap.used'.value")) > 0L);
   }
 }

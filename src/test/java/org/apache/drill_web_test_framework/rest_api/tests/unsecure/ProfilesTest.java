@@ -29,27 +29,23 @@ import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
+import static org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps.getStringFromResource;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
 public class ProfilesTest extends BaseRestTest {
   private static String bigQuery = null;
+
   @BeforeClass
   public static void getLargeQuery() {
-    StringBuffer sqlQuery = new StringBuffer();
-    try (Stream<String> stream = Files.lines(new File("queries/big_query.sql").toPath())) {
-      stream.forEach(sqlQuery::append);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    bigQuery = sqlQuery.toString();
+    bigQuery = getStringFromResource("queries/big_query.sql").replaceAll("\n", " ");
   }
 
   @Test
   public void checkRunnningQueryProfile() throws InterruptedException {
     RestBaseSteps.runQueryInBackground(bigQuery, sessionFilter);
-    //put 10 seconds sleep time to make sure the query is in a running state
-    Thread.sleep(10000);
+    //put 3 seconds sleep time to make sure the query is in a running state
+    Thread.sleep(3000);
     Response response = get("/profiles.json").then().extract().response();
     //Extract the entries for runningQueries from the response
     List<String> jsonResponse = response.jsonPath().getList("runningQueries");
@@ -80,8 +76,8 @@ public class ProfilesTest extends BaseRestTest {
   @Test
   public void cancelRunningQuery() throws InterruptedException {
     RestBaseSteps.runQueryInBackground(bigQuery, sessionFilter);
-    //put 10 seconds sleep time here to make sure query is in running state
-    Thread.sleep(10000);
+    //put 3 seconds sleep time here to make sure query is in running state
+    Thread.sleep(3000);
     Response response = get("/profiles.json").then().extract().response();
     //Extract the entries for runningQueries from the response
     List<String> jsonResponse = response.jsonPath().getList("runningQueries");
@@ -102,8 +98,8 @@ public class ProfilesTest extends BaseRestTest {
         .get("/profiles/cancel/{queryID}")
         .then()
         .statusCode(200);
-    //put 5 seconds sleep time here for query to completely cancelled
-    Thread.sleep(5000);
+    //put 3 seconds sleep time here for query to completely cancelled
+    Thread.sleep(3000);
     given()
         .filter(sessionFilter)
         .pathParam("queryID", queryId)

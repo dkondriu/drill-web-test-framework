@@ -37,6 +37,7 @@ public class LogsTest extends BaseRestTest {
         .statusCode(500)
         .body(containsString("User not authorized."));
   }
+
   @Test
   public void adminAccessLogsPage() {
     SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");

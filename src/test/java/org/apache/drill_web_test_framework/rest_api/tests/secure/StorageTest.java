@@ -36,6 +36,7 @@ public class StorageTest extends BaseRestTest {
         .statusCode(500)
         .body(containsString("User not authorized."));
   }
+
   @Test
   public void adminStoragePage() {
     //Get the response
@@ -49,13 +50,12 @@ public class StorageTest extends BaseRestTest {
     List<String> pluginNames = response.jsonPath().getList("name");
     //Iterate through the pluginNames
     int i;
-    for(i=0; i<=pluginNames.size(); i++) {
+    for (i = 0; i <= pluginNames.size(); i++) {
       String pluginName = response.jsonPath().param("i", i).getString("name[i]");
       //Skip plugins with null names
-      if(pluginName == null) {
+      if (pluginName == null) {
         continue;
-      }
-      else if(pluginName.equalsIgnoreCase("cp") || pluginName.equalsIgnoreCase("dfs")) {
+      } else if (pluginName.equalsIgnoreCase("cp") || pluginName.equalsIgnoreCase("dfs")) {
         given()
             .pathParam("pluginName", pluginName)
             .filter(adminSessionFilter)
@@ -65,9 +65,8 @@ public class StorageTest extends BaseRestTest {
             .statusCode(200)
             .body("config.enabled", is(true))
             .body("config.type", equalTo("file"))
-            .body("config.connection",containsString(":///"));
-      }
-      else if(pluginName.equalsIgnoreCase("kudu") || pluginName.equalsIgnoreCase("mongo") || pluginName.equalsIgnoreCase("s3")) {
+            .body("config.connection", containsString(":///"));
+      } else if (pluginName.equalsIgnoreCase("kudu") || pluginName.equalsIgnoreCase("mongo") || pluginName.equalsIgnoreCase("s3")) {
         given()
             .pathParam("pluginName", pluginName)
             .filter(adminSessionFilter)
@@ -79,6 +78,7 @@ public class StorageTest extends BaseRestTest {
       }
     }
   }
+
   @Test
   public void nonAdminAddPlugin() {
     String newPlugin = "{" +
@@ -107,6 +107,7 @@ public class StorageTest extends BaseRestTest {
         .statusCode(500)
         .body(containsString("User not authorized."));
   }
+
   @Test
   public void adminAddPlugin() {
     String newPlugin = "{" +
@@ -135,6 +136,7 @@ public class StorageTest extends BaseRestTest {
         .statusCode(200)
         .body(containsString("Success"));
   }
+
   @Test(dependsOnMethods = {"adminAddPlugin"})
   public void checkTestPlugin() {
     given()
@@ -149,6 +151,7 @@ public class StorageTest extends BaseRestTest {
     // drillTestDirP1 changed to drilltestdirp1 after plugin created
     //.body("config.workspaces.drillTestDirP1.location", equalTo("/drill/testdata/p1tests"));
   }
+
   @Test(dependsOnMethods = {"checkTestPlugin"})
   public void adminUpdateTestPlugin() {
     String updatePlugin = "{" +
@@ -182,6 +185,7 @@ public class StorageTest extends BaseRestTest {
         .statusCode(200)
         .body(containsString("Success"));
   }
+
   @Test(dependsOnMethods = {"adminUpdateTestPlugin"})
   public void nonAdminDeletePlugin() {
     given()
@@ -192,6 +196,7 @@ public class StorageTest extends BaseRestTest {
         .statusCode(500)
         .body(containsString("User not authorized."));
   }
+
   @Test(dependsOnMethods = {"adminUpdateTestPlugin"})
   public void adminDeletePlugin() {
     given()

@@ -19,7 +19,11 @@ package org.apache.drill_web_test_framework.rest_api.data;
 
 import io.restassured.RestAssured;
 import io.restassured.filter.session.SessionFilter;
+import org.apache.commons.io.IOUtils;
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
+
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import static io.restassured.RestAssured.given;
 
@@ -33,19 +37,17 @@ public final class RestBaseSteps {
     RestAssured.port = PropertiesConst.DRILL_PORT;
   }
 
+  public static String getStringFromResource(String resource) {
+    try (InputStream file = RestBaseSteps.class.getClassLoader()
+        .getResourceAsStream(resource)) {
+      return IOUtils.toString(file, Charset.defaultCharset());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static void runQueryInBackground(String query, SessionFilter sessionFilter) {
-    String queryText = "{\"queryType\":\"SQL\", \"query\": \"" + query + "\"}";
-    new Thread(() -> {
-      given()
-          .filter(sessionFilter)
-          .body(queryText)
-          .with()
-          .contentType("application/json")
-          .when()
-          .post("/query.json")
-          .then()
-          .statusCode(200);
-    }).start();
+    new Thread(() -> runQuery(query, sessionFilter)).start();
   }
 
   public static void runQuery(String query, SessionFilter sessionFilter) {

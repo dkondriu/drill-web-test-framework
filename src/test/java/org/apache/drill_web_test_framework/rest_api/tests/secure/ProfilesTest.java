@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps.getStringFromResource;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -40,13 +41,7 @@ public class ProfilesTest extends BaseRestTest {
 
   @BeforeClass
   public static void getLargeQuery() {
-    StringBuffer sqlQuery = new StringBuffer();
-    try (Stream<String> stream = Files.lines(new File("queries/big_query.sql").toPath())) {
-      stream.forEach(sqlQuery::append);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    bigQuery = sqlQuery.toString();
+    bigQuery = getStringFromResource("queries/big_query.sql").replaceAll("\n", " ");
   }
 
   @Test

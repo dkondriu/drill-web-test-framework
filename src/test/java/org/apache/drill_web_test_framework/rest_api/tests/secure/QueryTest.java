@@ -33,7 +33,7 @@ public class QueryTest extends BaseRestTest {
         .then()
         .statusCode(200)
         .body("columns[0]", equalTo("employee_id"))
-        .body("rows.employee_id[0]",equalTo("1"));
+        .body("rows.employee_id[0]", equalTo("1"));
   }
 
   @Test
@@ -47,7 +47,7 @@ public class QueryTest extends BaseRestTest {
         .then()
         .statusCode(200)
         .body("columns[0]", equalTo("employee_id"))
-        .body("rows.employee_id[0]",equalTo("1"));
+        .body("rows.employee_id[0]", equalTo("1"));
   }
 
   @Test
@@ -61,6 +61,6 @@ public class QueryTest extends BaseRestTest {
         .then()
         .statusCode(200)
         .body("columns[0]", equalTo("employee_id"))
-        .body("rows.employee_id[0]",equalTo("1"));
+        .body("rows.employee_id[0]", equalTo("1"));
   }
 }

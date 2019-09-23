@@ -56,8 +56,9 @@ public class StorageTest extends BaseRestTest {
         .get("/storage.json")
         .then()
         .statusCode(200)
-        .body("name", hasItems("cp","dfs","hive","kafka","kudu","mongo","s3"));
+        .body("name", hasItems("cp", "dfs", "hive", "kafka", "kudu", "mongo", "s3"));
   }
+
   @Test
   public void testStorageStoragePlugins() {
     //Get the response
@@ -72,13 +73,12 @@ public class StorageTest extends BaseRestTest {
     List<String> pluginNames = response.jsonPath().getList("name");
     //Iterate through the pluginNames
     int i;
-    for(i = 0; i <= pluginNames.size(); i++) {
+    for (i = 0; i <= pluginNames.size(); i++) {
       String pluginName = response.jsonPath().param("i", i).getString("name[i]");
       //Skip plugins with null names
-      if(pluginName == null) {
+      if (pluginName == null) {
         continue;
-      }
-      else if(pluginName.equalsIgnoreCase("cp") || pluginName.equalsIgnoreCase("dfs")) {
+      } else if (pluginName.equalsIgnoreCase("cp") || pluginName.equalsIgnoreCase("dfs")) {
         given()
             .filter(sessionFilter)
             .pathParam("pluginName", pluginName)
@@ -88,9 +88,8 @@ public class StorageTest extends BaseRestTest {
             .statusCode(200)
             .body("config.enabled", is(true))
             .body("config.type", equalTo("file"))
-            .body("config.connection",containsString(":///"));
-      }
-      else if(pluginName.equalsIgnoreCase("kudu") || pluginName.equalsIgnoreCase("mongo") || pluginName.equalsIgnoreCase("s3")) {
+            .body("config.connection", containsString(":///"));
+      } else if (pluginName.equalsIgnoreCase("kudu") || pluginName.equalsIgnoreCase("mongo") || pluginName.equalsIgnoreCase("s3")) {
         given()
             .filter(sessionFilter)
             .pathParam("pluginName", pluginName)
@@ -102,6 +101,7 @@ public class StorageTest extends BaseRestTest {
       }
     }
   }
+
   @Test
   public void addNewPlugin() {
     String newPlugin = "{" +
@@ -157,31 +157,31 @@ public class StorageTest extends BaseRestTest {
         .post("/query.json")
         .then()
         .statusCode(500)
-        .body("errorMessage",containsString("Table 'testPlugin.drillTestDirP1.voter' not found"));
+        .body("errorMessage", containsString("Table 'testPlugin.drillTestDirP1.voter' not found"));
   }
-  //@Test(groups = { "noAuth" },dependsOnMethods = { "queryTestPlugin" })  //use this after DRILL-6306 is fixed.
+
   @Test(dependsOnMethods = {"addNewPlugin", "getTestPlugin"})//Use this dependency for now due to DRILL-6306
   public void updateTestPlugin() {
     String updatePlugin = "{" +
-    "  \"name\": \"testplugin\"," +
-    "  \"config\": {" +
-    "    \"type\": \"file\"," +
-    "    \"enabled\": \"true\"," +
-    "    \"connection\": \"maprfs:///\"," +
-    "    \"workspaces\": {" +
-    "      \"drilltestdirp1\": {" +
-    "        \"location\": \"/drill/testdata/p1tests\"," +
-    "        \"writable\": \"true\"," +
-    "        \"defaultInputFormat\": \"parquet\"" +
-    "      }," +
-    "      \"testSchema\": {" +
-    "        \"location\": \"/drill/testdata\"," +
-    "        \"writable\": \"true\"," +
-    "        \"defaultInputFormat\": \"json\"" +
-    "      }" +
-    "    }" +
-    "  }" +
-    "}";
+        "  \"name\": \"testplugin\"," +
+        "  \"config\": {" +
+        "    \"type\": \"file\"," +
+        "    \"enabled\": \"true\"," +
+        "    \"connection\": \"maprfs:///\"," +
+        "    \"workspaces\": {" +
+        "      \"drilltestdirp1\": {" +
+        "        \"location\": \"/drill/testdata/p1tests\"," +
+        "        \"writable\": \"true\"," +
+        "        \"defaultInputFormat\": \"parquet\"" +
+        "      }," +
+        "      \"testSchema\": {" +
+        "        \"location\": \"/drill/testdata\"," +
+        "        \"writable\": \"true\"," +
+        "        \"defaultInputFormat\": \"json\"" +
+        "      }" +
+        "    }" +
+        "  }" +
+        "}";
     given()
         .filter(sessionFilter)
         .body(updatePlugin)
@@ -207,11 +207,11 @@ public class StorageTest extends BaseRestTest {
         .body("drilltestdirp1.writable", is(true))
         .body("testschema.location", equalTo("/drill/testdata"));
   }
-  // How to create test tables in the new Storage Plugin???
+
   @Test(dependsOnMethods = {"updateTestPlugin"})
   public void queryUpdatedTestPlugin() {
-    RestBaseSteps.runQuery("DROP TABLE IF EXISTS testplugin.drilltestdirp1.voter", sessionFilter);
-    RestBaseSteps.runQuery("CREATE TABLE testplugin.drilltestdirp1.voter AS SELECT * FROM cp.`employee.json` LIMIT 2", sessionFilter);
+    RestBaseSteps.runQuery("DROP TABLE IF EXISTS `testplugin.drilltestdirp1`.voter", sessionFilter);
+    RestBaseSteps.runQuery("CREATE TABLE `testplugin.drilltestdirp1`.voter AS SELECT * FROM cp.`employee.json` LIMIT 2", sessionFilter);
     String query = "{" +
         "   \"queryType\": \"SQL\"," +
         "   \"query\": \"select count(*) as total_cnt from `testplugin.drilltestdirp1`.voter\"" +
@@ -226,16 +226,14 @@ public class StorageTest extends BaseRestTest {
         .then()
         .statusCode(200)
         .body("columns[0]", equalTo("total_cnt"))
-        .body("rows.total_cnt[0]",equalTo("2"));
-        //.body("columns[0]", equalTo("total_cnt"))
-        //.body("rows.total_cnt[0]",equalTo("1000"));
+        .body("rows.total_cnt[0]", equalTo("2"));
     //Get the response
     Response response = get("/profiles.json").then().extract().response();
     //Extract the entries for finishedQueries from the response
     List<String> jsonResponse = response.jsonPath().getList("finishedQueries");
     //Iterate through the repsonse to find the matching finished query
     int i;
-    for(i = 0; i <= jsonResponse.size(); i++) {
+    for (i = 0; i <= jsonResponse.size(); i++) {
       if (query.equalsIgnoreCase(response.jsonPath().param("i", i).getString("finishedQueries.query[i]"))) {
         break;
       }
@@ -243,6 +241,7 @@ public class StorageTest extends BaseRestTest {
     }
     queryId_1 = response.jsonPath().param("i", i).getString("finishedQueries.queryId[i]");
   }
+
   @Test(dependsOnMethods = {"queryUpdatedTestPlugin"})
   public void verifyTestQueryProfileInfo() {
 
@@ -268,6 +267,7 @@ public class StorageTest extends BaseRestTest {
         .body(containsString("lastUpdate"))
         .body(containsString("user"));
   }
+
   @Test(dependsOnMethods = {"checkUpdatedTestPlugin"})
   public void disableTestPlugin() {
     given()
@@ -278,6 +278,7 @@ public class StorageTest extends BaseRestTest {
         .statusCode(200)
         .body(containsString("Success"));
   }
+
   @Test(dependsOnMethods = {"disableTestPlugin"})
   public void verifyDisabledTestPlugin() {
     given()
@@ -289,6 +290,7 @@ public class StorageTest extends BaseRestTest {
         .body("name", equalTo("testplugin"))
         .body("config.enabled", equalTo(false));
   }
+
   @Test(dependsOnMethods = {"verifyDisabledTestPlugin"})
   public void deleteTestPlugin() {
     given()
@@ -299,6 +301,7 @@ public class StorageTest extends BaseRestTest {
         .statusCode(200)
         .body(containsString("Success"));
   }
+
   @Test(dependsOnMethods = {"deleteTestPlugin"})
   public void checkDeleteTestPlugin() {
     given()

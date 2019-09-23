@@ -34,6 +34,7 @@ public class OptionsTest extends BaseRestTest {
         .statusCode(500)
         .body(containsString("User not authorized."));
   }
+
   @Test
   public void adminAccessOptionsPage() {
     given()

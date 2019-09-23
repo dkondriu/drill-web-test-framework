@@ -31,6 +31,6 @@ public class ThreadsTest extends BaseRestTest {
         .get("/status/threads")
         .then()
         .statusCode(200)
-        .body(allOf(containsString("Reference Handler")) ,containsString("Signal Dispatcher"));
+        .body(allOf(containsString("Reference Handler")), containsString("Signal Dispatcher"));
   }
 }

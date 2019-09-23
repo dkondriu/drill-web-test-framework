@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps.getStringFromResource;
 import static org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps.setupREST;
 
 public final class RestStorageSteps {
@@ -91,23 +92,14 @@ public final class RestStorageSteps {
     storagePluginsSetupComplete = true;
   }
 
-  private static String getPluginFromResource(String resource) {
-    try (InputStream file = RestBaseSteps.class.getClassLoader()
-        .getResourceAsStream(resource)) {
-      return IOUtils.toString(file, Charset.defaultCharset());
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   private static String getDefaultDfsPlugin() {
     String pluginPath = PropertiesConst.DISTRIBUTED_MODE ?
         "restapi/storage/plugins/DfsDefaultMapRFS.json" :
         "restapi/storage/plugins/DfsDefaultEmbedded.json";
-    return getPluginFromResource(pluginPath);
+    return getStringFromResource(pluginPath);
   }
 
   private static String getOpenTSDBPlugin() {
-    return getPluginFromResource("restapi/storage/plugins/OpenTSDB.json");
+    return getStringFromResource("restapi/storage/plugins/OpenTSDB.json");
   }
 }
