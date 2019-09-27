@@ -17,24 +17,26 @@
 package org.apache.drill_web_test_framework.rest_api.tests.secure;
 
 import io.restassured.response.Response;
+import org.apache.drill.exec.proto.UserBitShared.QueryResult.QueryState;
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
 import org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps.cancelTheQuery;
 import static org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps.getStringFromResource;
+import static org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps.isQueryInState;
+import static org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps.isQueryRunning;
+import static org.apache.drill_web_test_framework.rest_api.data.RestBaseSteps.waitForCondition;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItems;
+import static org.testng.Assert.assertTrue;
 
 public class ProfilesTest extends BaseRestTest {
   private static String bigQuery = null;
@@ -76,8 +78,7 @@ public class ProfilesTest extends BaseRestTest {
   @Test
   public void nonAdminCancelSecondNonAdminQuery() throws InterruptedException {
     RestBaseSteps.runQueryInBackground(bigQuery, nonAdminSessionFilter);
-    //put 3 seconds sleep time here to make sure query is in running state
-    Thread.sleep(3000);
+    assertTrue(waitForCondition(condition -> isQueryRunning("query", bigQuery, adminSessionFilter)));
     //Get the response
     Response response = given().filter(adminSessionFilter).get("/profiles.json").then().extract().response();
     //Extract the entries for runningQueries from the response
@@ -100,8 +101,6 @@ public class ProfilesTest extends BaseRestTest {
         .then()
         .statusCode(500)
         .body(containsString("PERMISSION ERROR: Not authorized to cancel the query '" + queryId + "'"));
-    //put 3 seconds sleep time
-    Thread.sleep(3000);
     //Check to make sure that query is still running or completed and not cancelled or being cancelled
     given()
         .pathParam("queryID", queryId)
@@ -114,10 +113,9 @@ public class ProfilesTest extends BaseRestTest {
   }
 
   @Test
-  public void nonAdminCancelOwnQuery() throws InterruptedException {
+  public void nonAdminCancelOwnQuery() {
     RestBaseSteps.runQueryInBackground(bigQuery, nonAdminSessionFilter);
-    //put 3 seconds sleep time here to make sure query is in running state
-    Thread.sleep(3000);
+    assertTrue(waitForCondition(condition -> isQueryRunning("query", bigQuery, nonAdminSessionFilter)));
     //Get the response
     Response response = given().filter(nonAdminSessionFilter).get("/profiles.json").then().extract().response();
     //Put the running queries into a list
@@ -131,16 +129,8 @@ public class ProfilesTest extends BaseRestTest {
       break;
     }
     String queryId = response.jsonPath().param("i", i).getString("runningQueries.queryId[i]");
-    //Cancel the query with the queryId
-    given()
-        .pathParam("queryID", queryId)
-        .filter(nonAdminSessionFilter)
-        .when()
-        .get("/profiles/cancel/{queryID}")
-        .then()
-        .statusCode(200);
-    //put 3 seconds sleep time to make sure query is cancelled
-    Thread.sleep(3000);
+    cancelTheQuery(queryId, nonAdminSessionFilter);
+    waitForCondition(condition -> isQueryInState(queryId, QueryState.CANCELED, nonAdminSessionFilter));
     //Check to make sure that query is cancelled
     given()
         .pathParam("queryID", queryId)
@@ -149,14 +139,13 @@ public class ProfilesTest extends BaseRestTest {
         .get("/profiles/{queryID}.json")
         .then()
         .statusCode(200)
-        .body("state", equalTo(3));
+        .body("state", equalTo(QueryState.CANCELED.getNumber()));
   }
 
   @Test
   public void adminCancelSecondNonAdminQuery() throws InterruptedException {
     RestBaseSteps.runQueryInBackground(bigQuery, secondNonAdminSessionFilter);
-    //put 3 seconds sleep time here to make sure query is in running state
-    Thread.sleep(3000);
+    assertTrue(waitForCondition(condition -> isQueryRunning("query", bigQuery, secondNonAdminSessionFilter)));
     //Get the response
     Response response = given().filter(secondNonAdminSessionFilter).get("/profiles.json").then().extract().response();
     //Put the running queries into a list
@@ -170,17 +159,8 @@ public class ProfilesTest extends BaseRestTest {
       break;
     }
     String queryId = response.jsonPath().param("i", i).getString("runningQueries.queryId[i]");
-    //Cancel the query with the queryId
-    given()
-        .pathParam("queryID", queryId)
-        .filter(adminSessionFilter)
-        .when()
-        .get("/profiles/cancel/{queryID}")
-        .then()
-        .statusCode(200);
-    //put 3 seconds sleep time to make sure query is cancelled
-    Thread.sleep(3000);
-    //Check to make sure that query is cancelled
+    cancelTheQuery(queryId, adminSessionFilter);
+    waitForCondition(condition -> isQueryInState(queryId, QueryState.CANCELED, adminSessionFilter));
     given()
         .pathParam("queryID", queryId)
         .filter(adminSessionFilter)

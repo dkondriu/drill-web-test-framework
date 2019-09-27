@@ -17,13 +17,19 @@
  */
 package org.apache.drill_web_test_framework.rest_api.data;
 
+import com.google.common.base.Stopwatch;
 import io.restassured.RestAssured;
 import io.restassured.filter.session.SessionFilter;
+import io.restassured.response.Response;
 import org.apache.commons.io.IOUtils;
+import org.apache.drill.exec.proto.UserBitShared.QueryResult.QueryState;
 import org.apache.drill_web_test_framework.properties.PropertiesConst;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import static io.restassured.RestAssured.given;
 
@@ -44,6 +50,54 @@ public final class RestBaseSteps {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static Boolean waitForCondition(Function<Boolean, Boolean> condition) {
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    while (stopwatch.elapsed(TimeUnit.SECONDS) < PropertiesConst.DEFAULT_TIMEOUT) {
+      if (condition.apply(null)) return true;
+    }
+    return false;
+  }
+
+  public static boolean isQueryRunning(String queryProfileAttribute, String attributeValue, SessionFilter sessionFilter) {
+    Response response = given()
+        .filter(sessionFilter)
+        .get("/profiles.json")
+        .then()
+        .extract()
+        .response();
+    for (HashMap profile : response.jsonPath().getList("runningQueries", HashMap.class)) {
+      if (attributeValue.startsWith((String) profile.get(queryProfileAttribute))
+          && ((String) profile.get("state")).toLowerCase().equals("running")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static boolean isQueryInState(String queryId, QueryState state, SessionFilter sessionFilter) {
+    Response response = given()
+        .filter(sessionFilter)
+        .pathParam("queryID", queryId)
+        .when()
+        .get("/profiles/{queryID}.json")
+        .then()
+        .statusCode(200)
+        .extract()
+        .response();
+
+    return state.getNumber() == response.jsonPath().getInt("state");
+  }
+
+  public static void cancelTheQuery(String queryId, SessionFilter sessionFilter) {
+    given()
+        .filter(sessionFilter)
+        .pathParam("queryID", queryId)
+        .when()
+        .get("/profiles/cancel/{queryID}")
+        .then()
+        .statusCode(200);
   }
 
   public static void runQueryInBackground(String query, SessionFilter sessionFilter) {

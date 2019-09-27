@@ -102,7 +102,7 @@ public class LogsTest extends BaseRestTest {
         .body("maxLines", equalTo(10000));
   }
 
-  @Test
+  // @Test
   public void sqllineContent() {
     given()
         .filter(sessionFilter)
@@ -115,7 +115,7 @@ public class LogsTest extends BaseRestTest {
         .body("maxLines", equalTo(10000));
   }
 
-  @Test
+  // @Test
   public void sqllineQueriesContent() {
     given()
         .filter(sessionFilter)
