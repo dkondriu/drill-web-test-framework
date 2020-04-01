@@ -20,6 +20,9 @@ import org.apache.drill_web_test_framework.web_ui.pages.BasePage;
 import org.apache.drill_web_test_framework.web_ui.pages.QueryPage;
 import org.apache.drill_web_test_framework.web_ui.pages.QueryPage.QueryType;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public final class QuerySteps extends BaseSteps {
   public enum RESULT_MODE {
     PHYSICAL,
@@ -53,6 +56,26 @@ public final class QuerySteps extends BaseSteps {
         .setQueryType(QueryType.LOGICAL)
         .submitQuery(queryText);
     return getSteps(QueryResultsSteps.class);
+  }
+
+  public List<String> getResultsTable(String query){
+    List<String> result = runSQL(query)
+      .getTable()
+      .stream()
+      .skip(1)
+      .map(x -> x.get(0))
+      .collect(Collectors.toList());
+    return result;
+  }
+
+  public List<String> getResultsTable(String query, int columnNum){
+    List<String> result = runSQL(query)
+      .getTable()
+      .stream()
+      .skip(1)
+      .map(x -> x.get(columnNum))
+      .collect(Collectors.toList());
+    return result;
   }
 
   public static String prepareLogicalPlan(String queryText, RESULT_MODE result_mode) {
